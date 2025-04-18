@@ -8,6 +8,7 @@ import {
 import { AuthProvider, useAuth } from "./context/AuthContext.jsx";
 import "./App.css";
 import Homepage from "./components/Homepage.jsx";
+import Login from "./components/Login.jsx";
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
@@ -29,6 +30,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Homepage />} />
+          <Route path="/login" element={<Login />} />
         </Routes>
       </Router>
     </AuthProvider>
