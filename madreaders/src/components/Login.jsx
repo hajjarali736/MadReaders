@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom"; // Added Link import
 import "../styles/Login.css";
 
 export default function LoginPage() {
@@ -13,8 +13,6 @@ export default function LoginPage() {
     e.preventDefault();
     setIsLoading(true);
     try {
-      // TODO: Replace this with actual auth logic
-      // Simulate succe isd
       setTimeout(() => {
         navigate("/dashboard");
       }, 1000);
@@ -26,13 +24,13 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-blue-100 flex items-center justify-center p-4 relative overflow-hidden">
+<div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-indigo-50 to-blue-100 fixed top-0 left-0 right-0 bottom-0">
       {/* Floating books */}
       <div className="absolute inset-0 overflow-hidden z-0 pointer-events-none">
         {Array.from({ length: 18 }).map((_, i) => (
           <img
             key={i}
-            src="/books.png"
+            src="/book1.jpg"
             alt={`Floating book ${i + 1}`}
             className={`floating-book float-book-${i + 1} w-12 opacity-30`}
           />
@@ -42,7 +40,7 @@ export default function LoginPage() {
       <div className="w-full max-w-md z-10">
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
           <div className="bg-gradient-to-r from-indigo-600 to-blue-500 p-6 text-center">
-            <h1 className="text-2xl font-bold text-white">Welcome Back</h1>
+            <h1 className="text-2xl font-bold text-white">Welcome To MadReaders</h1>
             <p className="text-indigo-100 mt-1">Sign in to your account</p>
           </div>
 
@@ -89,6 +87,14 @@ export default function LoginPage() {
                     className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none"
                     placeholder="••••••••"
                   />
+                  <div className="text-right mt-2">
+                    <Link 
+                      to="/forgotpassword" 
+                      className="text-xs text-indigo-600 hover:text-indigo-500 hover:underline"
+                    >
+                      Forgot password?
+                    </Link>
+                  </div>
                 </div>
               </div>
 
@@ -104,13 +110,13 @@ export default function LoginPage() {
             </form>
 
             <p className="mt-6 text-center text-sm text-gray-600">
-              Don’t have an account?{" "}
-              <a
-                href="/signup"
+              Don't have an account?{" "}
+              <Link
+                to="/signup"
                 className="text-indigo-600 font-medium hover:text-indigo-500"
               >
                 Sign up
-              </a>
+              </Link>
             </p>
           </div>
         </div>
