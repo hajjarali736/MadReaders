@@ -87,3 +87,4 @@ export const getCurrentUser = () => {
 //   "User",
 //   "test@gmail.com"
 // );
+logoutUser();
