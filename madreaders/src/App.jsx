@@ -11,14 +11,11 @@ import Homepage from "./components/Homepage.jsx";
 import Login from "./components/Login.jsx";
 import Signup from "./components/Signup.jsx";
 import ForgotPassword from "./components/ForgotPassword.jsx";
-<<<<<<< HEAD
 import SearchResults from "./components/SearchResults.jsx";
 import BookDetails from "./components/BookDetails.jsx";
 import WishList from "./components/WishList.jsx";
 import CategoryPage from "./components/CategoryPage.jsx";
 import Layout from "./components/Layout.jsx";
-=======
->>>>>>> ffeff4acc731d4fcbe200c9e71ee548796eb904e
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
