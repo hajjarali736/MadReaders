@@ -1,21 +1,30 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
-  content: [
-    "./app/**/*.{js,ts,jsx,tsx}", // App Router
-    "./src/app/**/*.{js,ts,jsx,tsx}", // If inside /src
-    "./components/**/*.{js,ts,jsx,tsx}",
-  ],
+export default {
+  content: [],
   theme: {
     extend: {
       colors: {
-        primary: "#007bff",
-        secondary: "#6c757d",
-        success: "#28a745",
-        info: "#17a2b8",
-        warning: "#ffc107",
-        danger: "#dc3545",
-        light: "#f8f9fa",
-        dark: "#343a40",
+        primary: "#1a73e8", // Google blue
+        secondary: "#34a853", // Google green
+        background: "#f8f9fa", // Light gray background
+      },
+      fontFamily: {
+        sans: ["Inter", "sans-serif"],
+        serif: ["Merriweather", "serif"],
+      },
+      animation: {
+        "fade-in": "fadeIn 0.3s ease-in",
+        "slide-up": "slideUp 0.3s ease-out",
+      },
+      keyframes: {
+        fadeIn: {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
+        slideUp: {
+          "0%": { transform: "translateY(20px)", opacity: "0" },
+          "100%": { transform: "translateY(0)", opacity: "1" },
+        },
       },
     },
   },
