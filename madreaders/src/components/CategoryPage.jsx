@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { searchBooks } from './services/googleBooksService';
 import Layout from './Layout';
-import { Link } from 'react-router-dom';
 
 function CategoryPage() {
     const { category } = useParams();
@@ -112,30 +111,28 @@ function CategoryPage() {
                                                 key={formattedBook.id} 
                                                 className="bg-white rounded-lg p-3 shadow-sm border border-blue-200 hover:shadow-md hover:-translate-y-1 transition-all duration-200 flex flex-col w-[200px]"
                                             >
-                                                <Link to={`/book/${formattedBook.id}`} className="block">
-                                                    <img 
-                                                        src={formattedBook.coverImage} 
-                                                        alt={formattedBook.title} 
-                                                        className="w-full h-[180px] object-cover rounded mb-2"
-                                                    />
-                                                    <h3 className="text-sm font-medium text-blue-500 mb-1 line-clamp-2">
-                                                        {formattedBook.title}
-                                                    </h3>
-                                                    <p className="text-xs text-gray-700 mb-1 line-clamp-1">{formattedBook.author}</p>
-                                                    <div className="mt-auto flex items-center gap-0.5">
-                                                        {Array(5).fill().map((_, i) => (
-                                                            <span 
-                                                                key={i} 
-                                                                className={`text-sm ${i < formattedBook.averageRating ? 'text-yellow-400' : 'text-gray-300'}`}
-                                                            >
-                                                                ★
-                                                            </span>
-                                                        ))}
-                                                        <span className="text-xs text-gray-600 ml-1">
-                                                            ({formattedBook.ratingsCount})
+                                                <img 
+                                                    src={formattedBook.coverImage} 
+                                                    alt={formattedBook.title} 
+                                                    className="w-full h-[180px] object-cover rounded mb-2"
+                                                />
+                                                <h3 className="text-sm font-medium text-blue-500 mb-1 line-clamp-2">
+                                                    {formattedBook.title}
+                                                </h3>
+                                                <p className="text-xs text-gray-700 mb-1 line-clamp-1">{formattedBook.author}</p>
+                                                <div className="mt-auto flex items-center gap-0.5">
+                                                    {Array(5).fill().map((_, i) => (
+                                                        <span 
+                                                            key={i} 
+                                                            className={`text-sm ${i < formattedBook.averageRating ? 'text-yellow-400' : 'text-gray-300'}`}
+                                                        >
+                                                            ★
                                                         </span>
-                                                    </div>
-                                                </Link>
+                                                    ))}
+                                                    <span className="text-xs text-gray-600 ml-1">
+                                                        ({formattedBook.ratingsCount})
+                                                    </span>
+                                                </div>
                                             </div>
                                         );
                                     })}

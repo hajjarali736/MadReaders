@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Header from './Header';
 import { searchBooks } from './services/googleBooksService';
-import { Link } from 'react-router-dom';
 
 function Homepage() {
     const [searchQuery, setSearchQuery] = useState('');
@@ -132,19 +131,17 @@ function Homepage() {
                                 const formattedBook = formatBookData(book);
                                 return (
                                     <div key={formattedBook.id} className="bg-white rounded-lg p-4 shadow-sm border border-blue-200 hover:shadow-md hover:-translate-y-1 transition-all duration-200 flex flex-col">
-                                        <Link to={`/book/${formattedBook.id}`} className="block">
-                                            <img src={formattedBook.coverImage} alt={formattedBook.title} className="w-full h-[250px] object-cover rounded mb-4" />
-                                            <h3 className="text-lg font-medium text-[#212e53] mb-2">{formattedBook.title}</h3>
-                                            <p className="text-[#212e53]">{formattedBook.author}</p>
-                                            <div className="mt-auto flex items-center gap-1">
-                                                {Array(5).fill().map((_, i) => (
-                                                    <span key={i} className={`text-xl ${i < formattedBook.averageRating ? 'text-yellow-400' : 'text-gray-300'}`}>
-                                                        ★
-                                                    </span>
-                                                ))}
-                                                <span className="text-sm text-gray-600 ml-2">({formattedBook.ratingsCount})</span>
-                                            </div>
-                                        </Link>
+                                        <img src={formattedBook.coverImage} alt={formattedBook.title} className="w-full h-[250px] object-cover rounded mb-4" />
+                                        <h3 className="text-lg font-medium text-[#212e53] mb-2">{formattedBook.title}</h3>
+                                        <p className="text-[#212e53]">{formattedBook.author}</p>
+                                        <div className="mt-auto flex items-center gap-1">
+                                            {Array(5).fill().map((_, i) => (
+                                                <span key={i} className={`text-xl ${i < formattedBook.averageRating ? 'text-yellow-400' : 'text-gray-300'}`}>
+                                                    ★
+                                                </span>
+                                            ))}
+                                            <span className="text-sm text-gray-600 ml-2">({formattedBook.ratingsCount})</span>
+                                        </div>
                                     </div>
                                 );
                             })}
@@ -159,19 +156,17 @@ function Homepage() {
                             const formattedBook = formatBookData(book);
                             return (
                                 <div key={formattedBook.id} className="bg-white rounded-lg p-4 shadow-sm border border-blue-200 hover:shadow-md hover:-translate-y-1 transition-all duration-200 flex flex-col">
-                                    <Link to={`/book/${formattedBook.id}`} className="block">
-                                        <img src={formattedBook.coverImage} alt={formattedBook.title} className="w-full h-[250px] object-cover rounded mb-4" />
-                                        <h3 className="text-lg font-medium text-[#212e53] mb-2">{formattedBook.title}</h3>
-                                        <p className="text-[#212e53]">{formattedBook.author}</p>
-                                        <div className="mt-auto flex items-center gap-1">
-                                            {Array(5).fill().map((_, i) => (
-                                                <span key={i} className={`text-xl ${i < formattedBook.averageRating ? 'text-yellow-400' : 'text-gray-300'}`}>
-                                                    ★
-                                                </span>
-                                            ))}
-                                            <span className="text-sm text-gray-600 ml-2">({formattedBook.ratingsCount})</span>
-                                        </div>
-                                    </Link>
+                                    <img src={formattedBook.coverImage} alt={formattedBook.title} className="w-full h-[250px] object-cover rounded mb-4" />
+                                    <h3 className="text-lg font-medium text-[#212e53] mb-2">{formattedBook.title}</h3>
+                                    <p className="text-[#212e53]">{formattedBook.author}</p>
+                                    <div className="mt-auto flex items-center gap-1">
+                                        {Array(5).fill().map((_, i) => (
+                                            <span key={i} className={`text-xl ${i < formattedBook.averageRating ? 'text-yellow-400' : 'text-gray-300'}`}>
+                                                ★
+                                            </span>
+                                        ))}
+                                        <span className="text-sm text-gray-600 ml-2">({formattedBook.ratingsCount})</span>
+                                    </div>
                                 </div>
                             );
                         })}
@@ -195,19 +190,17 @@ function Homepage() {
                             const formattedBook = formatBookData(book);
                             return (
                                 <div key={formattedBook.id} className="bg-white rounded-lg p-4 shadow-sm border border-blue-200 hover:shadow-md hover:-translate-y-1 transition-all duration-200 flex flex-col">
-                                    <Link to={`/book/${formattedBook.id}`} className="block">
-                                        <img src={formattedBook.coverImage} alt={formattedBook.title} className="w-full h-[250px] object-cover rounded mb-4" />
-                                        <h3 className="text-lg font-medium text-[#212e53] mb-2">{formattedBook.title}</h3>
-                                        <p className="text-[#212e53]">{formattedBook.author}</p>
-                                        <div className="mt-auto flex items-center gap-1">
-                                            {Array(5).fill().map((_, i) => (
-                                                <span key={i} className={`text-xl ${i < formattedBook.averageRating ? 'text-yellow-400' : 'text-gray-300'}`}>
-                                                    ★
-                                                </span>
-                                            ))}
-                                            <span className="text-sm text-gray-600 ml-2">({formattedBook.ratingsCount})</span>
-                                        </div>
-                                    </Link>
+                                    <img src={formattedBook.coverImage} alt={formattedBook.title} className="w-full h-[250px] object-cover rounded mb-4" />
+                                    <h3 className="text-lg font-medium text-[#212e53] mb-2">{formattedBook.title}</h3>
+                                    <p className="text-[#212e53]">{formattedBook.author}</p>
+                                    <div className="mt-auto flex items-center gap-1">
+                                        {Array(5).fill().map((_, i) => (
+                                            <span key={i} className={`text-xl ${i < formattedBook.averageRating ? 'text-yellow-400' : 'text-gray-300'}`}>
+                                                ★
+                                            </span>
+                                        ))}
+                                        <span className="text-sm text-gray-600 ml-2">({formattedBook.ratingsCount})</span>
+                                    </div>
                                 </div>
                             );
                         })}
@@ -231,19 +224,17 @@ function Homepage() {
                             const formattedBook = formatBookData(book);
                             return (
                                 <div key={formattedBook.id} className="bg-white rounded-lg p-4 shadow-sm border border-blue-200 hover:shadow-md hover:-translate-y-1 transition-all duration-200 flex flex-col">
-                                    <Link to={`/book/${formattedBook.id}`} className="block">
-                                        <img src={formattedBook.coverImage} alt={formattedBook.title} className="w-full h-[250px] object-cover rounded mb-4" />
-                                        <h3 className="text-lg font-medium text-[#212e53] mb-2">{formattedBook.title}</h3>
-                                        <p className="text-[#212e53]">{formattedBook.author}</p>
-                                        <div className="mt-auto flex items-center gap-1">
-                                            {Array(5).fill().map((_, i) => (
-                                                <span key={i} className={`text-xl ${i < formattedBook.averageRating ? 'text-yellow-400' : 'text-gray-300'}`}>
-                                                    ★
-                                                </span>
-                                            ))}
-                                            <span className="text-sm text-gray-600 ml-2">({formattedBook.ratingsCount})</span>
-                                        </div>
-                                    </Link>
+                                    <img src={formattedBook.coverImage} alt={formattedBook.title} className="w-full h-[250px] object-cover rounded mb-4" />
+                                    <h3 className="text-lg font-medium text-[#212e53] mb-2">{formattedBook.title}</h3>
+                                    <p className="text-[#212e53]">{formattedBook.author}</p>
+                                    <div className="mt-auto flex items-center gap-1">
+                                        {Array(5).fill().map((_, i) => (
+                                            <span key={i} className={`text-xl ${i < formattedBook.averageRating ? 'text-yellow-400' : 'text-gray-300'}`}>
+                                                ★
+                                            </span>
+                                        ))}
+                                        <span className="text-sm text-gray-600 ml-2">({formattedBook.ratingsCount})</span>
+                                    </div>
                                 </div>
                             );
                         })}
