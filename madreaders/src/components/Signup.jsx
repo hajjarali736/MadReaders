@@ -1,5 +1,3 @@
-
-
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "../styles/Login.css";
@@ -7,43 +5,77 @@ import "../styles/Login.css";
 export default function SignUpPage() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
+    username: "",
     password: "",
-    confirmPassword: ""
+    birthdate: "",
+    gender: "",
+    firstName: "",
+    lastName: "",
+    email: ""
   });
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [currentStep, setCurrentStep] = useState(1);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const validateForm = () => {
-    if (!formData.name.trim()) {
-      setError("Please enter your name");
-      return false;
+  const validateStep = () => {
+    if (currentStep === 1) {
+      if (!formData.username.trim()) {
+        setError("Please enter a username");
+        return false;
+      }
+      if (formData.password.length < 6) {
+        setError("Password must be at least 6 characters");
+        return false;
+      }
     }
-    if (!formData.email.includes("@") || !formData.email.includes(".")) {
-      setError("Please enter a valid email");
-      return false;
+    else if (currentStep === 2) {
+      if (!formData.birthdate) {
+        setError("Please enter your birthdate");
+        return false;
+      }
+      if (!formData.gender) {
+        setError("Please select your gender");
+        return false;
+      }
     }
-    if (formData.password.length < 6) {
-      setError("Password must be at least 6 characters");
-      return false;
-    }
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords don't match");
-      return false;
+    else if (currentStep === 3) {
+      if (!formData.firstName.trim()) {
+        setError("Please enter your first name");
+        return false;
+      }
+      if (!formData.lastName.trim()) {
+        setError("Please enter your last name");
+        return false;
+      }
+      if (!formData.email.includes("@") || !formData.email.includes(".")) {
+        setError("Please enter a valid email");
+        return false;
+      }
     }
     return true;
+  };
+
+  const nextStep = () => {
+    setError("");
+    if (validateStep()) {
+      setCurrentStep(prev => prev + 1);
+    }
+  };
+
+  const prevStep = () => {
+    setCurrentStep(prev => prev - 1);
+    setError("");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    if (!validateForm()) return;
+    if (!validateStep()) return;
     
     setIsLoading(true);
     try {
@@ -56,7 +88,6 @@ export default function SignUpPage() {
   };
 
   return (
-    
     <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-indigo-50 to-blue-100 fixed top-0 left-0 right-0 bottom-0">
       {/* Floating books */}
       <div className="absolute inset-0 overflow-hidden z-0 pointer-events-none">
@@ -69,11 +100,12 @@ export default function SignUpPage() {
           />
         ))}
       </div>
+      
       <div className="w-full max-w-sm z-10">
         <div className="bg-white rounded-xl shadow-md overflow-hidden">
           <div className="bg-gradient-to-r from-indigo-600 to-blue-500 p-5 text-center">
             <h1 className="text-xl font-bold text-white">Join MadReaders</h1>
-            <p className="text-indigo-100 text-sm mt-1">Create your account</p>
+            <p className="text-indigo-100 text-sm mt-1">Step {currentStep} of 3</p>
           </div>
 
           <div className="p-6">
@@ -83,67 +115,147 @@ export default function SignUpPage() {
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">Full Name</label>
-                <input
-                  name="name"
-                  type="text"
-                  required
-                  value={formData.name}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 text-sm rounded border border-gray-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-200"
-                  placeholder="John Doe"
-                />
-              </div>
+            <form onSubmit={currentStep === 3 ? handleSubmit : (e) => e.preventDefault()}>
+              {/* Step 1: Account Info */}
+              {currentStep === 1 && (
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">Username *</label>
+                    <input
+                      name="username"
+                      type="text"
+                      required
+                      value={formData.username}
+                      onChange={handleChange}
+                      className="w-full px-3 py-2 text-sm rounded border border-gray-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-200"
+                      placeholder="coolreader123"
+                    />
+                  </div>
 
-              <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">Email address</label>
-                <input
-                  name="email"
-                  type="email"
-                  required
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 text-sm rounded border border-gray-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-200"
-                  placeholder="you@example.com"
-                />
-              </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">Password *</label>
+                    <input
+                      name="password"
+                      type="password"
+                      required
+                      value={formData.password}
+                      onChange={handleChange}
+                      className="w-full px-3 py-2 text-sm rounded border border-gray-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-200"
+                      placeholder="••••••"
+                    />
+                    <p className="mt-1 text-xs text-gray-500">At least 6 characters</p>
+                  </div>
+                </div>
+              )}
 
-              <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">Password</label>
-                <input
-                  name="password"
-                  type="password"
-                  required
-                  value={formData.password}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 text-sm rounded border border-gray-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-200"
-                  placeholder="••••••"
-                />
-                <p className="mt-1 text-xs text-gray-500">At least 6 characters</p>
-              </div>
+              {/* Step 2: Personal Info */}
+              {currentStep === 2 && (
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">Birthdate *</label>
+                    <input
+                      name="birthdate"
+                      type="date"
+                      required
+                      value={formData.birthdate}
+                      onChange={handleChange}
+                      className="w-full px-3 py-2 text-sm rounded border border-gray-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-200"
+                      max={new Date().toISOString().split('T')[0]}
+                    />
+                  </div>
 
-              <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">Confirm Password</label>
-                <input
-                  name="confirmPassword"
-                  type="password"
-                  required
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 text-sm rounded border border-gray-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-200"
-                  placeholder="••••••"
-                />
-              </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">Gender *</label>
+                    <select
+                      name="gender"
+                      required
+                      value={formData.gender}
+                      onChange={handleChange}
+                      className="w-full px-3 py-2 text-sm rounded border border-gray-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-200"
+                    >
+                      <option value="">Select Gender</option>
+                      <option value="male">Male</option>
+                      <option value="female">Female</option>
+                      <option value="other">Other</option>
+                      <option value="prefer-not-to-say">Prefer not to say</option>
+                    </select>
+                  </div>
+                </div>
+              )}
 
-              <button
-                type="submit"
-                disabled={isLoading}
-                className={`w-full py-2 px-4 rounded text-white text-sm font-medium bg-gradient-to-r from-indigo-600 to-blue-500 hover:from-indigo-700 hover:to-blue-600 transition ${isLoading ? "opacity-80" : ""}`}
-              >
-                {isLoading ? "Creating account..." : "Create Account"}
-              </button>
+              {/* Step 3: Contact Info */}
+              {currentStep === 3 && (
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">First Name *</label>
+                    <input
+                      name="firstName"
+                      type="text"
+                      required
+                      value={formData.firstName}
+                      onChange={handleChange}
+                      className="w-full px-3 py-2 text-sm rounded border border-gray-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-200"
+                      placeholder="John"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">Last Name *</label>
+                    <input
+                      name="lastName"
+                      type="text"
+                      required
+                      value={formData.lastName}
+                      onChange={handleChange}
+                      className="w-full px-3 py-2 text-sm rounded border border-gray-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-200"
+                      placeholder="Doe"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">Email *</label>
+                    <input
+                      name="email"
+                      type="email"
+                      required
+                      value={formData.email}
+                      onChange={handleChange}
+                      className="w-full px-3 py-2 text-sm rounded border border-gray-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-200"
+                      placeholder="you@example.com"
+                    />
+                  </div>
+                </div>
+              )}
+
+              <div className="mt-6 flex justify-between">
+                {currentStep > 1 && (
+                  <button
+                    type="button"
+                    onClick={prevStep}
+                    className="px-4 py-2 text-sm font-medium text-indigo-600 hover:text-indigo-500"
+                  >
+                    Back
+                  </button>
+                )}
+
+                {currentStep < 3 ? (
+                  <button
+                    type="button"
+                    onClick={nextStep}
+                    className="ml-auto px-4 py-2 rounded text-white text-sm font-medium bg-indigo-600 hover:bg-indigo-700 transition"
+                  >
+                    Next
+                  </button>
+                ) : (
+                  <button
+                    type="submit"
+                    disabled={isLoading}
+                    className={`ml-auto px-4 py-2 rounded text-white text-sm font-medium bg-gradient-to-r from-indigo-600 to-blue-500 hover:from-indigo-700 hover:to-blue-600 transition ${isLoading ? "opacity-80" : ""}`}
+                  >
+                    {isLoading ? "Creating account..." : "Complete Sign Up"}
+                  </button>
+                )}
+              </div>
             </form>
 
             <div className="mt-4 text-center text-xs text-gray-600">
