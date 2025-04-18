@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { FaBook, FaShippingFast, FaCheckCircle, FaTimesCircle, FaUndo, FaSearch, FaHistory } from 'react-icons/fa';
-
+import Header from './Header';
 export default function OrderHistoryPage() {
   // Sample book orders data (mimicking Google Books API structure)
   const [orders, setOrders] = useState([
@@ -133,7 +133,8 @@ export default function OrderHistoryPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-indigo-50 py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-6xl mx-auto">
+      <Header />
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-12">
         {/* Header */}
         <div className="text-center mb-10">
           <div className="inline-flex items-center justify-center bg-white p-4 rounded-full shadow-lg mb-4">
@@ -315,6 +316,11 @@ export default function OrderHistoryPage() {
           )}
         </div>
       </div>
+      <footer className="bg-gray-900 text-white py-8 relative z-10">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p className="text-gray-400">© {new Date().getFullYear()} MadReaders Bookstore. All rights reserved.</p>
+        </div>
+      </footer>
     </div>
   );
 }

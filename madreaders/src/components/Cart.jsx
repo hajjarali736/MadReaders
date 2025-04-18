@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-
+import Header from './Header';
 export default function CartPage() {
   const [cartItems, setCartItems] = useState([]);
   const [couponCode, setCouponCode] = useState('');
@@ -78,7 +78,8 @@ export default function CartPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 top-0 left-0 right-0 bottom-0">
-      <div className="container mx-auto px-4">
+      <Header />
+      <div className="container mx-auto px-4 pt-8 md:pt-16">
         <h1 className="text-3xl font-bold mb-8 text-indigo-800">Your Shopping Cart</h1>
         
         {cartItems.length === 0 ? (
@@ -272,6 +273,11 @@ export default function CartPage() {
           </div>
         )}
       </div>
+      <footer className="bg-gray-900 text-white py-8 relative z-10">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p className="text-gray-400">© {new Date().getFullYear()} MadReaders Bookstore. All rights reserved.</p>
+        </div>
+      </footer>
     </div>
   );
 }

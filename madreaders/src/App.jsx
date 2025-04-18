@@ -19,6 +19,9 @@ import WishList from "./components/WishList.jsx";
 import CategoryPage from "./components/CategoryPage.jsx";
 import Layout from "./components/Layout.jsx";
 import Order from "./components/OrderHistory.jsx";
+import Contact from "./components/Contactus.jsx";
+import Faq from "./components/Faq.jsx";
+import Dash from "./components/Dashboard.jsx";
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
 
@@ -48,6 +51,9 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Check />} />
           <Route path="/order" element={<Order />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/faq" element={<Faq />} />
+          <Route path="/dashboard" element={<Dash />} />
           <Route
             path="/wishlist"
             element={
