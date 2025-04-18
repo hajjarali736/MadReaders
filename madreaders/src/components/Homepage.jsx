@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Header from './Header';
-import { searchBooks, getFeaturedBooks, getBestsellers } from './services/googleBooksService';
+import { searchBooks } from './services/googleBooksService';
 
 function Homepage() {
     const [searchQuery, setSearchQuery] = useState('');
@@ -12,45 +12,50 @@ function Homepage() {
     const [displayedFeatured, setDisplayedFeatured] = useState(20);
     const [displayedBestsellers, setDisplayedBestsellers] = useState(20);
     const [displayedNewReleases, setDisplayedNewReleases] = useState(20);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         const fetchInitialData = async () => {
             try {
-                // Fetch featured books - romance genre
+                setLoading(true);
+                setError(null);
+
+                // Fetch all data sequentially to avoid rate limiting
                 const featuredData = await searchBooks('romance', { 
                     orderBy: 'relevance',
-                    maxResults: 40
+                    maxResults: 20
                 });
                 
-                // Fetch bestsellers - mystery genre
-                const bestsellersData = await searchBooks('mystery', { 
-                    orderBy: 'relevance',
-                    maxResults: 40
-                });
-                
-                // Fetch new releases - fantasy genre
-                const newReleasesData = await searchBooks('fantasy', { 
-                    orderBy: 'newest',
-                    maxResults: 40
-                });
-
-                console.log('Featured Books:', featuredData);
-                console.log('Best Sellers:', bestsellersData);
-                console.log('New Releases:', newReleasesData);
-
                 if (featuredData && featuredData.items) {
                     setFeaturedBooks(featuredData.items);
                 }
+
+                const bestsellersData = await searchBooks('mystery', { 
+                    orderBy: 'relevance',
+                    maxResults: 20
+                });
+                
                 if (bestsellersData && bestsellersData.items) {
                     setBestsellers(bestsellersData.items);
                 }
+
+                const newReleasesData = await searchBooks('fantasy', { 
+                    orderBy: 'newest',
+                    maxResults: 20
+                });
+
                 if (newReleasesData && newReleasesData.items) {
                     setNewReleases(newReleasesData.items);
                 }
             } catch (error) {
                 console.error('Error fetching initial data:', error);
+                setError('Failed to fetch books. Please try again later.');
+            } finally {
+                setLoading(false);
             }
         };
+
         fetchInitialData();
     }, []);
 
@@ -96,9 +101,9 @@ function Homepage() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-100 flex flex-col w-full">
+        <div className="min-h-screen bg-[#4a919e] flex flex-col w-full">
             <Header />
-            <main className="w-full max-w-7xl px-8 py-4 mx-auto mt-4 relative bg-gray-100 flex-1 z-10">
+            <main className="w-full max-w-7xl px-8 py-4 mx-auto mt-4 relative bg-[#4a919e] flex-1 z-10">
                 <section className="mb-4 bg-white p-6 rounded-lg shadow-sm w-full">
                     <form onSubmit={handleSearch} className="flex gap-4 w-full">
                         <input
@@ -106,12 +111,12 @@ function Homepage() {
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             placeholder="Search for books..."
-                            className="flex-1 px-3 py-2 border border-blue-300 rounded-md text-base min-w-[200px]"
+                            className="flex-1 px-3 py-2 border border-[#212e53] rounded-md text-base min-w-[200px] focus:ring-2 focus:ring-[#212e53] focus:border-[#212e53]"
                         />
                         <button 
                             type="submit" 
                             disabled={isSearching}
-                            className="px-6 py-2 bg-blue-500 text-white rounded-md cursor-pointer transition-colors hover:bg-blue-600 disabled:bg-blue-300 disabled:cursor-not-allowed whitespace-nowrap"
+                            className="px-6 py-2 bg-[#212e53] text-white rounded-md cursor-pointer transition-colors hover:bg-[#1a243f] disabled:bg-[#4a5a7a] disabled:cursor-not-allowed whitespace-nowrap"
                         >
                             {isSearching ? 'Searching...' : 'Search'}
                         </button>
@@ -120,15 +125,15 @@ function Homepage() {
 
                 {searchResults.length > 0 && (
                     <section className="mb-12">
-                        <h2 className="text-2xl font-semibold text-blue-500 mb-6">Search Results</h2>
+                        <h2 className="text-2xl font-semibold text-[#212e53] mb-6">Search Results</h2>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                             {searchResults.map((book) => {
                                 const formattedBook = formatBookData(book);
                                 return (
                                     <div key={formattedBook.id} className="bg-white rounded-lg p-4 shadow-sm border border-blue-200 hover:shadow-md hover:-translate-y-1 transition-all duration-200 flex flex-col">
                                         <img src={formattedBook.coverImage} alt={formattedBook.title} className="w-full h-[250px] object-cover rounded mb-4" />
-                                        <h3 className="text-lg font-medium text-blue-500 mb-2">{formattedBook.title}</h3>
-                                        <p className="text-gray-700">{formattedBook.author}</p>
+                                        <h3 className="text-lg font-medium text-[#212e53] mb-2">{formattedBook.title}</h3>
+                                        <p className="text-[#212e53]">{formattedBook.author}</p>
                                         <div className="mt-auto flex items-center gap-1">
                                             {Array(5).fill().map((_, i) => (
                                                 <span key={i} className={`text-xl ${i < formattedBook.averageRating ? 'text-yellow-400' : 'text-gray-300'}`}>
@@ -145,15 +150,15 @@ function Homepage() {
                 )}
 
                 <section className="mb-8 bg-white p-6 rounded-lg shadow-sm">
-                    <h2 className="text-2xl font-semibold text-blue-500 mb-6">Featured Books</h2>
+                    <h2 className="text-2xl font-semibold text-[#212e53] mb-6">Featured Books</h2>
                     <div className="grid grid-cols-4 gap-6">
                         {featuredBooks.slice(0, 20).map((book) => {
                             const formattedBook = formatBookData(book);
                             return (
                                 <div key={formattedBook.id} className="bg-white rounded-lg p-4 shadow-sm border border-blue-200 hover:shadow-md hover:-translate-y-1 transition-all duration-200 flex flex-col">
                                     <img src={formattedBook.coverImage} alt={formattedBook.title} className="w-full h-[250px] object-cover rounded mb-4" />
-                                    <h3 className="text-lg font-medium text-blue-500 mb-2">{formattedBook.title}</h3>
-                                    <p className="text-gray-700">{formattedBook.author}</p>
+                                    <h3 className="text-lg font-medium text-[#212e53] mb-2">{formattedBook.title}</h3>
+                                    <p className="text-[#212e53]">{formattedBook.author}</p>
                                     <div className="mt-auto flex items-center gap-1">
                                         {Array(5).fill().map((_, i) => (
                                             <span key={i} className={`text-xl ${i < formattedBook.averageRating ? 'text-yellow-400' : 'text-gray-300'}`}>
@@ -179,15 +184,15 @@ function Homepage() {
                 </section>
 
                 <section className="mb-8 bg-white p-6 rounded-lg shadow-sm">
-                    <h2 className="text-2xl font-semibold text-blue-500 mb-6">Best Sellers</h2>
+                    <h2 className="text-2xl font-semibold text-[#212e53] mb-6">Best Sellers</h2>
                     <div className="grid grid-cols-4 gap-6">
                         {bestsellers.slice(0, 20).map((book) => {
                             const formattedBook = formatBookData(book);
                             return (
                                 <div key={formattedBook.id} className="bg-white rounded-lg p-4 shadow-sm border border-blue-200 hover:shadow-md hover:-translate-y-1 transition-all duration-200 flex flex-col">
                                     <img src={formattedBook.coverImage} alt={formattedBook.title} className="w-full h-[250px] object-cover rounded mb-4" />
-                                    <h3 className="text-lg font-medium text-blue-500 mb-2">{formattedBook.title}</h3>
-                                    <p className="text-gray-700">{formattedBook.author}</p>
+                                    <h3 className="text-lg font-medium text-[#212e53] mb-2">{formattedBook.title}</h3>
+                                    <p className="text-[#212e53]">{formattedBook.author}</p>
                                     <div className="mt-auto flex items-center gap-1">
                                         {Array(5).fill().map((_, i) => (
                                             <span key={i} className={`text-xl ${i < formattedBook.averageRating ? 'text-yellow-400' : 'text-gray-300'}`}>
@@ -213,15 +218,15 @@ function Homepage() {
                 </section>
 
                 <section className="mb-8 bg-white p-6 rounded-lg shadow-sm">
-                    <h2 className="text-2xl font-semibold text-blue-500 mb-6">New Releases</h2>
+                    <h2 className="text-2xl font-semibold text-[#212e53] mb-6">New Releases</h2>
                     <div className="grid grid-cols-4 gap-6">
                         {newReleases.slice(0, 20).map((book) => {
                             const formattedBook = formatBookData(book);
                             return (
                                 <div key={formattedBook.id} className="bg-white rounded-lg p-4 shadow-sm border border-blue-200 hover:shadow-md hover:-translate-y-1 transition-all duration-200 flex flex-col">
                                     <img src={formattedBook.coverImage} alt={formattedBook.title} className="w-full h-[250px] object-cover rounded mb-4" />
-                                    <h3 className="text-lg font-medium text-blue-500 mb-2">{formattedBook.title}</h3>
-                                    <p className="text-gray-700">{formattedBook.author}</p>
+                                    <h3 className="text-lg font-medium text-[#212e53] mb-2">{formattedBook.title}</h3>
+                                    <p className="text-[#212e53]">{formattedBook.author}</p>
                                     <div className="mt-auto flex items-center gap-1">
                                         {Array(5).fill().map((_, i) => (
                                             <span key={i} className={`text-xl ${i < formattedBook.averageRating ? 'text-yellow-400' : 'text-gray-300'}`}>
