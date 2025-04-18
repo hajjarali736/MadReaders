@@ -12,6 +12,8 @@ import Login from "./components/Login.jsx";
 import Signup from "./components/Signup.jsx";
 import ForgotPassword from "./components/ForgotPassword.jsx";
 import SearchResults from "./components/SearchResults.jsx";
+import Cart from "./components/Cart.jsx";
+import Check from "./components/Checkout.jsx";
 import BookDetails from "./components/BookDetails.jsx";
 import WishList from "./components/WishList.jsx";
 import CategoryPage from "./components/CategoryPage.jsx";
@@ -43,6 +45,9 @@ function App() {
           <Route path="/search" element={<Layout><SearchResults /></Layout>} />
           <Route path="/book/:id" element={<Layout><BookDetails /></Layout>} />
           <Route path="/category/:category" element={<CategoryPage />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/checkout" element={<Check />} />
+
           <Route
             path="/wishlist"
             element={

@@ -77,7 +77,7 @@ export default function CartPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 fixed top-0 left-0 right-0 bottom-0">
+    <div className="min-h-screen bg-gray-50 py-8 top-0 left-0 right-0 bottom-0">
       <div className="container mx-auto px-4">
         <h1 className="text-3xl font-bold mb-8 text-indigo-800">Your Shopping Cart</h1>
         
