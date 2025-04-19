@@ -10,114 +10,328 @@ import {
   Review,
   ShoppingCart,
   Contact,
+  resetDatabase,
 } from "./Schema.js";
-
-import * as db from "./dbOperations.js";
 
 const uri =
   "mongodb+srv://admin:admin@madreaders.dvcyjvw.mongodb.net/?retryWrites=true&w=majority&appName=madreaders";
 
-async function cleanup() {
-  console.log("🧹 Cleaning up previous test data...");
-  await User.deleteMany({ Email: /^test.*@example\.com$/ });
-  await Order.deleteMany({});
-  await OrderItem.deleteMany({});
-  await Coupon.deleteMany({});
-  await Contact.deleteMany({ Email: /^contact.*@test\.com$/ });
-}
+// Sample data arrays
+const sampleUsers = [
+  {
+    Name: "John Doe",
+    Email: "john@example.com",
+    PhoneNumber: "+96170123456",
+    Address: "123 Main St",
+    Role: "admin",
+  },
+  {
+    Name: "Jane Smith",
+    Email: "jane@example.com",
+    PhoneNumber: "+96170123457",
+    Address: "456 Oak Ave",
+    Role: "user",
+  },
+  {
+    Name: "Alice Johnson",
+    Email: "alice@example.com",
+    PhoneNumber: "+96170123458",
+    Address: "789 Pine Rd",
+    Role: "user",
+  },
+  {
+    Name: "Bob Wilson",
+    Email: "bob@example.com",
+    PhoneNumber: "+96170123459",
+    Address: "321 Elm St",
+    Role: "user",
+  },
+  {
+    Name: "Carol Brown",
+    Email: "carol@example.com",
+    PhoneNumber: "+96170123460",
+    Address: "654 Maple Dr",
+    Role: "user",
+  },
+  {
+    Name: "David Lee",
+    Email: "david@example.com",
+    PhoneNumber: "+96170123461",
+    Address: "987 Cedar Ln",
+    Role: "user",
+  },
+  {
+    Name: "Eva Garcia",
+    Email: "eva@example.com",
+    PhoneNumber: "+96170123462",
+    Address: "147 Birch Rd",
+    Role: "user",
+  },
+  {
+    Name: "Frank Miller",
+    Email: "frank@example.com",
+    PhoneNumber: "+96170123463",
+    Address: "258 Walnut Ave",
+    Role: "user",
+  },
+  {
+    Name: "Grace Taylor",
+    Email: "grace@example.com",
+    PhoneNumber: "+96170123464",
+    Address: "369 Spruce St",
+    Role: "user",
+  },
+  {
+    Name: "Henry Martinez",
+    Email: "henry@example.com",
+    PhoneNumber: "+96170123465",
+    Address: "741 Pine Ct",
+    Role: "user",
+  },
+];
+
+const sampleBooks = [
+  {
+    BookID: "BOOK001",
+    GoogleBooksID: "gb001",
+    Price: 29.99,
+    StockQuantity: 50,
+    EbookAvailability: true,
+  },
+  {
+    BookID: "BOOK002",
+    GoogleBooksID: "gb002",
+    Price: 19.99,
+    StockQuantity: 30,
+    EbookAvailability: true,
+  },
+  {
+    BookID: "BOOK003",
+    GoogleBooksID: "gb003",
+    Price: 24.99,
+    StockQuantity: 40,
+    EbookAvailability: false,
+  },
+  {
+    BookID: "BOOK004",
+    GoogleBooksID: "gb004",
+    Price: 14.99,
+    StockQuantity: 25,
+    EbookAvailability: true,
+  },
+  {
+    BookID: "BOOK005",
+    GoogleBooksID: "gb005",
+    Price: 34.99,
+    StockQuantity: 20,
+    EbookAvailability: true,
+  },
+  {
+    BookID: "BOOK006",
+    GoogleBooksID: "gb006",
+    Price: 22.99,
+    StockQuantity: 35,
+    EbookAvailability: false,
+  },
+  {
+    BookID: "BOOK007",
+    GoogleBooksID: "gb007",
+    Price: 27.99,
+    StockQuantity: 45,
+    EbookAvailability: true,
+  },
+  {
+    BookID: "BOOK008",
+    GoogleBooksID: "gb008",
+    Price: 17.99,
+    StockQuantity: 15,
+    EbookAvailability: true,
+  },
+  {
+    BookID: "BOOK009",
+    GoogleBooksID: "gb009",
+    Price: 39.99,
+    StockQuantity: 10,
+    EbookAvailability: false,
+  },
+  {
+    BookID: "BOOK010",
+    GoogleBooksID: "gb010",
+    Price: 32.99,
+    StockQuantity: 25,
+    EbookAvailability: true,
+  },
+];
+
+const orderStatuses = ["Pending", "Processing", "Shipped", "Delivered"];
 
 async function runTests() {
   try {
     await mongoose.connect(uri);
     console.log("✅ Connected to MongoDB");
 
-    // Clean up any previous test data
-    await cleanup();
+    // Reset the database
+    console.log("🧹 Resetting database...");
+    await resetDatabase();
+    console.log("✅ Database reset complete");
 
-    // Test User Operations
-    console.log("\n🧪 Testing User Operations:");
-    const timestamp = Date.now();
-    const user = await User.create({
-      Name: "Test User",
-      Email: `test.${timestamp}@example.com`,
-      PhoneNumber: "+961123456789",
-      Address: "123 Test St",
-      Role: "user",
-    });
-    console.log("✅ Created test user:", user);
+    // Create Users
+    console.log("\n🧪 Creating Users...");
+    const users = await User.insertMany(sampleUsers);
+    console.log(`✅ Created ${users.length} users`);
 
-    const users = await db.listUsers();
-    console.log(`✅ Listed ${users.length} users`);
+    // Create Books
+    console.log("\n🧪 Creating Books...");
+    const books = await Book.insertMany(sampleBooks);
+    console.log(`✅ Created ${books.length} books`);
 
-    // Test Coupon Operations
-    console.log("\n🧪 Testing Coupon Operations:");
-    const coupon = await db.createCoupon({
-      DiscountPercentage: 20,
-      ExpiryDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
-      MaxUses: 100,
-    });
-    console.log("✅ Created coupon:", coupon);
+    // Create Coupons
+    console.log("\n🧪 Creating Coupons...");
+    const coupons = await Coupon.insertMany([
+      {
+        DiscountPercentage: 20,
+        ExpiryDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+        MaxUses: 100,
+      },
+      {
+        DiscountPercentage: 15,
+        ExpiryDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+        MaxUses: 50,
+      },
+      {
+        DiscountPercentage: 25,
+        ExpiryDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+        MaxUses: 75,
+      },
+      {
+        DiscountPercentage: 10,
+        ExpiryDate: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000),
+        MaxUses: 200,
+      },
+      {
+        DiscountPercentage: 30,
+        ExpiryDate: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
+        MaxUses: 25,
+      },
+    ]);
+    console.log(`✅ Created ${coupons.length} coupons`);
 
-    const validationResult = await db.validateCoupon(coupon._id);
-    console.log("✅ Validated coupon:", validationResult);
+    // Create Orders and OrderItems
+    console.log("\n🧪 Creating Orders and OrderItems...");
+    for (let i = 0; i < 10; i++) {
+      const user = users[Math.floor(Math.random() * users.length)];
+      const book = books[Math.floor(Math.random() * books.length)];
+      const status =
+        orderStatuses[Math.floor(Math.random() * orderStatuses.length)];
 
-    const discountCalc = await db.calculateDiscount(coupon._id, 100);
-    console.log("✅ Calculated discount:", discountCalc);
+      const order = await Order.create({
+        UserID: user._id,
+        TotalAmount: book.Price,
+        OrderStatus: status,
+      });
 
-    // Test Order Operations
-    console.log("\n🧪 Testing Order Operations:");
-    const order = await Order.create({
-      UserID: user._id,
-      TotalAmount: 99.99,
-      OrderStatus: "Pending",
-    });
-    console.log("✅ Created order:", order);
+      await OrderItem.create({
+        OrderID: order._id,
+        BookID: book.BookID,
+        Price: book.Price,
+        Quantity: Math.floor(Math.random() * 3) + 1,
+      });
 
-    const orderItem = await OrderItem.create({
-      OrderID: order._id,
-      BookID: "TEST123",
-      Price: 99.99,
-      Quantity: 1,
-    });
-    console.log("✅ Created order item:", orderItem);
-
-    const updatedOrder = await db.updateOrderStatus(order._id, "Processing");
-    console.log("✅ Updated order status:", updatedOrder);
-
-    const orderDetails = await db.getOrderDetails(order._id);
-    console.log("✅ Got order details:", orderDetails);
-
-    // Test Contact Form Operations
-    console.log("\n🧪 Testing Contact Form Operations:");
-    const contact = await db.submitContactForm({
-      Name: "Test Contact",
-      Email: `contact.${timestamp}@test.com`,
-      Subject: "Test Subject",
-      Message: "This is a test message",
-    });
-    console.log("✅ Submitted contact form:", contact);
-
-    const submissions = await db.getContactSubmissions();
-    console.log(`✅ Retrieved ${submissions.length} contact submissions`);
-
-    // Final Cleanup
-    console.log("\n🧹 Cleaning up test data...");
-    await User.deleteOne({ _id: user._id });
-    await Order.deleteOne({ _id: order._id });
-    await OrderItem.deleteOne({ _id: orderItem._id });
-    await Coupon.deleteOne({ _id: coupon._id });
-    await Contact.deleteOne({ _id: contact._id });
-    console.log("✅ Cleanup completed");
-  } catch (err) {
-    if (err.code === 11000) {
-      console.error(
-        "❌ Duplicate key error. This usually means test data wasn't properly cleaned up."
-      );
-      console.error("Running cleanup and please try again...");
-      await cleanup();
-    } else {
-      console.error("❌ Error:", err.message);
+      // Create Payment for order
+      await Payment.create({
+        OrderID: order._id,
+        UserID: user._id,
+        PaymentMethod: ["CreditCard", "PayPal", "CashOnDelivery"][
+          Math.floor(Math.random() * 3)
+        ],
+        Amount: book.Price,
+        Status: "Completed",
+      });
     }
+    console.log("✅ Created 10 orders with items and payments");
+
+    // Create Reviews
+    console.log("\n🧪 Creating Reviews...");
+    for (let i = 0; i < 15; i++) {
+      const user = users[Math.floor(Math.random() * users.length)];
+      const book = books[Math.floor(Math.random() * books.length)];
+      try {
+        await Review.create({
+          UserID: user._id,
+          BookID: book.BookID,
+          Rating: Math.floor(Math.random() * 5) + 1,
+          Comment: [
+            "Great book!",
+            "Loved it!",
+            "Highly recommend!",
+            "Could be better",
+            "Interesting read",
+          ][Math.floor(Math.random() * 5)],
+        });
+      } catch (err) {
+        if (err.code !== 11000) {
+          throw err;
+        }
+      }
+    }
+    const reviewCount = await Review.countDocuments();
+    console.log(`✅ Created ${reviewCount} reviews`);
+
+    // Create Wishlists
+    console.log("\n🧪 Creating Wishlists...");
+    for (let i = 0; i < 10; i++) {
+      const user = users[Math.floor(Math.random() * users.length)];
+      const book = books[Math.floor(Math.random() * books.length)];
+      try {
+        await Wishlist.create({
+          UserID: user._id,
+          BookID: book.BookID,
+        });
+      } catch (err) {
+        if (err.code !== 11000) {
+          throw err;
+        }
+      }
+    }
+    const wishlistCount = await Wishlist.countDocuments();
+    console.log(`✅ Created ${wishlistCount} wishlist items`);
+
+    // Create Shopping Cart Items
+    console.log("\n🧪 Creating Shopping Cart Items...");
+    for (let i = 0; i < 10; i++) {
+      const user = users[Math.floor(Math.random() * users.length)];
+      const book = books[Math.floor(Math.random() * books.length)];
+      try {
+        await ShoppingCart.create({
+          UserID: user._id,
+          BookID: book.BookID,
+          Quantity: Math.floor(Math.random() * 3) + 1,
+        });
+      } catch (err) {
+        if (err.code !== 11000) {
+          throw err;
+        }
+      }
+    }
+    const cartCount = await ShoppingCart.countDocuments();
+    console.log(`✅ Created ${cartCount} shopping cart items`);
+
+    // Create Contact Forms
+    console.log("\n🧪 Creating Contact Forms...");
+    const contacts = await Contact.insertMany(
+      Array.from({ length: 10 }, (_, i) => ({
+        Name: `Contact Person ${i + 1}`,
+        Email: `contact${i + 1}@example.com`,
+        Subject: `Subject ${i + 1}`,
+        Message: `This is test message ${i + 1}`,
+        Status: ["Unread", "Read", "Responded"][Math.floor(Math.random() * 3)],
+      }))
+    );
+    console.log(`✅ Created ${contacts.length} contact form submissions`);
+
+    console.log("\n✅ All test data created successfully!");
+  } catch (err) {
+    console.error("❌ Error:", err.message);
   } finally {
     await mongoose.disconnect();
     console.log("🔌 Disconnected from MongoDB");
