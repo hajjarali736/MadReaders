@@ -23,6 +23,19 @@ export default function SignUpPage() {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+  const validatePassword = (password) => {
+    const hasLowercase = /[a-z]/.test(password);
+    const hasUppercase = /[A-Z]/.test(password);
+    const hasNumber = /[0-9]/.test(password);
+    
+    return {
+      isValid: hasLowercase && hasUppercase && hasNumber,
+      message: !hasLowercase ? "At least one lowercase letter required" :
+               !hasUppercase ? "At least one uppercase letter required" :
+               "At least one number required"
+    };
+  };
+
   const validateStep = () => {
     if (currentStep === 1) {
       if (!formData.username.trim()) {
@@ -31,6 +44,12 @@ export default function SignUpPage() {
       }
       if (formData.password.length < 6) {
         setError("Password must be at least 6 characters");
+        return false;
+      }
+      
+      const passwordValidation = validatePassword(formData.password);
+      if (!passwordValidation.isValid) {
+        setError(`Invalid password format: ${passwordValidation.message}`);
         return false;
       }
     }
@@ -90,6 +109,37 @@ export default function SignUpPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-indigo-50 to-blue-100">
+      {/* Error message positioned below header at top right */}
+      {error && (
+        <div className="fixed top-24 right-4 z-50">
+          <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded shadow-lg max-w-xs">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <svg className="h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div className="ml-3">
+                <p className="text-sm text-red-700">{error}</p>
+              </div>
+              <div className="ml-auto pl-3">
+                <div className="-mx-1.5 -my-1.5">
+                  <button
+                    onClick={() => setError("")}
+                    className="inline-flex rounded-md p-1.5 text-red-500 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-red-50 focus:ring-red-600"
+                  >
+                    <span className="sr-only">Dismiss</span>
+                    <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Fixed background elements */}
       <div className="fixed inset-0 overflow-hidden z-0 pointer-events-none">
         {Array.from({ length: 18 }).map((_, i) => (
@@ -114,12 +164,6 @@ export default function SignUpPage() {
             </div>
 
             <div className="p-6">
-              {error && (
-                <div className="mb-4 bg-red-50 border-l-4 border-red-500 p-3 rounded-r text-sm">
-                  <p className="text-red-700">{error}</p>
-                </div>
-              )}
-
               <form onSubmit={currentStep === 3 ? handleSubmit : (e) => e.preventDefault()}>
                 {/* Step 1: Account Info */}
                 {currentStep === 1 && (
@@ -148,7 +192,9 @@ export default function SignUpPage() {
                         className="w-full px-3 py-2 text-sm rounded border border-gray-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-200"
                         placeholder="••••••"
                       />
-                      <p className="mt-1 text-xs text-gray-500">At least 6 characters</p>
+                      <p className="mt-1 text-xs text-gray-500">
+                        At least 6 characters with 1 uppercase, 1 lowercase, and 1 number
+                      </p>
                     </div>
                   </div>
                 )}
@@ -280,7 +326,7 @@ export default function SignUpPage() {
         </div>
       </main>
 
-      {/* Footer - now properly positioned at bottom */}
+      {/* Footer */}
       <footer className="bg-gray-900 text-white py-8 w-full">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-gray-400">© {new Date().getFullYear()} MadReaders Bookstore. All rights reserved.</p>
