@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import { User } from "./Schema.js";
+import wishlistRoutes from './routes/wishlist.js';
 
 const app = express();
 
@@ -29,5 +30,8 @@ app.post("/api/users", async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 });
+
+// Wishlist routes
+app.use('/api/wishlist', wishlistRoutes);
 
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
