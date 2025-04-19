@@ -1,7 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
-import userRoutes from "./routes/user.js";
+import { User } from "./Schema.js";
 
 const app = express();
 
@@ -13,17 +13,21 @@ const MONGO_URI =
   "mongodb+srv://admin:admin@madreaders.dvcyjvw.mongodb.net/?retryWrites=true&w=majority&appName=madreaders";
 const PORT = 5000;
 
-// ✅ Connect to MongoDB
+//CONNECT TO MONGO DB
 mongoose
   .connect(MONGO_URI)
   .then(() => console.log("✅ MongoDB connected"))
-  .catch((err) => console.error("❌ DB connection error:", err.message));
+  .catch((err) => console.error("❌ MongoDB error:", err));
 
-// ✅ Routes
-app.use("/api/users", userRoutes);
-
-app.get("/", (req, res) => {
-  res.send("🎉 Backend is alive!");
+// Sample route to test user creation
+app.post("/api/users", async (req, res) => {
+  try {
+    const newUser = new User(req.body);
+    await newUser.save();
+    res.status(201).json(newUser);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
 });
 
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));

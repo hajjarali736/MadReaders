@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { register, login } from "../auth/cognito";
 import "../styles/Login.css";
-import Header from './Header';
+import Header from "./Header";
 
 export default function SignUpPage() {
   const navigate = useNavigate();
@@ -12,7 +13,7 @@ export default function SignUpPage() {
     gender: "",
     firstName: "",
     lastName: "",
-    email: ""
+    email: "",
   });
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -20,19 +21,21 @@ export default function SignUpPage() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const validatePassword = (password) => {
     const hasLowercase = /[a-z]/.test(password);
     const hasUppercase = /[A-Z]/.test(password);
     const hasNumber = /[0-9]/.test(password);
-    
+
     return {
       isValid: hasLowercase && hasUppercase && hasNumber,
-      message: !hasLowercase ? "At least one lowercase letter required" :
-               !hasUppercase ? "At least one uppercase letter required" :
-               "At least one number required"
+      message: !hasLowercase
+        ? "At least one lowercase letter required"
+        : !hasUppercase
+        ? "At least one uppercase letter required"
+        : "At least one number required",
     };
   };
 
@@ -43,17 +46,16 @@ export default function SignUpPage() {
         return false;
       }
       if (formData.password.length < 6) {
-        setError("Password must be at least 6 characters");
+        setError("Password must at least 6 characters");
         return false;
       }
-      
+
       const passwordValidation = validatePassword(formData.password);
       if (!passwordValidation.isValid) {
         setError(`Invalid password format: ${passwordValidation.message}`);
         return false;
       }
-    }
-    else if (currentStep === 2) {
+    } else if (currentStep === 2) {
       if (!formData.birthdate) {
         setError("Please enter your birthdate");
         return false;
@@ -62,8 +64,7 @@ export default function SignUpPage() {
         setError("Please select your gender");
         return false;
       }
-    }
-    else if (currentStep === 3) {
+    } else if (currentStep === 3) {
       if (!formData.firstName.trim()) {
         setError("Please enter your first name");
         return false;
@@ -83,12 +84,12 @@ export default function SignUpPage() {
   const nextStep = () => {
     setError("");
     if (validateStep()) {
-      setCurrentStep(prev => prev + 1);
+      setCurrentStep((prev) => prev + 1);
     }
   };
 
   const prevStep = () => {
-    setCurrentStep(prev => prev - 1);
+    setCurrentStep((prev) => prev - 1);
     setError("");
   };
 
@@ -96,12 +97,56 @@ export default function SignUpPage() {
     e.preventDefault();
     setError("");
     if (!validateStep()) return;
-    
+
     setIsLoading(true);
     try {
-      setTimeout(() => navigate("/dashboard"), 1000);
-    } catch  {
-      setError("Signup failed. Please try again.");
+      const {
+        username,
+        password,
+        email,
+        firstName,
+        lastName,
+        birthdate,
+        gender,
+      } = formData;
+      const user = await register(
+        username,
+        password,
+        birthdate,
+        gender,
+        firstName,
+        lastName,
+        email
+      );
+
+      const userData = {
+        Name: `${formData.firstName} ${formData.lastName}`,
+        Email: formData.email,
+        PhoneNumber: "", // Not collected in form
+        Address: "", // Not collected in form
+        Role: "user", // Default role
+        CreatedAt: new Date(),
+      };
+
+      const res = await fetch("http://localhost:5000/api/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userData),
+      });
+      const data = await res.json();
+      console.log("✅ User created:", data);
+      if (user) {
+        // If registration is successful, navigate to home
+        const curr = login(username, password);
+        setTimeout(() => navigate("/"), 1000);
+        if (curr) {
+          navigate("/");
+        }
+      } else {
+        setError("Registration failed. Please try again.");
+      }
+    } catch (err) {
+      setError(err.message || "An error occurred during registration");
     } finally {
       setIsLoading(false);
     }
@@ -115,8 +160,17 @@ export default function SignUpPage() {
           <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded shadow-lg max-w-xs">
             <div className="flex">
               <div className="flex-shrink-0">
-                <svg className="h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                <svg
+                  className="h-5 w-5 text-red-500"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                    clipRule="evenodd"
+                  />
                 </svg>
               </div>
               <div className="ml-3">
@@ -129,8 +183,17 @@ export default function SignUpPage() {
                     className="inline-flex rounded-md p-1.5 text-red-500 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-red-50 focus:ring-red-600"
                   >
                     <span className="sr-only">Dismiss</span>
-                    <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                    <svg
+                      className="h-5 w-5"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                        clipRule="evenodd"
+                      />
                     </svg>
                   </button>
                 </div>
@@ -158,18 +221,26 @@ export default function SignUpPage() {
       <main className="flex-grow flex items-center justify-center p-4 relative z-10">
         <div className="w-full max-w-sm">
           <div className="bg-white rounded-xl shadow-md overflow-hidden">
-            <div className="bg-gradient-to-r from-indigo-600 to-blue-500 p-5 text-center">
+            <div className="bg-gradient-to-r from-indigo-600 to-blue-5 p-5 text-center">
               <h1 className="text-xl font-bold text-white">Join MadReaders</h1>
-              <p className="text-indigo-100 text-sm mt-1">Step {currentStep} of 3</p>
+              <p className="text-indigo-100 text-sm mt-1">
+                Step {currentStep} of 3
+              </p>
             </div>
 
             <div className="p-6">
-              <form onSubmit={currentStep === 3 ? handleSubmit : (e) => e.preventDefault()}>
+              <form
+                onSubmit={
+                  currentStep === 3 ? handleSubmit : (e) => e.preventDefault()
+                }
+              >
                 {/* Step 1: Account Info */}
                 {currentStep === 1 && (
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-xs font-medium text-gray-700 mb-1">Username *</label>
+                      <label className="block text-xs font-medium text-gray-700 mb-1">
+                        Username *
+                      </label>
                       <input
                         name="username"
                         type="text"
@@ -182,7 +253,9 @@ export default function SignUpPage() {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-medium text-gray-700 mb-1">Password *</label>
+                      <label className="block text-xs font-medium text-gray-700 mb-1">
+                        Password *
+                      </label>
                       <input
                         name="password"
                         type="password"
@@ -193,7 +266,8 @@ export default function SignUpPage() {
                         placeholder="••••••"
                       />
                       <p className="mt-1 text-xs text-gray-500">
-                        At least 6 characters with 1 uppercase, 1 lowercase, and 1 number
+                        At least 6 characters with 1 uppercase, 1 lowercase, and
+                        1 number
                       </p>
                     </div>
                   </div>
@@ -203,7 +277,9 @@ export default function SignUpPage() {
                 {currentStep === 2 && (
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-xs font-medium text-gray-700 mb-1">Birthdate *</label>
+                      <label className="block text-xs font-medium text-gray-700 mb-1">
+                        Birthdate *
+                      </label>
                       <input
                         name="birthdate"
                         type="date"
@@ -211,12 +287,14 @@ export default function SignUpPage() {
                         value={formData.birthdate}
                         onChange={handleChange}
                         className="w-full px-3 py-2 text-sm rounded border border-gray-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-200"
-                        max={new Date().toISOString().split('T')[0]}
+                        max={new Date().toISOString().split("T")[0]}
                       />
                     </div>
 
                     <div>
-                      <label className="block text-xs font-medium text-gray-700 mb-1">Gender *</label>
+                      <label className="block text-xs font-medium text-gray-700 mb-1">
+                        Gender *
+                      </label>
                       <select
                         name="gender"
                         required
@@ -228,7 +306,9 @@ export default function SignUpPage() {
                         <option value="male">Male</option>
                         <option value="female">Female</option>
                         <option value="other">Other</option>
-                        <option value="prefer-not-to-say">Prefer not to say</option>
+                        <option value="prefer-not-to-say">
+                          Prefer not to say
+                        </option>
                       </select>
                     </div>
                   </div>
@@ -238,7 +318,9 @@ export default function SignUpPage() {
                 {currentStep === 3 && (
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-xs font-medium text-gray-700 mb-1">First Name *</label>
+                      <label className="block text-xs font-medium text-gray-700 mb-1">
+                        First Name *
+                      </label>
                       <input
                         name="firstName"
                         type="text"
@@ -251,7 +333,9 @@ export default function SignUpPage() {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-medium text-gray-700 mb-1">Last Name *</label>
+                      <label className="block text-xs font-medium text-gray-700 mb-1">
+                        Last Name *
+                      </label>
                       <input
                         name="lastName"
                         type="text"
@@ -264,7 +348,9 @@ export default function SignUpPage() {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-medium text-gray-700 mb-1">Email *</label>
+                      <label className="block text-xs font-medium text-gray-700 mb-1">
+                        Email *
+                      </label>
                       <input
                         name="email"
                         type="email"
@@ -301,7 +387,9 @@ export default function SignUpPage() {
                     <button
                       type="submit"
                       disabled={isLoading}
-                      className={`ml-auto px-4 py-2 rounded text-white text-sm font-medium bg-gradient-to-r from-indigo-600 to-blue-500 hover:from-indigo-700 hover:to-blue-600 transition ${isLoading ? "opacity-80" : ""}`}
+                      className={`ml-auto px-4 py-2 rounded text-white text-sm font-medium bg-gradient-to-r from-indigo-600 to-blue-500 hover:from-indigo-700 hover:to-blue-600 transition ${
+                        isLoading ? "opacity-80" : ""
+                      }`}
                     >
                       {isLoading ? "Creating account..." : "Complete Sign Up"}
                     </button>
@@ -311,14 +399,22 @@ export default function SignUpPage() {
 
               <div className="mt-4 text-center text-xs text-gray-600">
                 Already have an account?{" "}
-                <Link to="/login" className="text-indigo-600 font-medium">Sign in</Link>
+                <Link to="/login" className="text-indigo-600 font-medium">
+                  Sign in
+                </Link>
               </div>
 
               <div className="mt-4 pt-4 border-t border-gray-200 text-center">
                 <p className="text-xs text-gray-500">
                   By creating an account, you agree to our{" "}
-                  <a href="#" className="text-indigo-600">Terms</a> and{" "}
-                  <a href="#" className="text-indigo-600">Privacy Policy</a>.
+                  <a href="#" className="text-indigo-600">
+                    Terms
+                  </a>{" "}
+                  and{" "}
+                  <a href="#" className="text-indigo-600">
+                    Privacy Policy
+                  </a>
+                  .
                 </p>
               </div>
             </div>
@@ -329,7 +425,10 @@ export default function SignUpPage() {
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-8 w-full">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-gray-400">© {new Date().getFullYear()} MadReaders Bookstore. All rights reserved.</p>
+          <p className="text-gray-400">
+            © {new Date().getFullYear()} MadReaders Bookstore. All rights
+            reserved.
+          </p>
         </div>
       </footer>
     </div>

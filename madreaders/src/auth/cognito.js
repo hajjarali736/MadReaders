@@ -4,7 +4,6 @@ import {
   CognitoUser,
   AuthenticationDetails,
 } from "amazon-cognito-identity-js";
-
 export const register = (
   username,
   password,
@@ -23,8 +22,12 @@ export const register = (
   ];
 
   UserPool.signUp(username, password, attributeList, null, (err, data) => {
-    if (err) return console.log("❌ Registration error:", err.message || err);
+    if (err) {
+      console.log("❌ Registration error:", err.message || err);
+      throw new Error(err.message || "Registration failed");
+    }
     console.log("✅ Registration success:", data);
+    return data;
   });
 };
 
@@ -79,12 +82,24 @@ export const getCurrentUser = () => {
 };
 
 // register(
-//   "testuser123",
-//   "Aa1#2345678",
+//   "testuser21223",
+//   "Aa1#12345678",
 //   "1990-01-01",
 //   "male",
 //   "Test",
 //   "User",
-//   "test@gmail.com"
+//   "tes2t@gmail.com"
 // );
-logoutUser();
+
+// // Adding another test registration
+// register(
+//   "testuser21224",
+//   "Aa1#12345678",
+//   "1995-05-15",
+//   "female",
+//   "Jane",
+//   "Doe",
+//   "jane.doe@example.com"
+// );
+
+// logoutUser();

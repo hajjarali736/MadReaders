@@ -81,6 +81,20 @@ const ShoppingCartSchema = new Schema({
   AddedAt: { type: Date, default: Date.now },
 });
 
+// 🔹 Contact Schema
+const ContactSchema = new Schema({
+  Name: { type: String, required: true },
+  Email: { type: String, required: true },
+  Subject: { type: String, required: true },
+  Message: { type: String, required: true },
+  CreatedAt: { type: Date, default: Date.now },
+  Status: {
+    type: String,
+    default: "Unread",
+    enum: ["Unread", "Read", "Responded"],
+  },
+});
+
 // 🔸 Export models
 export const User = model("User", UserSchema);
 export const Book = model("Book", BookSchema);
@@ -91,3 +105,4 @@ export const Coupon = model("Coupon", CouponSchema);
 export const Wishlist = model("Wishlist", WishlistSchema);
 export const Review = model("Review", ReviewSchema);
 export const ShoppingCart = model("ShoppingCart", ShoppingCartSchema);
+export const Contact = model("Contact", ContactSchema);
