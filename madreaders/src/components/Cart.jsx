@@ -78,9 +78,10 @@ function Cart() {
 
   // Calculate total
   const subtotal = cartItems.reduce(
-    (total, item) => total + (item.price || 0),
+    (total, item) => total + (item.price * item.Quantity || 0),
     0
   );
+
   const discountAmount = discount
     ? discount.type === "percentage"
       ? (subtotal * discount.value) / 100
@@ -126,13 +127,29 @@ function Cart() {
     }
   };
 
-  const applyCoupon = () => {
-    if (couponCode === "READ20") {
-      setDiscount({ value: 20, type: "percentage" });
-    } else if (couponCode === "BOOK10") {
-      setDiscount({ value: 10, type: "fixed" });
-    } else {
-      alert("Invalid coupon code");
+  const applyCoupon = async () => {
+    const code = couponCode.trim();
+
+    if (!code) {
+      alert("Please enter a coupon code");
+      return;
+    }
+
+    try {
+      const res = await fetch(
+        `http://localhost:3001/api/coupons/validate/${code}`
+      );
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        setDiscount(data.discount);
+      } else {
+        alert(data.message || "Invalid coupon code");
+        setDiscount(null);
+      }
+    } catch (err) {
+      console.error("Coupon validation error:", err);
+      alert("Could not validate coupon");
     }
   };
 
