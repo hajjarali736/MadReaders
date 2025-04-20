@@ -1,54 +1,57 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import Layout from './Layout';
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import Layout from "./Layout";
 
 function Cart() {
   const [cartItems, setCartItems] = useState(() => {
-    const savedCart = localStorage.getItem('cart');
+    const savedCart = localStorage.getItem("cart");
     return savedCart ? JSON.parse(savedCart) : [];
   });
-  const [couponCode, setCouponCode] = useState('');
+  const [couponCode, setCouponCode] = useState("");
   const [discount, setDiscount] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   // Save cart to localStorage whenever it changes
   useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(cartItems));
+    localStorage.setItem("cart", JSON.stringify(cartItems));
     // Update cart count in navbar
-    const cartCount = document.getElementById('cart-count');
+    const cartCount = document.getElementById("cart-count");
     if (cartCount) {
       cartCount.textContent = cartItems.length;
     }
   }, [cartItems]);
 
   // Calculate total
-  const subtotal = cartItems.reduce((total, item) => total + (item.price || 0), 0);
+  const subtotal = cartItems.reduce(
+    (total, item) => total + (item.price || 0),
+    0
+  );
   const discountAmount = discount
-    ? discount.type === 'percentage'
+    ? discount.type === "percentage"
       ? (subtotal * discount.value) / 100
       : discount.value
     : 0;
   const total = subtotal - discountAmount;
 
   const removeItem = (id) => {
-    const updatedCart = cartItems.filter(item => item.id !== id);
+    const updatedCart = cartItems.filter((item) => item.id !== id);
     setCartItems(updatedCart);
-    localStorage.setItem('cart', JSON.stringify(updatedCart));
-    
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
+
     // Update cart count in navbar
-    const cartCount = document.getElementById('cart-count');
+    const cartCount = document.getElementById("cart-count");
     if (cartCount) {
       cartCount.textContent = updatedCart.length;
     }
   };
 
   const applyCoupon = () => {
-    if (couponCode === 'READ20') {
-      setDiscount({ value: 20, type: 'percentage' });
-    } else if (couponCode === 'BOOK10') {
-      setDiscount({ value: 10, type: 'fixed' });
+    if (couponCode === "READ20") {
+      setDiscount({ value: 20, type: "percentage" });
+    } else if (couponCode === "BOOK10") {
+      setDiscount({ value: 10, type: "fixed" });
     } else {
-      alert('Invalid coupon code');
+      alert("Invalid coupon code");
     }
   };
 
@@ -72,12 +75,26 @@ function Cart() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="text-center py-16 bg-white rounded-lg shadow-sm">
               <div className="mb-6">
-                <svg className="mx-auto h-12 w-12 text-[#212e53]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                <svg
+                  className="mx-auto h-12 w-12 text-[#212e53]"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                  />
                 </svg>
               </div>
-              <h3 className="mt-2 text-xl font-medium text-[#212e53]">Your cart is empty</h3>
-              <p className="mt-1 text-sm text-[#212e53]">Browse our collection and add items to your cart!</p>
+              <h3 className="mt-2 text-xl font-medium text-[#212e53]">
+                Your cart is empty
+              </h3>
+              <p className="mt-1 text-sm text-[#212e53]">
+                Browse our collection and add items to your cart!
+              </p>
               <div className="mt-6">
                 <Link
                   to="/"
@@ -95,10 +112,15 @@ function Cart() {
     return (
       <div className="min-h-screen bg-[#4a919e] pt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <h1 className="text-2xl font-semibold text-white mb-6">Shopping Cart</h1>
+          <h1 className="text-2xl font-semibold text-white mb-6">
+            Shopping Cart
+          </h1>
           <div className="grid grid-cols-1 gap-6">
             {cartItems.map((item) => (
-              <div key={item.id} className="bg-white rounded-lg shadow-sm overflow-hidden">
+              <div
+                key={item.id}
+                className="bg-white rounded-lg shadow-sm overflow-hidden"
+              >
                 <div className="p-4 flex items-center">
                   <div className="flex-shrink-0 w-24">
                     <img
@@ -108,17 +130,31 @@ function Cart() {
                     />
                   </div>
                   <div className="ml-6 flex-1">
-                    <h3 className="text-lg font-medium text-[#212e53]">{item.title}</h3>
+                    <h3 className="text-lg font-medium text-[#212e53]">
+                      {item.title}
+                    </h3>
                     <p className="mt-1 text-sm text-[#212e53]">{item.author}</p>
-                    <div className="mt-2 text-lg font-medium text-[#212e53]">${item.price}</div>
+                    <div className="mt-2 text-lg font-medium text-[#212e53]">
+                      ${item.price}
+                    </div>
                   </div>
                   <div className="ml-6">
                     <button
                       onClick={() => removeItem(item.id)}
                       className="text-red-500 hover:text-red-700"
                     >
-                      <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                      <svg
+                        className="h-6 w-6"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M6 18L18 6M6 6l12 12"
+                        />
                       </svg>
                     </button>
                   </div>
