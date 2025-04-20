@@ -15,12 +15,13 @@ const connectDB = async () => {
 
     // Connect to MongoDB
     await mongoose.connect(MONGODB_URI, {
+      dbName: "madreaders", // ✅ this explicitly sets your database name
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
 
     isConnected = true;
-    console.log("✅ MongoDB connected successfully");
+    console.log("✅ MongoDB connected to 'madreaders' database");
   } catch (error) {
     console.error("❌ MongoDB connection error:", error);
     throw error;

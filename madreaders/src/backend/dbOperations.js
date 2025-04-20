@@ -240,7 +240,10 @@ export async function cancelOrder(orderId) {
 export async function submitContactForm(formData) {
   try {
     return await Contact.create({
-      ...formData,
+      Name: formData.name,
+      Email: formData.email,
+      Subject: formData.subject,
+      Message: formData.message,
       CreatedAt: new Date(),
     });
   } catch (error) {
@@ -253,6 +256,18 @@ export async function getContactSubmissions() {
     return await Contact.find({}).sort({ CreatedAt: -1 });
   } catch (error) {
     throw new Error(`Error getting contact submissions: ${error.message}`);
+  }
+}
+
+export async function updateContactStatus(id, newStatus) {
+  try {
+    return await Contact.findByIdAndUpdate(
+      id,
+      { Status: newStatus },
+      { new: true }
+    );
+  } catch (err) {
+    throw new Error(`Error updating contact status: ${err.message}`);
   }
 }
 

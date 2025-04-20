@@ -103,3 +103,7 @@ export const getCurrentUser = () => {
 // );
 
 // logoutUser();
+// await login("testuser123", "Aa1#12345678");
+// await new Promise((resolve) => setTimeout(resolve, 3000));
+// console.log(getCurrentUser());
+getCurrentUser();

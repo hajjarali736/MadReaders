@@ -1,26 +1,34 @@
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
+
 import { User } from "./Schema.js";
 import wishlistRoutes from "./routes/wishlist.js";
 import cartRoutes from "./routes/cart.js";
 import userRoutes from "./routes/userRoutes.js";
 import couponRoutes from "./routes/coupon.js";
+import contactRoutes from "./routes/contact.js";
+
 const app = express();
-
-app.use(cors());
-app.use(express.json());
-
-// 🧠 Hardcoded URI instead of process.env
-const MONGO_URI =
-  "mongodb+srv://admin:admin@madreaders.dvcyjvw.mongodb.net/?retryWrites=true&w=majority&appName=madreaders";
 const PORT = process.env.PORT || 3001;
 
-//CONNECT TO MONGO DB
+// 🧠 MongoDB Atlas URI
+const MONGO_URI =
+  "mongodb+srv://admin:admin@madreaders.dvcyjvw.mongodb.net/?retryWrites=true&w=majority&appName=madreaders";
+
+// ✅ MongoDB connection with dbName explicitly set
 mongoose
-  .connect(MONGO_URI)
-  .then(() => console.log("✅ MongoDB connected"))
+  .connect(MONGO_URI, {
+    dbName: "madreaders",
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log("✅ MongoDB connected to 'madreaders' database"))
   .catch((err) => console.error("❌ MongoDB error:", err));
+
+// Middlewares
+app.use(cors());
+app.use(express.json());
 
 // Sample route to test user creation
 app.post("/api/users", async (req, res) => {
@@ -33,16 +41,12 @@ app.post("/api/users", async (req, res) => {
   }
 });
 
-// Wishlist routes
+// Route registrations
 app.use("/api/wishlist", wishlistRoutes);
-
-// Cart routes
 app.use("/api/cart", cartRoutes);
-
-// User routes
 app.use("/api/users", userRoutes);
-
-// Coupon routes
 app.use("/api/coupons", couponRoutes);
+app.use("/api/contact", contactRoutes);
 
+// Start server
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
