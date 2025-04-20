@@ -71,15 +71,14 @@ const CouponSchema = new Schema({
   UsedCount: { type: Number, default: 0 },
 });
 
-// 🔹 Wishlist Schema
 const WishlistSchema = new Schema({
-  UserID: { type: Schema.Types.ObjectId, ref: "User", required: true },
+  Username: { type: String, required: true }, // 👈 now uses username instead of ObjectId
   BookID: { type: String, required: true },
   AddedAt: { type: Date, default: Date.now },
 });
 
-// Create compound index to prevent duplicate wishlist entries
-WishlistSchema.index({ UserID: 1, BookID: 1 }, { unique: true });
+// Prevent duplicate wishlist entries per user per book
+WishlistSchema.index({ Username: 1, BookID: 1 }, { unique: true });
 
 // 🔹 Review Schema
 const ReviewSchema = new Schema({
