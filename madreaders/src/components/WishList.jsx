@@ -1,19 +1,43 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 function WishList() {
-    // This would typically come from your global state management or API
-    const [wishlistItems, setWishlistItems] = useState([]);
+    const [wishlistItems, setWishlistItems] = useState(() => {
+        const savedWishlist = localStorage.getItem('wishlist');
+        return savedWishlist ? JSON.parse(savedWishlist) : [];
+    });
 
     const handleAddToCart = (item) => {
-        // TODO: Implement add to cart functionality
-        console.log('Adding to cart:', item);
-        // Remove from wishlist after adding to cart
-        setWishlistItems(wishlistItems.filter(wishItem => wishItem.id !== item.id));
+        // Add to cart
+        const savedCart = localStorage.getItem('cart') || '[]';
+        const currentCart = JSON.parse(savedCart);
+        if (!currentCart.some(cartItem => cartItem.id === item.id)) {
+            const updatedCart = [...currentCart, item];
+            localStorage.setItem('cart', JSON.stringify(updatedCart));
+        }
+
+        // Remove from wishlist
+        const updatedWishlist = wishlistItems.filter(wishItem => wishItem.id !== item.id);
+        setWishlistItems(updatedWishlist);
+        localStorage.setItem('wishlist', JSON.stringify(updatedWishlist));
+
+        // Update counts in navbar
+        const cartCount = document.getElementById('cart-count');
+        if (cartCount) {
+            cartCount.textContent = updatedCart.length;
+        }
     };
 
     const handleRemoveFromWishlist = (itemId) => {
-        setWishlistItems(wishlistItems.filter(item => item.id !== itemId));
+        const updatedWishlist = wishlistItems.filter(item => item.id !== itemId);
+        setWishlistItems(updatedWishlist);
+        localStorage.setItem('wishlist', JSON.stringify(updatedWishlist));
+        
+        // Update wishlist count in navbar
+        const wishlistCount = document.getElementById('wishlist-count');
+        if (wishlistCount) {
+            wishlistCount.textContent = updatedWishlist.length;
+        }
     };
 
     if (wishlistItems.length === 0) {
@@ -30,7 +54,7 @@ function WishList() {
                         <p className="mt-1 text-sm text-[#212e53]">Browse our collection and add items to your wishlist!</p>
                         <div className="mt-6">
                             <Link
-                                to="/books"
+                                to="/"
                                 className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-500 hover:bg-blue-600"
                             >
                                 Browse Books
@@ -45,31 +69,31 @@ function WishList() {
     return (
         <div className="min-h-screen bg-[#4a919e] pt-20">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                <h1 className="text-2xl font-semibold text-[#212e53] mb-6">My Wishlist</h1>
-                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                <h1 className="text-2xl font-semibold text-white mb-6">My Wishlist</h1>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                     {wishlistItems.map((item) => (
                         <div key={item.id} className="bg-white rounded-lg shadow-sm overflow-hidden">
-                            <div className="p-4">
-                                <div className="aspect-w-3 aspect-h-4 mb-4">
+                            <div className="p-3">
+                                <div className="mb-3">
                                     <img
-                                        src={item.coverImage}
+                                        src={item.cover}
                                         alt={item.title}
-                                        className="object-cover w-full h-full rounded-md"
+                                        className="object-contain w-[150px] h-[200px] rounded-md mx-auto"
                                     />
                                 </div>
-                                <h3 className="text-lg font-medium text-[#212e53]">{item.title}</h3>
-                                <p className="mt-1 text-sm text-[#212e53]">{item.author}</p>
-                                <div className="mt-2 text-lg font-medium text-[#212e53]">${item.price}</div>
-                                <div className="mt-4 space-y-2">
+                                <h3 className="text-base font-medium text-[#212e53] truncate">{item.title}</h3>
+                                <p className="mt-1 text-sm text-[#212e53] truncate">{item.author}</p>
+                                <div className="mt-2 text-base font-medium text-[#212e53]">${item.price}</div>
+                                <div className="mt-3 space-y-2">
                                     <button
                                         onClick={() => handleAddToCart(item)}
-                                        className="w-full flex justify-center items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                                        className="w-full flex justify-center items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#4a919e] hover:bg-[#3a7a85] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                                     >
                                         Add to Cart
                                     </button>
                                     <button
                                         onClick={() => handleRemoveFromWishlist(item.id)}
-                                        className="w-full flex justify-center items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                                        className="w-full flex justify-center items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-[#212e53] bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                                     >
                                         Remove from Wishlist
                                     </button>

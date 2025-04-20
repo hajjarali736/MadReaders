@@ -19,14 +19,90 @@
   }
 }
 
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 .floating-book {
   position: absolute;
   bottom: -100px;
-  animation: swimUp 10s linear infinite;
+  animation: swimUp 15s linear infinite;
   pointer-events: none;
   z-index: 0;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+  transition: all 0.3s ease;
 }
 
+.floating-book:hover {
+  animation-play-state: paused;
+  transform: scale(1.2);
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.2));
+}
+
+/* Form input focus effects */
+.form-input:focus {
+  box-shadow: 0 0 0 3px rgba(82, 109, 130, 0.2);
+  border-color: #27374D;
+  transition: all 0.3s ease;
+}
+
+/* Button hover effect */
+.login-button {
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(82, 109, 130, 0.3);
+}
+
+.login-button:active {
+  transform: translateY(0);
+}
+
+/* Error popup animation */
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.error-popup {
+  animation: slideIn 0.3s ease-out;
+}
+
+/* Success message animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.success-message {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Floating book positions */
 .float-book-1 {
   left: 5%;
   animation-delay: 2s;

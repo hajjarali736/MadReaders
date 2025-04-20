@@ -50,7 +50,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-indigo-50 to-blue-100">
+    <div className="min-h-screen flex flex-col bg-[#DDE6ED]">
       {/* Fixed background elements */}
       <div className="fixed inset-0 overflow-hidden z-0 pointer-events-none">
         {Array.from({ length: 18 }).map((_, i) => (
@@ -58,7 +58,7 @@ export default function LoginPage() {
             key={i}
             src="/book1.jpg"
             alt={`Floating book ${i + 1}`}
-            className={`floating-book float-book-${i + 1} w-12 opacity-30`}
+            className={`floating-book float-book-${i + 1} w-12 opacity-15`}
           />
         ))}
       </div>
@@ -66,11 +66,11 @@ export default function LoginPage() {
       <Header />
 
       {/* Main content area */}
-      <main className="flex-grow flex items-center justify-center p-4 relative z-10">
+      <main className="flex-grow flex items-center justify-center p-4 relative z-10 mt-16">
         {/* Error Popup */}
         {showErrorPopup && (
-          <div className="fixed top-4 right-4 z-50 animate-fade-in">
-            <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg shadow-lg flex items-center">
+          <div className="fixed top-20 right-4 z-50 error-popup">
+            <div className="bg-red-50 border-l-4 border-red-400 text-red-700 p-4 rounded-lg shadow-lg flex items-center">
               <svg
                 className="w-6 h-6 mr-2"
                 fill="none"
@@ -90,17 +90,17 @@ export default function LoginPage() {
         )}
 
         <div className="w-full max-w-md">
-          <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-            <div className="bg-gradient-to-r from-indigo-600 to-blue-500 p-6 text-center">
+          <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
+            <div className="bg-gradient-to-r from-[#27374D] to-[#526D82] p-6 text-center">
               <h1 className="text-2xl font-bold text-white">
                 Welcome To MadReaders
               </h1>
-              <p className="text-indigo-100 mt-1">Sign in to your account</p>
+              <p className="text-gray-200 mt-1">Sign in to your account</p>
             </div>
 
             <div className="p-8">
               {success && (
-                <div className="mb-6 bg-green-50 border-l-4 border-green-500 p-4 rounded-r">
+                <div className="mb-6 bg-green-50 border-l-4 border-green-400 p-4 rounded-r success-message">
                   <p className="text-green-700 font-medium">{success}</p>
                 </div>
               )}
@@ -120,7 +120,7 @@ export default function LoginPage() {
                       required
                       value={username}
                       onChange={(e) => setUsername(e.target.value)}
-                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none"
+                      className="form-input w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#27374D] focus:ring-2 focus:ring-[#526D82]/20 outline-none transition-all duration-300"
                       placeholder="Enter your username"
                     />
                   </div>
@@ -138,13 +138,13 @@ export default function LoginPage() {
                       required
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none"
+                      className="form-input w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#27374D] focus:ring-2 focus:ring-[#526D82]/20 outline-none transition-all duration-300"
                       placeholder="••••••••"
                     />
                     <div className="text-right mt-2">
                       <Link
                         to="/forgotpassword"
-                        className="text-xs text-indigo-600 hover:text-indigo-500 hover:underline"
+                        className="text-xs text-[#27374D] hover:text-[#526D82] hover:underline transition-colors duration-300"
                       >
                         Forgot password?
                       </Link>
@@ -155,7 +155,7 @@ export default function LoginPage() {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className={`w-full py-3 px-4 rounded-lg text-white font-medium bg-gradient-to-r from-indigo-600 to-blue-500 hover:from-indigo-700 hover:to-blue-600 transition duration-200 ${
+                  className={`login-button w-full py-3 px-4 rounded-lg text-white font-medium bg-gradient-to-r from-[#27374D] to-[#526D82] hover:from-[#27374D]/90 hover:to-[#526D82]/90 transition duration-200 ${
                     isLoading ? "opacity-80" : ""
                   }`}
                 >
@@ -167,7 +167,7 @@ export default function LoginPage() {
                 Don't have an account?{" "}
                 <Link
                   to="/signup"
-                  className="text-indigo-600 font-medium hover:text-indigo-500"
+                  className="text-[#27374D] font-medium hover:text-[#526D82] transition-colors duration-300"
                 >
                   Sign up
                 </Link>
@@ -177,8 +177,8 @@ export default function LoginPage() {
         </div>
       </main>
 
-      {/* Footer - now properly positioned at bottom */}
-      <footer className="bg-gray-900 text-white py-8 w-full">
+      {/* Footer */}
+      <footer className="bg-[#27374D] text-white py-8 w-full mt-auto">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-gray-400">© {new Date().getFullYear()} MadReaders Bookstore. All rights reserved.</p>
         </div>
