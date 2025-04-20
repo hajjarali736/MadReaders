@@ -120,3 +120,19 @@ export const isBookInWishlist = async (username, bookID) => {
     };
   }
 };
+
+export async function countWishlist(username) {
+  try {
+    const count = await Wishlist.countDocuments({ Username: username });
+    return {
+      success: true,
+      count,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: "Failed to count wishlist items",
+      error: error.message,
+    };
+  }
+}

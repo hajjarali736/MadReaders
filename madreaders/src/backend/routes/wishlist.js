@@ -4,6 +4,7 @@ import {
   removeFromWishlist,
   getWishlist,
   isBookInWishlist,
+  countWishlist,
 } from "../wishlistOperations.js";
 
 const router = express.Router();
@@ -97,6 +98,24 @@ router.get("/check/:username/:bookID", async (req, res) => {
       message: "Server error",
       error: error.message,
     });
+  }
+});
+
+router.get("/count/:username", async (req, res) => {
+  try {
+    const { username } = req.params;
+    if (!username) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Username is required" });
+    }
+
+    const result = await countWishlist(username);
+    res.status(result.success ? 200 : 400).json(result);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ success: false, message: "Server error", error: error.message });
   }
 });
 
