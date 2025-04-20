@@ -12,9 +12,6 @@ const UserSchema = new Schema({
   CreatedAt: { type: Date, default: Date.now },
 });
 
-// Create indexes
-UserSchema.index({ Email: 1 }, { unique: true });
-
 // 🔹 Book Schema
 const BookSchema = new Schema({
   BookID: { type: String, required: true, unique: true },

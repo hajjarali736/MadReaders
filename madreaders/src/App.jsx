@@ -22,6 +22,9 @@ import Order from "./components/OrderHistory.jsx";
 import Contact from "./components/Contactus.jsx";
 import Faq from "./components/Faq.jsx";
 import Dash from "./components/Dashboard.jsx";
+
+import UserList from "./components/UserList.jsx";
+
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
 
@@ -41,12 +44,33 @@ function App() {
     <AuthProvider>
       <Router>
         <Routes>
-          <Route path="/" element={<Layout><Homepage /></Layout>} />
+          <Route
+            path="/"
+            element={
+              <Layout>
+                <Homepage />
+              </Layout>
+            }
+          />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgotpassword" element={<ForgotPassword />} />
-          <Route path="/search" element={<Layout><SearchResults /></Layout>} />
-          <Route path="/book/:id" element={<Layout><BookDetails /></Layout>} />
+          <Route
+            path="/search"
+            element={
+              <Layout>
+                <SearchResults />
+              </Layout>
+            }
+          />
+          <Route
+            path="/book/:id"
+            element={
+              <Layout>
+                <BookDetails />
+              </Layout>
+            }
+          />
           <Route path="/category/:category" element={<CategoryPage />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Check />} />
@@ -54,11 +78,14 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/faq" element={<Faq />} />
           <Route path="/dashboard" element={<Dash />} />
+          <Route path="/users" element={<UserList />} />
           <Route
             path="/wishlist"
             element={
               <ProtectedRoute>
-                <Layout><WishList /></Layout>
+                <Layout>
+                  <WishList />
+                </Layout>
               </ProtectedRoute>
             }
           />

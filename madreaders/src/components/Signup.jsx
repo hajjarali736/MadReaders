@@ -109,6 +109,8 @@ export default function SignUpPage() {
         birthdate,
         gender,
       } = formData;
+
+      // First register with Cognito
       const user = await register(
         username,
         password,
@@ -119,26 +121,35 @@ export default function SignUpPage() {
         email
       );
 
-      const userData = {
-        Name: `${formData.firstName} ${formData.lastName}`,
-        Email: formData.email,
-        PhoneNumber: "", // Not collected in form
-        Address: "", // Not collected in form
-        Role: "user", // Default role
-        CreatedAt: new Date(),
-      };
-
-      const res = await fetch("http://localhost:5000/api/users", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(userData),
-      });
-      const data = await res.json();
-      console.log("✅ User created:", data);
       if (user) {
-        // If registration is successful, navigate to home
-        const curr = login(username, password);
-        setTimeout(() => navigate("/"), 1000);
+        // If Cognito registration is successful, create user in MongoDB
+        const userData = {
+          Name: `${formData.firstName} ${formData.lastName}`,
+          Email: formData.email,
+          PhoneNumber: "1234567890", // You might want to collect this in the form
+          Address: "Not provided", // You might want to collect this in the form
+          Role: "user",
+        };
+
+        // Call the API endpoint instead of directly using createUser
+        const response = await fetch("http://localhost:3001/api/users/create", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(userData),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || "Failed to create user");
+        }
+
+        const result = await response.json();
+        console.log("✅ User created:", result);
+
+        // Login the user
+        const curr = await login(username, password);
         if (curr) {
           navigate("/");
         }

@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   FaUsers,
   FaBook,
@@ -14,6 +15,7 @@ import Header from "./Header";
 import * as db from "../backend/dbOperations.js";
 
 export default function AdminDashboard() {
+  const navigate = useNavigate();
   // State management
   const [activeTab, setActiveTab] = useState("users");
   const [users, setUsers] = useState([]);
@@ -38,10 +40,26 @@ export default function AdminDashboard() {
   async function fetchDashboardData() {
     try {
       setLoading(true);
-      // Fetch users
-      const usersData = await db.listUsers();
-      setUsers(usersData);
-      setStats((prev) => ({ ...prev, totalUsers: usersData.length }));
+
+      // Fetch users count from API
+      const usersResponse = await fetch(
+        "http://localhost:3001/api/users/list",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!usersResponse.ok) {
+        const errorData = await usersResponse.json();
+        throw new Error(errorData.error || "Failed to fetch users");
+      }
+
+      const usersData = await usersResponse.json();
+      setUsers(usersData.users);
+      setStats((prev) => ({ ...prev, totalUsers: usersData.count }));
 
       // Fetch orders
       const ordersData = await db.getOrders();
@@ -49,7 +67,7 @@ export default function AdminDashboard() {
 
       // Set stats
       setStats({
-        totalUsers: usersData.length,
+        totalUsers: usersData.count,
         totalBooks: books.length,
         activeCoupons: coupons.length,
       });
@@ -98,6 +116,11 @@ export default function AdminDashboard() {
       console.error("Error updating order status:", err);
     }
   }
+
+  // Function to handle user count click
+  const handleUserCountClick = () => {
+    navigate("/users");
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-gray-100">
@@ -176,12 +199,17 @@ export default function AdminDashboard() {
 
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <StatCard
-              icon={<FaUsers className="text-blue-400" />}
-              title="Total Users"
-              value={stats.totalUsers.toString()}
-              color="bg-blue-900/30"
-            />
+            <div
+              onClick={handleUserCountClick}
+              className="cursor-pointer hover:scale-105 transition-transform duration-200"
+            >
+              <StatCard
+                icon={<FaUsers className="text-blue-400" />}
+                title="Total Users"
+                value={stats.totalUsers.toString()}
+                color="bg-blue-900/30"
+              />
+            </div>
             <StatCard
               icon={<FaBook className="text-green-400" />}
               title="Books in Library"

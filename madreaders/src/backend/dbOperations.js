@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import {
   User,
   Coupon,
@@ -9,10 +8,56 @@ import {
   Wishlist,
   Review,
 } from "./Schema.js";
+import connectDB from "./db.js";
+
+// Initialize connection
+let dbConnection = null;
+
+async function getConnection() {
+  if (!dbConnection) {
+    dbConnection = await connectDB();
+  }
+  return dbConnection;
+}
 
 // User Operations
+export async function createUser(userData) {
+  try {
+    await getConnection();
+
+    // Validate required fields
+    const requiredFields = ["Name", "Email", "PhoneNumber", "Address"];
+    for (const field of requiredFields) {
+      if (!userData[field]) {
+        throw new Error(`Missing required field: ${field}`);
+      }
+    }
+
+    // Create new user
+    const newUser = await User.create({
+      Name: userData.Name,
+      Email: userData.Email,
+      PhoneNumber: userData.PhoneNumber,
+      Address: userData.Address,
+      Role: userData.Role || "user",
+    });
+
+    return {
+      success: true,
+      user: newUser,
+      message: "User created successfully",
+    };
+  } catch (error) {
+    if (error.code === 11000) {
+      throw new Error("Email already exists");
+    }
+    throw new Error(`Error creating user: ${error.message}`);
+  }
+}
+
 export async function listUsers() {
   try {
+    await getConnection();
     return await User.find({});
   } catch (error) {
     throw new Error(`Error listing users: ${error.message}`);
@@ -190,3 +235,28 @@ export async function getContactSubmissions() {
     throw new Error(`Error getting contact submissions: ${error.message}`);
   }
 }
+
+// Test function to demonstrate createUser
+async function testCreateUser() {
+  try {
+    const testUser = {
+      Name: "Test User",
+      Email: "test@exampdsle.com",
+      PhoneNumber: "1sds234567890",
+      Address: "123 Test Street",
+      Role: "user",
+    };
+
+    const result = await createUser(testUser);
+    console.log("Test User Creation Result:", result);
+
+    // List all users to verify
+    const users = await listUsers();
+    console.log("All Users:", users);
+  } catch (error) {
+    console.error("Test Error:", error.message);
+  }
+}
+
+// Uncomment the line below to run the test
+testCreateUser();
