@@ -3,6 +3,7 @@ import { FaQuestionCircle, FaChevronDown, FaChevronUp, FaSearch, FaBookOpen, FaS
 // eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from 'framer-motion';
 import Header from './Header';
+
 export default function FAQPage() {
   const [activeIndex, setActiveIndex] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -61,7 +62,7 @@ export default function FAQPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 py-12 px-4 sm:px-6 lg:px-8 ">
-        <Header />
+      <Header />
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-12">
         {/* Animated Header Section */}
         <motion.div 
@@ -238,11 +239,6 @@ export default function FAQPage() {
           </motion.a>
         </motion.div>
       </div>
-      <footer className="bg-gray-900 text-white py-8 relative z-10">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-gray-400">© {new Date().getFullYear()} MadReaders Bookstore. All rights reserved.</p>
-        </div>
-      </footer>
     </div>
   );
 }

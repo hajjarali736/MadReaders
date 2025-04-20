@@ -63,7 +63,7 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-indigo-50 to-blue-100">
+    <div className="min-h-screen flex flex-col bg-[#DDE6ED]">
       {/* Fixed background elements */}
       <div className="fixed inset-0 overflow-visible z-0 pointer-events-none">
         {Array.from({ length: 18 }).map((_, i) => (
@@ -143,13 +143,6 @@ export default function ForgotPasswordPage() {
           </div>
         </div>
       </main>
-
-      {/* Footer - now properly positioned at bottom */}
-      <footer className="bg-gray-900 text-white py-8 w-full">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-gray-400">© {new Date().getFullYear()} MadReaders Bookstore. All rights reserved.</p>
-        </div>
-      </footer>
     </div>
   );
 }

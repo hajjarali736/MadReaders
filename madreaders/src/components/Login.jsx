@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "../styles/Login.css";
-import Header from './Header';
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -63,10 +62,8 @@ export default function LoginPage() {
         ))}
       </div>
 
-      <Header />
-
       {/* Main content area */}
-      <main className="flex-grow flex items-center justify-center p-4 relative z-10 mt-16">
+      <main className="flex-grow flex items-center justify-center p-4 relative z-10">
         {/* Error Popup */}
         {showErrorPopup && (
           <div className="fixed top-20 right-4 z-50 error-popup">
@@ -176,13 +173,6 @@ export default function LoginPage() {
           </div>
         </div>
       </main>
-
-      {/* Footer */}
-      <footer className="bg-[#27374D] text-white py-8 w-full mt-auto">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-gray-400">© {new Date().getFullYear()} MadReaders Bookstore. All rights reserved.</p>
-        </div>
-      </footer>
     </div>
   );
 }

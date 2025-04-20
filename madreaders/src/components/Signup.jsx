@@ -164,52 +164,48 @@ export default function SignUpPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-indigo-50 to-blue-100">
+    <div className="min-h-screen flex flex-col bg-[#DDE6ED]">
+      <Header />
+
       {/* Error message positioned below header at top right */}
       {error && (
-        <div className="fixed top-24 right-4 z-50">
-          <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded shadow-lg max-w-xs">
-            <div className="flex">
-              <div className="flex-shrink-0">
-                <svg
-                  className="h-5 w-5 text-red-500"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </div>
-              <div className="ml-3">
-                <p className="text-sm text-red-700">{error}</p>
-              </div>
-              <div className="ml-auto pl-3">
-                <div className="-mx-1.5 -my-1.5">
-                  <button
-                    onClick={() => setError("")}
-                    className="inline-flex rounded-md p-1.5 text-red-500 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-red-50 focus:ring-red-600"
-                  >
-                    <span className="sr-only">Dismiss</span>
-                    <svg
-                      className="h-5 w-5"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </button>
-                </div>
-              </div>
+        <div className="fixed top-24 right-4 z-50 error-popup">
+          <div className="bg-red-50 border-l-4 border-red-400 p-4 rounded-lg shadow-lg flex items-center">
+            <div className="flex-shrink-0">
+              <svg
+                className="h-5 w-5 text-red-500"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                  clipRule="evenodd"
+                />
+              </svg>
             </div>
+            <div className="ml-3">
+              <p className="text-sm text-red-700">{error}</p>
+            </div>
+            <button
+              onClick={() => setError("")}
+              className="ml-auto text-red-500 hover:text-red-600 focus:outline-none"
+            >
+              <span className="sr-only">Dismiss</span>
+              <svg
+                className="h-5 w-5"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </button>
           </div>
         </div>
       )}
@@ -221,64 +217,66 @@ export default function SignUpPage() {
             key={i}
             src="/book1.jpg"
             alt={`Floating book ${i + 1}`}
-            className={`floating-book float-book-${i + 1} w-12 opacity-30`}
+            className={`floating-book float-book-${i + 1} w-12 opacity-15`}
           />
         ))}
       </div>
 
-      <Header />
-
       {/* Main content area */}
-      <main className="flex-grow flex items-center justify-center p-4 relative z-10">
-        <div className="w-full max-w-sm">
-          <div className="bg-white rounded-xl shadow-md overflow-hidden">
-            <div className="bg-gradient-to-r from-indigo-600 to-blue-5 p-5 text-center">
-              <h1 className="text-xl font-bold text-white">Join MadReaders</h1>
-              <p className="text-indigo-100 text-sm mt-1">
-                Step {currentStep} of 3
-              </p>
+      <main className="flex-grow flex items-center justify-center p-4 relative z-10 mt-20">
+        <div className="w-full max-w-md">
+          <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
+            <div className="bg-gradient-to-r from-[#27374D] to-[#526D82] p-6 text-center">
+              <h1 className="text-2xl font-bold text-white">Join MadReaders</h1>
+              <p className="text-gray-200 mt-1">Step {currentStep} of 3</p>
             </div>
 
-            <div className="p-6">
+            <div className="p-8">
               <form
                 onSubmit={
                   currentStep === 3 ? handleSubmit : (e) => e.preventDefault()
                 }
+                className="space-y-6"
               >
                 {/* Step 1: Account Info */}
                 {currentStep === 1 && (
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-xs font-medium text-gray-700 mb-1">
-                        Username *
+                      <label
+                        htmlFor="username"
+                        className="block text-sm font-medium text-gray-700 mb-1"
+                      >
+                        Username <span className="text-red-500">*</span>
                       </label>
                       <input
-                        name="username"
                         type="text"
-                        required
+                        id="username"
+                        name="username"
                         value={formData.username}
                         onChange={handleChange}
-                        className="w-full px-3 py-2 text-sm rounded border border-gray-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-200"
-                        placeholder="coolreader123"
+                        className="form-input w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#27374D] focus:ring-2 focus:ring-[#526D82]/20 outline-none transition-all duration-300"
+                        required
                       />
                     </div>
-
                     <div>
-                      <label className="block text-xs font-medium text-gray-700 mb-1">
-                        Password *
+                      <label
+                        htmlFor="password"
+                        className="block text-sm font-medium text-gray-700 mb-1"
+                      >
+                        Password <span className="text-red-500">*</span>
                       </label>
                       <input
-                        name="password"
                         type="password"
-                        required
+                        id="password"
+                        name="password"
                         value={formData.password}
                         onChange={handleChange}
-                        className="w-full px-3 py-2 text-sm rounded border border-gray-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-200"
-                        placeholder="••••••"
+                        className="form-input w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#27374D] focus:ring-2 focus:ring-[#526D82]/20 outline-none transition-all duration-300"
+                        required
                       />
-                      <p className="mt-1 text-xs text-gray-500">
-                        At least 6 characters with 1 uppercase, 1 lowercase, and
-                        1 number
+                      <p className="mt-2 text-sm text-gray-500">
+                        At least 6 characters with 1 uppercase, 1 lowercase, and 1
+                        number
                       </p>
                     </div>
                   </div>
@@ -288,38 +286,41 @@ export default function SignUpPage() {
                 {currentStep === 2 && (
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-xs font-medium text-gray-700 mb-1">
-                        Birthdate *
+                      <label
+                        htmlFor="birthdate"
+                        className="block text-sm font-medium text-gray-700 mb-1"
+                      >
+                        Birthdate <span className="text-red-500">*</span>
                       </label>
                       <input
-                        name="birthdate"
                         type="date"
-                        required
+                        id="birthdate"
+                        name="birthdate"
                         value={formData.birthdate}
                         onChange={handleChange}
-                        className="w-full px-3 py-2 text-sm rounded border border-gray-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-200"
-                        max={new Date().toISOString().split("T")[0]}
+                        className="form-input w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#27374D] focus:ring-2 focus:ring-[#526D82]/20 outline-none transition-all duration-300"
+                        required
                       />
                     </div>
-
                     <div>
-                      <label className="block text-xs font-medium text-gray-700 mb-1">
-                        Gender *
+                      <label
+                        htmlFor="gender"
+                        className="block text-sm font-medium text-gray-700 mb-1"
+                      >
+                        Gender <span className="text-red-500">*</span>
                       </label>
                       <select
+                        id="gender"
                         name="gender"
-                        required
                         value={formData.gender}
                         onChange={handleChange}
-                        className="w-full px-3 py-2 text-sm rounded border border-gray-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-200"
+                        className="form-input w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#27374D] focus:ring-2 focus:ring-[#526D82]/20 outline-none transition-all duration-300"
+                        required
                       >
-                        <option value="">Select Gender</option>
+                        <option value="">Select gender</option>
                         <option value="male">Male</option>
                         <option value="female">Female</option>
                         <option value="other">Other</option>
-                        <option value="prefer-not-to-say">
-                          Prefer not to say
-                        </option>
                       </select>
                     </div>
                   </div>
@@ -329,68 +330,74 @@ export default function SignUpPage() {
                 {currentStep === 3 && (
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-xs font-medium text-gray-700 mb-1">
-                        First Name *
+                      <label
+                        htmlFor="firstName"
+                        className="block text-sm font-medium text-gray-700 mb-1"
+                      >
+                        First Name <span className="text-red-500">*</span>
                       </label>
                       <input
-                        name="firstName"
                         type="text"
-                        required
+                        id="firstName"
+                        name="firstName"
                         value={formData.firstName}
                         onChange={handleChange}
-                        className="w-full px-3 py-2 text-sm rounded border border-gray-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-200"
-                        placeholder="John"
+                        className="form-input w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#27374D] focus:ring-2 focus:ring-[#526D82]/20 outline-none transition-all duration-300"
+                        required
                       />
                     </div>
-
                     <div>
-                      <label className="block text-xs font-medium text-gray-700 mb-1">
-                        Last Name *
+                      <label
+                        htmlFor="lastName"
+                        className="block text-sm font-medium text-gray-700 mb-1"
+                      >
+                        Last Name <span className="text-red-500">*</span>
                       </label>
                       <input
-                        name="lastName"
                         type="text"
-                        required
+                        id="lastName"
+                        name="lastName"
                         value={formData.lastName}
                         onChange={handleChange}
-                        className="w-full px-3 py-2 text-sm rounded border border-gray-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-200"
-                        placeholder="Doe"
+                        className="form-input w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#27374D] focus:ring-2 focus:ring-[#526D82]/20 outline-none transition-all duration-300"
+                        required
                       />
                     </div>
-
                     <div>
-                      <label className="block text-xs font-medium text-gray-700 mb-1">
-                        Email *
+                      <label
+                        htmlFor="email"
+                        className="block text-sm font-medium text-gray-700 mb-1"
+                      >
+                        Email <span className="text-red-500">*</span>
                       </label>
                       <input
-                        name="email"
                         type="email"
-                        required
+                        id="email"
+                        name="email"
                         value={formData.email}
                         onChange={handleChange}
-                        className="w-full px-3 py-2 text-sm rounded border border-gray-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-200"
-                        placeholder="you@example.com"
+                        className="form-input w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#27374D] focus:ring-2 focus:ring-[#526D82]/20 outline-none transition-all duration-300"
+                        required
                       />
                     </div>
                   </div>
                 )}
 
-                <div className="mt-6 flex justify-between">
+                <div className="flex justify-between gap-4 mt-6">
                   {currentStep > 1 && (
                     <button
                       type="button"
                       onClick={prevStep}
-                      className="px-4 py-2 text-sm font-medium text-indigo-600 hover:text-indigo-500"
+                      className="px-6 py-3 rounded-lg text-[#27374D] font-medium border-2 border-[#27374D] hover:bg-[#27374D] hover:text-white transition duration-200 flex-1"
                     >
                       Back
                     </button>
                   )}
-
                   {currentStep < 3 ? (
                     <button
                       type="button"
                       onClick={nextStep}
-                      className="ml-auto px-4 py-2 rounded text-white text-sm font-medium bg-indigo-600 hover:bg-indigo-700 transition"
+                      className="login-button px-6 py-3 rounded-lg text-white font-medium bg-gradient-to-r from-[#27374D] to-[#526D82] hover:from-[#27374D]/90 hover:to-[#526D82]/90 transition duration-200 flex-1"
                     >
                       Next
                     </button>
@@ -398,50 +405,29 @@ export default function SignUpPage() {
                     <button
                       type="submit"
                       disabled={isLoading}
-                      className={`ml-auto px-4 py-2 rounded text-white text-sm font-medium bg-gradient-to-r from-indigo-600 to-blue-500 hover:from-indigo-700 hover:to-blue-600 transition ${
+                      className={`login-button px-6 py-3 rounded-lg text-white font-medium bg-gradient-to-r from-[#27374D] to-[#526D82] hover:from-[#27374D]/90 hover:to-[#526D82]/90 transition duration-200 flex-1 ${
                         isLoading ? "opacity-80" : ""
                       }`}
                     >
-                      {isLoading ? "Creating account..." : "Complete Sign Up"}
+                      {isLoading ? "Creating Account..." : "Create Account"}
                     </button>
                   )}
                 </div>
               </form>
 
-              <div className="mt-4 text-center text-xs text-gray-600">
+              <p className="mt-6 text-center text-sm text-gray-600">
                 Already have an account?{" "}
-                <Link to="/login" className="text-indigo-600 font-medium">
+                <Link
+                  to="/login"
+                  className="text-[#27374D] font-medium hover:text-[#526D82] transition-colors duration-300"
+                >
                   Sign in
                 </Link>
-              </div>
-
-              <div className="mt-4 pt-4 border-t border-gray-200 text-center">
-                <p className="text-xs text-gray-500">
-                  By creating an account, you agree to our{" "}
-                  <a href="#" className="text-indigo-600">
-                    Terms
-                  </a>{" "}
-                  and{" "}
-                  <a href="#" className="text-indigo-600">
-                    Privacy Policy
-                  </a>
-                  .
-                </p>
-              </div>
+              </p>
             </div>
           </div>
         </div>
       </main>
-
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-8 w-full">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-gray-400">
-            © {new Date().getFullYear()} MadReaders Bookstore. All rights
-            reserved.
-          </p>
-        </div>
-      </footer>
     </div>
   );
 }

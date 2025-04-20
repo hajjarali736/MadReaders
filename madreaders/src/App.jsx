@@ -24,8 +24,8 @@ import Faq from "./components/Faq.jsx";
 import Dash from "./components/Dashboard.jsx";
 import CouponManager from "./components/CouponManager.jsx";
 import ContactInquiries from "./components/ContactInquiries.jsx";
-
 import UserList from "./components/UserList.jsx";
+import BookRecommendationChat from "./components/BookRecommendationChat.jsx";
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
@@ -54,9 +54,9 @@ function App() {
               </Layout>
             }
           />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/forgotpassword" element={<ForgotPassword />} />
+          <Route path="/login" element={<Layout><Login /></Layout>} />
+          <Route path="/signup" element={<Layout><Signup /></Layout>} />
+          <Route path="/forgotpassword" element={<Layout><ForgotPassword /></Layout>} />
           <Route
             path="/search"
             element={
@@ -73,16 +73,24 @@ function App() {
               </Layout>
             }
           />
-          <Route path="/category/:category" element={<CategoryPage />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/checkout" element={<Check />} />
-          <Route path="/order" element={<Order />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/faq" element={<Faq />} />
-          <Route path="/dashboard" element={<Dash />} />
-          <Route path="/users" element={<UserList />} />
-          <Route path="/coupons" element={<CouponManager />} />
-          <Route path="/contact-inquiries" element={<ContactInquiries />} />
+          <Route path="/category/:category" element={<Layout><CategoryPage /></Layout>} />
+          <Route path="/cart" element={<Layout><Cart /></Layout>} />
+          <Route path="/checkout" element={<Layout><Check /></Layout>} />
+          <Route path="/order" element={<Layout><Order /></Layout>} />
+          <Route path="/contact" element={<Layout><Contact /></Layout>} />
+          <Route path="/faq" element={<Layout><Faq /></Layout>} />
+          <Route path="/dashboard" element={<Layout><Dash /></Layout>} />
+          <Route path="/users" element={<Layout><UserList /></Layout>} />
+          <Route path="/coupons" element={<Layout><CouponManager /></Layout>} />
+          <Route path="/contact-inquiries" element={<Layout><ContactInquiries /></Layout>} />
+          <Route
+            path="/book-recommendation"
+            element={
+              <Layout>
+                <BookRecommendationChat />
+              </Layout>
+            }
+          />
           <Route
             path="/wishlist"
             element={

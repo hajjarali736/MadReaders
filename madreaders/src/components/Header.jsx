@@ -108,6 +108,12 @@ function Header() {
               >
                 FAQ
               </Link>
+              <Link
+                to="/book-recommendation"
+                className="text-[#212e53] hover:text-[#212e53] font-medium"
+              >
+                Book Assistant
+              </Link>
             </div>
           </div>
           <div className="flex items-center space-x-4">

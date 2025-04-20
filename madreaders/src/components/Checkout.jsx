@@ -72,7 +72,7 @@ export default function CheckoutPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#4B6A88] py-8 fixed top-0 left-0 right-0 bottom-0 overflow-y-auto">
+    <div className="min-h-screen flex flex-col bg-[#DDE6ED]">
       <div className="container mx-auto px-4 max-w-3xl ">
         {/* Progress Steps with Icons */}
         <div className="mb-8">
@@ -414,11 +414,6 @@ export default function CheckoutPage() {
           </div>
         </div>
       </div>
-      <footer className="bg-gray-900 text-white py-8 relative z-10">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-gray-400">© {new Date().getFullYear()} MadReaders Bookstore. All rights reserved.</p>
-        </div>
-      </footer>
     </div>
   );
 }
