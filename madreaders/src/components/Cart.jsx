@@ -1,33 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Layout from "./Layout";
-<<<<<<< Updated upstream
-
-function Cart() {
-  const [cartItems, setCartItems] = useState(() => {
-    const savedCart = localStorage.getItem("cart");
-    return savedCart ? JSON.parse(savedCart) : [];
-  });
-=======
 import { getCurrentUser } from "../auth/cognito";
 
 function Cart() {
   const [cartItems, setCartItems] = useState([]);
 
->>>>>>> Stashed changes
   const [couponCode, setCouponCode] = useState("");
   const [discount, setDiscount] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-<<<<<<< Updated upstream
-  // Save cart to localStorage whenever it changes
-  useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cartItems));
-    // Update cart count in navbar
-    const cartCount = document.getElementById("cart-count");
-    if (cartCount) {
-      cartCount.textContent = cartItems.length;
-=======
   function generatePriceFromTitle(title) {
     if (!title || typeof title !== "string") return 12;
 
@@ -37,7 +19,6 @@ function Cart() {
     let hash = 0;
     for (let i = 0; i < normalized.length; i++) {
       hash = normalized.charCodeAt(i) + ((hash << 5) - hash);
->>>>>>> Stashed changes
     }
 
     // Normalize hash to a range: 10 to 50
@@ -107,17 +88,6 @@ function Cart() {
     : 0;
   const total = subtotal - discountAmount;
 
-<<<<<<< Updated upstream
-  const removeItem = (id) => {
-    const updatedCart = cartItems.filter((item) => item.id !== id);
-    setCartItems(updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
-
-    // Update cart count in navbar
-    const cartCount = document.getElementById("cart-count");
-    if (cartCount) {
-      cartCount.textContent = updatedCart.length;
-=======
   const handleQuantityChange = async (bookID, newQuantity) => {
     const user = getCurrentUser();
     if (!user || newQuantity < 1) return;
@@ -153,7 +123,6 @@ function Cart() {
 
     if (res.ok) {
       setCartItems((prev) => prev.filter((item) => item.BookID !== bookID));
->>>>>>> Stashed changes
     }
   };
 
@@ -230,11 +199,7 @@ function Cart() {
           <div className="grid grid-cols-1 gap-6">
             {cartItems.map((item) => (
               <div
-<<<<<<< Updated upstream
-                key={item.id}
-=======
                 key={item.BookID}
->>>>>>> Stashed changes
                 className="bg-white rounded-lg shadow-sm overflow-hidden"
               >
                 <div className="p-4 flex items-center">
@@ -252,8 +217,6 @@ function Cart() {
                     <p className="mt-1 text-sm text-[#212e53]">{item.author}</p>
                     <div className="mt-2 text-lg font-medium text-[#212e53]">
                       ${item.price}
-<<<<<<< Updated upstream
-=======
                       <div className="mt-2">
                         <input
                           type="number"
@@ -268,7 +231,6 @@ function Cart() {
                           className="w-16 px-2 py-1 border border-gray-300 rounded"
                         />
                       </div>
->>>>>>> Stashed changes
                     </div>
                   </div>
                   <div className="ml-6">
