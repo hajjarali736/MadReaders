@@ -92,16 +92,14 @@ const ReviewSchema = new Schema({
 // Create compound index to prevent multiple reviews from same user for same book
 ReviewSchema.index({ UserID: 1, BookID: 1 }, { unique: true });
 
-// 🔹 ShoppingCart Schema
-const ShoppingCartSchema = new Schema({
-  UserID: { type: Schema.Types.ObjectId, ref: "User", required: true },
+const CartSchema = new Schema({
+  Username: { type: String, required: true },
   BookID: { type: String, required: true },
   Quantity: { type: Number, required: true, min: 1 },
+  Price: { type: Number, required: true },
   AddedAt: { type: Date, default: Date.now },
 });
-
-// Create compound index to prevent duplicate cart entries
-ShoppingCartSchema.index({ UserID: 1, BookID: 1 }, { unique: true });
+CartSchema.index({ Username: 1, BookID: 1 }, { unique: true });
 
 // 🔹 Contact Schema
 const ContactSchema = new Schema({
@@ -134,7 +132,7 @@ export const Payment = model("Payment", PaymentSchema);
 export const Coupon = model("Coupon", CouponSchema);
 export const Wishlist = model("Wishlist", WishlistSchema);
 export const Review = model("Review", ReviewSchema);
-export const ShoppingCart = model("ShoppingCart", ShoppingCartSchema);
+export const Cart = model("Cart", CartSchema);
 export const Contact = model("Contact", ContactSchema);
 
 // Export reset function

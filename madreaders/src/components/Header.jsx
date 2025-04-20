@@ -179,8 +179,9 @@ function Header() {
                     className="flex items-center space-x-2 text-sm focus:outline-none"
                   >
                     <span className="text-[#212e53] font-medium">
-                      {user?.given_name || "User"}
+                      {user?.username || "User"}
                     </span>
+
                     <div className="h-8 w-8 rounded-full bg-[#212e53] flex items-center justify-center text-white font-medium">
                       {user?.given_name?.[0]?.toUpperCase() || "U"}
                     </div>

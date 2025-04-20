@@ -1,152 +1,90 @@
-import express from 'express';
+import express from "express";
 import {
-    addToCart,
-    updateCartItemQuantity,
-    removeFromCart,
-    getCart,
-    clearCart
-} from '../cartOperations.js';
+  addToCart,
+  getCart,
+  updateCartItemQuantity,
+  removeFromCart,
+  countCartItems,
+} from "../cartOperations.js";
 
 const router = express.Router();
 
-// Add item to cart
-router.post('/add', async (req, res) => {
-    try {
-        const { userID, bookID, quantity } = req.body;
-        
-        if (!userID || !bookID || !quantity) {
-            return res.status(400).json({
-                success: false,
-                message: 'UserID, BookID, and quantity are required'
-            });
-        }
+// ✅ Add book to cart
+router.post("/add", async (req, res) => {
+  const { username, bookID, price, quantity } = req.body;
 
-        const result = await addToCart(userID, bookID, parseInt(quantity));
-        
-        if (result.success) {
-            res.status(201).json(result);
-        } else {
-            res.status(400).json(result);
-        }
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: 'Server error',
-            error: error.message
-        });
-    }
+  // Validate all required fields
+  if (!username || !bookID || !price || !quantity) {
+    return res.status(400).json({
+      success: false,
+      message:
+        "Missing fields: username, bookID, price, and quantity are required",
+    });
+  }
+
+  // Add or update cart item
+  const result = await addToCart(username, bookID, price, quantity);
+  res.status(result.success ? 200 : 400).json(result);
 });
 
-// Update cart item quantity
-router.put('/update', async (req, res) => {
-    try {
-        const { userID, bookID, quantity } = req.body;
-        
-        if (!userID || !bookID || quantity === undefined) {
-            return res.status(400).json({
-                success: false,
-                message: 'UserID, BookID, and quantity are required'
-            });
-        }
+// ✅ Get all cart items for a user
+router.get("/:username", async (req, res) => {
+  const { username } = req.params;
 
-        const result = await updateCartItemQuantity(userID, bookID, parseInt(quantity));
-        
-        if (result.success) {
-            res.status(200).json(result);
-        } else {
-            res.status(400).json(result);
-        }
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: 'Server error',
-            error: error.message
-        });
-    }
+  if (!username) {
+    return res.status(400).json({
+      success: false,
+      message: "Username is required",
+    });
+  }
+
+  const result = await getCart(username);
+  res.status(result.success ? 200 : 400).json(result);
 });
 
-// Remove item from cart
-router.delete('/remove', async (req, res) => {
-    try {
-        const { userID, bookID } = req.body;
-        
-        if (!userID || !bookID) {
-            return res.status(400).json({
-                success: false,
-                message: 'UserID and BookID are required'
-            });
-        }
+// ✅ Update quantity for a specific cart item
+router.put("/update", async (req, res) => {
+  const { username, bookID, quantity } = req.body;
 
-        const result = await removeFromCart(userID, bookID);
-        
-        if (result.success) {
-            res.status(200).json(result);
-        } else {
-            res.status(404).json(result);
-        }
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: 'Server error',
-            error: error.message
-        });
-    }
+  if (!username || !bookID || !quantity) {
+    return res.status(400).json({
+      success: false,
+      message: "Missing fields: username, bookID, and quantity are required",
+    });
+  }
+
+  const result = await updateCartItemQuantity(username, bookID, quantity);
+  res.status(result.success ? 200 : 400).json(result);
 });
 
-// Get user's cart
-router.get('/:userID', async (req, res) => {
-    try {
-        const { userID } = req.params;
-        
-        if (!userID) {
-            return res.status(400).json({
-                success: false,
-                message: 'UserID is required'
-            });
-        }
+// ✅ Remove a specific item from cart
+router.delete("/remove", async (req, res) => {
+  const { username, bookID } = req.body;
 
-        const result = await getCart(userID);
-        
-        if (result.success) {
-            res.status(200).json(result);
-        } else {
-            res.status(400).json(result);
-        }
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: 'Server error',
-            error: error.message
-        });
-    }
+  if (!username || !bookID) {
+    return res.status(400).json({
+      success: false,
+      message: "Missing fields: username and bookID are required",
+    });
+  }
+
+  const result = await removeFromCart(username, bookID);
+  res.status(result.success ? 200 : 400).json(result);
 });
 
-// Clear user's cart
-router.delete('/clear/:userID', async (req, res) => {
-    try {
-        const { userID } = req.params;
-        
-        if (!userID) {
-            return res.status(400).json({
-                success: false,
-                message: 'UserID is required'
-            });
-        }
+// ✅ Get total count of items in cart
+router.get("/count/:username", async (req, res) => {
+  const { username } = req.params;
 
-        const result = await clearCart(userID);
-        
-        if (result.success) {
-            res.status(200).json(result);
-        } else {
-            res.status(400).json(result);
-        }
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: 'Server error',
-            error: error.message
-        });
-    }
+  if (!username) {
+    return res.status(400).json({
+      success: false,
+      message: "Username is required",
+    });
+  }
+
+  const result = await countCartItems(username);
+  res.status(result.success ? 200 : 400).json(result);
 });
 
-export default router; 
+export default router;

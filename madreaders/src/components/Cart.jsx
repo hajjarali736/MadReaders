@@ -1,16 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Layout from "./Layout";
+<<<<<<< Updated upstream
 
 function Cart() {
   const [cartItems, setCartItems] = useState(() => {
     const savedCart = localStorage.getItem("cart");
     return savedCart ? JSON.parse(savedCart) : [];
   });
+=======
+import { getCurrentUser } from "../auth/cognito";
+
+function Cart() {
+  const [cartItems, setCartItems] = useState([]);
+
+>>>>>>> Stashed changes
   const [couponCode, setCouponCode] = useState("");
   const [discount, setDiscount] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
+<<<<<<< Updated upstream
   // Save cart to localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cartItems));
@@ -18,8 +27,73 @@ function Cart() {
     const cartCount = document.getElementById("cart-count");
     if (cartCount) {
       cartCount.textContent = cartItems.length;
+=======
+  function generatePriceFromTitle(title) {
+    if (!title || typeof title !== "string") return 12;
+
+    const normalized = title.trim().toUpperCase();
+
+    // Create a numeric hash based on character codes
+    let hash = 0;
+    for (let i = 0; i < normalized.length; i++) {
+      hash = normalized.charCodeAt(i) + ((hash << 5) - hash);
+>>>>>>> Stashed changes
     }
-  }, [cartItems]);
+
+    // Normalize hash to a range: 10 to 50
+    const min = 10;
+    const max = 50;
+    const price = min + Math.abs(hash % (max - min + 1));
+
+    return price;
+  }
+
+  const fetchCartItems = async () => {
+    const user = getCurrentUser();
+    if (!user) return;
+
+    try {
+      const res = await fetch(
+        `http://localhost:3001/api/cart/${user.getUsername()}`
+      );
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        const detailed = await Promise.all(
+          data.data.map(async (item) => {
+            const bookRes = await fetch(
+              `https://www.googleapis.com/books/v1/volumes/${item.BookID}`
+            );
+            const book = await bookRes.json();
+            const title = book.volumeInfo?.title || "Untitled";
+            const author =
+              book.volumeInfo?.authors?.join(", ") || "Unknown Author";
+            const cover =
+              book.volumeInfo?.imageLinks?.thumbnail ||
+              "https://via.placeholder.com/150x200";
+
+            const price = generatePriceFromTitle(title); // use your deterministic price function
+
+            return {
+              ...item,
+              title,
+              author,
+              cover,
+              price,
+            };
+          })
+        );
+
+        setCartItems(detailed);
+      }
+    } catch (err) {
+      console.error("Failed to fetch cart items:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchCartItems();
+  }, []);
 
   // Calculate total
   const subtotal = cartItems.reduce(
@@ -33,6 +107,7 @@ function Cart() {
     : 0;
   const total = subtotal - discountAmount;
 
+<<<<<<< Updated upstream
   const removeItem = (id) => {
     const updatedCart = cartItems.filter((item) => item.id !== id);
     setCartItems(updatedCart);
@@ -42,6 +117,43 @@ function Cart() {
     const cartCount = document.getElementById("cart-count");
     if (cartCount) {
       cartCount.textContent = updatedCart.length;
+=======
+  const handleQuantityChange = async (bookID, newQuantity) => {
+    const user = getCurrentUser();
+    if (!user || newQuantity < 1) return;
+
+    const res = await fetch("http://localhost:3001/api/cart/update", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: user.getUsername(),
+        bookID,
+        quantity: newQuantity,
+      }),
+    });
+
+    if (res.ok) {
+      setCartItems((prev) =>
+        prev.map((item) =>
+          item.BookID === bookID ? { ...item, Quantity: newQuantity } : item
+        )
+      );
+    }
+  };
+
+  const removeItem = async (bookID) => {
+    const user = getCurrentUser();
+    if (!user) return;
+
+    const res = await fetch("http://localhost:3001/api/cart/remove", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: user.getUsername(), bookID }),
+    });
+
+    if (res.ok) {
+      setCartItems((prev) => prev.filter((item) => item.BookID !== bookID));
+>>>>>>> Stashed changes
     }
   };
 
@@ -118,7 +230,11 @@ function Cart() {
           <div className="grid grid-cols-1 gap-6">
             {cartItems.map((item) => (
               <div
+<<<<<<< Updated upstream
                 key={item.id}
+=======
+                key={item.BookID}
+>>>>>>> Stashed changes
                 className="bg-white rounded-lg shadow-sm overflow-hidden"
               >
                 <div className="p-4 flex items-center">
@@ -136,11 +252,28 @@ function Cart() {
                     <p className="mt-1 text-sm text-[#212e53]">{item.author}</p>
                     <div className="mt-2 text-lg font-medium text-[#212e53]">
                       ${item.price}
+<<<<<<< Updated upstream
+=======
+                      <div className="mt-2">
+                        <input
+                          type="number"
+                          min="1"
+                          value={item.Quantity}
+                          onChange={(e) =>
+                            handleQuantityChange(
+                              item.BookID,
+                              parseInt(e.target.value)
+                            )
+                          }
+                          className="w-16 px-2 py-1 border border-gray-300 rounded"
+                        />
+                      </div>
+>>>>>>> Stashed changes
                     </div>
                   </div>
                   <div className="ml-6">
                     <button
-                      onClick={() => removeItem(item.id)}
+                      onClick={() => removeItem(item.BookID)}
                       className="text-red-500 hover:text-red-700"
                     >
                       <svg

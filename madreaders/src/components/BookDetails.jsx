@@ -8,6 +8,8 @@ const BookDetails = () => {
   const [book, setBook] = useState(null);
   const [recommendations, setRecommendations] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [quantity, setQuantity] = useState(1);
+
   const [cart, setCart] = useState(() => {
     const savedCart = localStorage.getItem("cart");
     return savedCart ? JSON.parse(savedCart) : [];
@@ -17,6 +19,25 @@ const BookDetails = () => {
     return savedWishlist ? JSON.parse(savedWishlist) : [];
   });
   const [showMessage, setShowMessage] = useState("");
+
+  function generatePriceFromTitle(title) {
+    if (!title || typeof title !== "string") return 12;
+
+    const normalized = title.trim().toUpperCase();
+
+    // Create a numeric hash based on character codes
+    let hash = 0;
+    for (let i = 0; i < normalized.length; i++) {
+      hash = normalized.charCodeAt(i) + ((hash << 5) - hash);
+    }
+
+    // Normalize hash to a range: 10 to 50
+    const min = 10;
+    const max = 50;
+    const price = min + Math.abs(hash % (max - min + 1));
+
+    return price;
+  }
 
   // Save cart and wishlist to localStorage whenever they change
   useEffect(() => {
@@ -112,41 +133,50 @@ const BookDetails = () => {
     fetchBookDetails();
   }, [id]);
 
-  const handleAddToCart = () => {
-    if (book) {
-      // Get current cart items
-      const savedCart = localStorage.getItem("cart") || "[]";
-      const currentCart = JSON.parse(savedCart);
+  const handleAddToCart = async () => {
+    if (!book) return;
 
-      // Check if book is already in cart
-      const isInCart = currentCart.some((item) => item.id === book.id);
-
-      if (!isInCart) {
-        // Create a simplified book object with only necessary data
-        const bookToAdd = {
-          id: book.id,
-          title: book.title,
-          author: book.author,
-          cover: book.cover,
-          price: book.price,
-        };
-
-        // Add to cart
-        const updatedCart = [...currentCart, bookToAdd];
-        localStorage.setItem("cart", JSON.stringify(updatedCart));
-        setCart(updatedCart);
-        setShowMessage("Added to cart!");
-
-        // Update cart count in navbar
-        const cartCount = document.getElementById("cart-count");
-        if (cartCount) {
-          cartCount.textContent = updatedCart.length;
-        }
-      } else {
-        setShowMessage("Already in cart!");
-      }
-      setTimeout(() => setShowMessage(""), 3000);
+    const user = getCurrentUser();
+    if (!user) {
+      setShowMessage("You must be logged in to add to cart.");
+      return;
     }
+
+    const username = user.getUsername();
+
+    console.log("Sending cart add request:", {
+      username: user.getUsername(),
+      bookID: book.id,
+      price: generatePriceFromTitle(book.volumeInfo?.title),
+      quantity,
+    });
+
+    try {
+      const response = await fetch("http://localhost:3001/api/cart/add", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username,
+          bookID: book.id,
+          price: generatePriceFromTitle(book.volumeInfo?.title),
+          quantity,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        setShowMessage("Added to cart!");
+        // Optional: update localStorage or cart count UI if you want
+      } else {
+        setShowMessage(data.message || "Error adding to cart.");
+      }
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      setShowMessage("An error occurred. Please try again.");
+    }
+
+    setTimeout(() => setShowMessage(""), 3000);
   };
 
   const handleAddToWishlist = async () => {
@@ -291,8 +321,22 @@ const BookDetails = () => {
                       {book.category}
                     </p>
                   </div>
-                  <p className="text-[#212e53] mb-6" dangerouslySetInnerHTML={{ __html: book.description }}></p>
+                  <p
+                    className="text-[#212e53] mb-6"
+                    dangerouslySetInnerHTML={{ __html: book.description }}
+                  ></p>
                   <div className="flex gap-4">
+                    <input
+                      type="number"
+                      min="1"
+                      value={quantity}
+                      onChange={(e) =>
+                        setQuantity(parseInt(e.target.value) || 1)
+                      }
+                      className="w-20 px-2 py-1 border rounded text-[#212e53]"
+                      disabled={!book?.availability}
+                    />
+
                     <button
                       onClick={handleAddToWishlist}
                       className="px-6 py-2 bg-[#212e53] text-white rounded-lg hover:bg-[#1a243f] transition-colors flex items-center gap-2"

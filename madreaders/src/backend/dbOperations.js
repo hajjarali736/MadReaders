@@ -4,7 +4,6 @@ import {
   Order,
   OrderItem,
   Contact,
-  ShoppingCart,
   Wishlist,
   Review,
 } from "./Schema.js";
@@ -90,7 +89,6 @@ export async function deleteUser(userId) {
 
     // Delete associated data
     await Order.deleteMany({ UserID: userId });
-    await ShoppingCart.deleteMany({ UserID: userId });
     await Wishlist.deleteMany({ UserID: userId });
     await Review.deleteMany({ UserID: userId });
 
