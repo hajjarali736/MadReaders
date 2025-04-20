@@ -291,7 +291,7 @@ const BookDetails = () => {
                       {book.category}
                     </p>
                   </div>
-                  <p className="text-[#212e53] mb-6">{book.description}</p>
+                  <p className="text-[#212e53] mb-6" dangerouslySetInnerHTML={{ __html: book.description }}></p>
                   <div className="flex gap-4">
                     <button
                       onClick={handleAddToWishlist}
