@@ -63,8 +63,8 @@ const PaymentSchema = new Schema({
   CreatedAt: { type: Date, default: Date.now },
 });
 
-// 🔹 Coupon Schema
 const CouponSchema = new Schema({
+  code: { type: String, required: true, unique: true },
   DiscountPercentage: { type: Number, required: true, min: 0, max: 100 },
   ExpiryDate: { type: Date, required: true },
   MaxUses: { type: Number, required: true, min: 1 },

@@ -5,7 +5,7 @@ import { User } from "./Schema.js";
 import wishlistRoutes from "./routes/wishlist.js";
 import cartRoutes from "./routes/cart.js";
 import userRoutes from "./routes/userRoutes.js";
-
+import couponRoutes from "./routes/coupon.js";
 const app = express();
 
 app.use(cors());
@@ -41,5 +41,8 @@ app.use("/api/cart", cartRoutes);
 
 // User routes
 app.use("/api/users", userRoutes);
+
+// Coupon routes
+app.use("/api/coupons", couponRoutes);
 
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));

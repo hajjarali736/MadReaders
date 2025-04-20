@@ -104,12 +104,15 @@ export async function deleteUser(userId) {
     throw new Error(`Error deleting user: ${error.message}`);
   }
 }
-
 // Coupon Operations
 export async function createCoupon(couponData) {
   try {
+    await getConnection();
     return await Coupon.create({
-      ...couponData,
+      code: couponData.code.toUpperCase(),
+      DiscountPercentage: couponData.DiscountPercentage,
+      ExpiryDate: couponData.ExpiryDate,
+      MaxUses: couponData.MaxUses,
       UsedCount: 0,
     });
   } catch (error) {
@@ -119,35 +122,52 @@ export async function createCoupon(couponData) {
 
 export async function updateCoupon(couponId, updateData) {
   try {
+    await getConnection();
     return await Coupon.findByIdAndUpdate(couponId, updateData, { new: true });
   } catch (error) {
     throw new Error(`Error updating coupon: ${error.message}`);
   }
 }
 
+export async function deleteCoupon(couponId) {
+  try {
+    await getConnection();
+    return await Coupon.findByIdAndDelete(couponId);
+  } catch (error) {
+    throw new Error(`Error deleting coupon: ${error.message}`);
+  }
+}
+
+// List only active coupons (not expired & not fully used)
+export async function listCoupons() {
+  try {
+    await getConnection();
+    const today = new Date();
+    return await Coupon.find({
+      ExpiryDate: { $gt: today },
+      $expr: { $lt: ["$UsedCount", "$MaxUses"] },
+    });
+  } catch (error) {
+    throw new Error(`Error listing coupons: ${error.message}`);
+  }
+}
+
+// Validate if coupon can be used
 export async function validateCoupon(couponId) {
   try {
+    await getConnection();
     const coupon = await Coupon.findById(couponId);
-    if (!coupon) {
-      throw new Error("Coupon not found");
-    }
-
-    // Check expiration
-    if (coupon.ExpiryDate < new Date()) {
-      throw new Error("Coupon has expired");
-    }
-
-    // Check usage limit
-    if (coupon.UsedCount >= coupon.MaxUses) {
+    if (!coupon) throw new Error("Coupon not found");
+    if (coupon.ExpiryDate < new Date()) throw new Error("Coupon has expired");
+    if (coupon.UsedCount >= coupon.MaxUses)
       throw new Error("Coupon usage limit exceeded");
-    }
-
     return coupon;
   } catch (error) {
     throw new Error(`Error validating coupon: ${error.message}`);
   }
 }
 
+// Discount calculation using coupon
 export async function calculateDiscount(couponId, amount) {
   try {
     const coupon = await validateCoupon(couponId);
@@ -155,7 +175,7 @@ export async function calculateDiscount(couponId, amount) {
     return {
       originalAmount: amount,
       discountPercentage: coupon.DiscountPercentage,
-      discountAmount: discountAmount,
+      discountAmount,
       finalAmount: amount - discountAmount,
     };
   } catch (error) {
@@ -236,27 +256,27 @@ export async function getContactSubmissions() {
   }
 }
 
-// Test function to demonstrate createUser
-async function testCreateUser() {
-  try {
-    const testUser = {
-      Name: "Test User",
-      Email: "test@exampdsle.com",
-      PhoneNumber: "1sds234567890",
-      Address: "123 Test Street",
-      Role: "user",
-    };
+// // Test function to demonstrate createUser
+// async function testCreateUser() {
+//   try {
+//     const testUser = {
+//       Name: "Test User",
+//       Email: "test@exampdsle.com",
+//       PhoneNumber: "1sds234567890",
+//       Address: "123 Test Street",
+//       Role: "user",
+//     };
 
-    const result = await createUser(testUser);
-    console.log("Test User Creation Result:", result);
+//     const result = await createUser(testUser);
+//     console.log("Test User Creation Result:", result);
 
-    // List all users to verify
-    const users = await listUsers();
-    console.log("All Users:", users);
-  } catch (error) {
-    console.error("Test Error:", error.message);
-  }
-}
+//     // List all users to verify
+//     const users = await listUsers();
+//     console.log("All Users:", users);
+//   } catch (error) {
+//     console.error("Test Error:", error.message);
+//   }
+// }
 
-// Uncomment the line below to run the test
-testCreateUser();
+// // Uncomment the line below to run the test
+// testCreateUser();

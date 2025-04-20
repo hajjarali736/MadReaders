@@ -22,6 +22,7 @@ import Order from "./components/OrderHistory.jsx";
 import Contact from "./components/Contactus.jsx";
 import Faq from "./components/Faq.jsx";
 import Dash from "./components/Dashboard.jsx";
+import CouponManager from "./components/CouponManager.jsx";
 
 import UserList from "./components/UserList.jsx";
 
@@ -79,6 +80,7 @@ function App() {
           <Route path="/faq" element={<Faq />} />
           <Route path="/dashboard" element={<Dash />} />
           <Route path="/users" element={<UserList />} />
+          <Route path="/coupons" element={<CouponManager />} />
           <Route
             path="/wishlist"
             element={
