@@ -103,9 +103,9 @@ function Homepage() {
     };
 
     return (
-        <div className="min-h-screen bg-[#4a919e] flex flex-col w-full">
+        <div className="min-h-screen bg-[#9333ea] flex flex-col w-full">
             <Header />
-            <main className="w-full max-w-7xl px-8 py-4 mx-auto mt-4 relative bg-[#4a919e] flex-1 z-10">
+            <main className="w-full max-w-7xl px-8 py-2 mx-auto mt-2 relative bg-[#9333ea] flex-1 z-10">
                 <section className="mb-4 bg-white p-6 rounded-lg shadow-sm w-full">
                     <form onSubmit={handleSearch} className="flex gap-4 w-full">
                         <input

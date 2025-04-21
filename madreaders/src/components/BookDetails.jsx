@@ -386,19 +386,19 @@ const BookDetails = () => {
             <h2 className="text-2xl font-bold mb-4 text-white">
               You May Also Like
             </h2>
-            <div className="space-y-4">
+            <div className="flex flex-wrap gap-3">
               {recommendations.length > 0 ? (
                 recommendations.map((rec) => (
-                  <Link to={`/book/${rec.id}`} key={rec.id}>
-                    <div className="bg-white rounded-lg shadow p-4 flex gap-4 hover:shadow-md transition-shadow cursor-pointer">
+                  <Link to={`/book/${rec.id}`} key={rec.id} className="w-full">
+                    <div className="bg-white rounded-lg shadow p-3 flex gap-3 hover:shadow-md transition-shadow cursor-pointer">
                       <img
                         src={rec.cover}
                         alt={rec.title}
-                        className="w-20 h-30 object-cover rounded"
+                        className="w-16 h-24 object-cover rounded"
                       />
-                      <div>
-                        <h3 className="font-semibold">{rec.title}</h3>
-                        <p className="text-sm text-gray-600">{rec.author}</p>
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-sm line-clamp-2">{rec.title}</h3>
+                        <p className="text-xs text-gray-600 line-clamp-1">{rec.author}</p>
                       </div>
                     </div>
                   </Link>

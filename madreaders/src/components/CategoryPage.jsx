@@ -84,12 +84,14 @@ function CategoryPage() {
     }
 
     return (
-        <div className="w-full">
+        <div className="w-full min-h-screen bg-[#9333ea]">
             <main className="w-full max-w-7xl px-8 py-8 mx-auto">
-                <section className="mb-8 bg-white p-6 rounded-lg shadow-sm">
-                    <h1 className="text-3xl font-bold text-[#212e53] mb-8 capitalize">
-                        {category.replace(/([A-Z])/g, ' $1').trim()} Books
-                    </h1>
+                <div className="bg-white/90 rounded-lg shadow-lg p-8">
+                    <div className="border-b border-gray-200 pb-4 mb-6">
+                        <h1 className="text-3xl font-bold text-[#212e53] capitalize">
+                            {category.replace(/([A-Z])/g, ' $1').trim()} Books
+                        </h1>
+                    </div>
                     
                     {books.length === 0 ? (
                         <div className="text-center py-12">
@@ -97,22 +99,22 @@ function CategoryPage() {
                         </div>
                     ) : (
                         <>
-                            <div className="grid grid-cols-4 gap-4 mx-auto">
+                            <div className="grid grid-cols-4 gap-4">
                                 {books.slice(0, displayedBooks).map((book) => {
                                     const formattedBook = formatBookData(book);
                                     return (
                                         <Link to={`/book/${formattedBook.id}`} key={formattedBook.id}>
-                                            <div className="bg-white rounded-lg p-3 shadow-sm border border-blue-200 hover:shadow-md hover:-translate-y-1 transition-all duration-200 flex flex-col w-[200px]">
+                                            <div className="bg-white rounded-lg p-3 shadow-sm hover:shadow-md transition-all duration-200 w-[200px]">
                                                 <img 
                                                     src={formattedBook.coverImage} 
                                                     alt={formattedBook.title} 
-                                                    className="w-full h-[180px] object-cover rounded mb-2"
+                                                    className="w-full h-[180px] object-cover rounded-md mb-2"
                                                 />
-                                                <h3 className="text-sm font-medium text-blue-500 mb-1 line-clamp-2">
+                                                <h3 className="text-sm font-medium text-[#212e53] mb-1 line-clamp-2">
                                                     {formattedBook.title}
                                                 </h3>
-                                                <p className="text-xs text-gray-700 mb-1 line-clamp-1">{formattedBook.author}</p>
-                                                <div className="mt-auto flex items-center gap-0.5">
+                                                <p className="text-xs text-gray-600 mb-1">{formattedBook.author}</p>
+                                                <div className="flex items-center gap-0.5">
                                                     {Array(5).fill().map((_, i) => (
                                                         <span 
                                                             key={i} 
@@ -134,7 +136,7 @@ function CategoryPage() {
                                 <div className="mt-8 text-center">
                                     <button 
                                         onClick={loadMore}
-                                        className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
+                                        className="px-6 py-2 bg-[#212e53] text-white rounded-md hover:bg-[#2c3e6f] transition-colors"
                                     >
                                         Load More Books
                                     </button>
@@ -142,7 +144,7 @@ function CategoryPage() {
                             )}
                         </>
                     )}
-                </section>
+                </div>
             </main>
         </div>
     );

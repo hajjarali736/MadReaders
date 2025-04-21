@@ -47,10 +47,10 @@ function Header() {
   return (
     <header className="fixed top-0 left-0 right-0 bg-white shadow-md z-50">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-24">
+        <div className="flex justify-between items-center h-20">
           <div className="flex items-center space-x-8">
             <Link to="/" className="text-4xl font-bold text-[#212e53]">
-              MadReaders
+              <img src="/madreaderslogo.png" alt="MadReaders Logo" className="h-14 w-auto opacity-90 hover:opacity-100 transition-opacity" />
             </Link>
             <div className="flex space-x-8">
               <Link
@@ -112,7 +112,7 @@ function Header() {
                 to="/book-recommendation"
                 className="text-[#212e53] hover:text-[#212e53] font-medium"
               >
-                Book Assistant
+                Book Buddy
               </Link>
             </div>
           </div>
