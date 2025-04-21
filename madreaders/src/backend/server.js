@@ -8,6 +8,7 @@ import cartRoutes from "./routes/cart.js";
 import userRoutes from "./routes/userRoutes.js";
 import couponRoutes from "./routes/coupon.js";
 import contactRoutes from "./routes/contact.js";
+import recommendRoutes from "./routes/recommend.js";
 import checkoutRoutes from "./routes/checkout.js";
 
 const app = express();
@@ -49,5 +50,6 @@ app.use("/api/users", userRoutes);
 app.use("/api/coupons", couponRoutes);
 app.use("/api/contact", contactRoutes);
 app.use("/api/checkout", checkoutRoutes);
+app.use("/api/recommend", recommendRoutes);
 // Start server
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
