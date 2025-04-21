@@ -340,7 +340,7 @@ export default function ContactPage() {
                       Address
                     </h3>
                   </div>
-                  <p className="text-gray-700 ml-9">123 Book Street</p>
+                  <p className="text-gray-700 ml-9">LAU Beirut Campus</p>
                   <p className="text-gray-700 ml-9">Beirut, Lebanon</p>
                 </div>
 

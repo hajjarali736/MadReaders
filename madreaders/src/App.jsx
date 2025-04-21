@@ -27,7 +27,6 @@ import ContactInquiries from "./components/ContactInquiries.jsx";
 import UserList from "./components/UserList.jsx";
 import BookRecommendationChat from "./components/BookRecommendationChat.jsx";
 import ChatRecommendation from "./components/ChatRecommendation.jsx";
-
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
 
