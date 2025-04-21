@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { GOOGLE_BOOKS_API_KEY } from "./services/googleBooksService";
@@ -219,7 +220,7 @@ const BookDetails = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#4a919e] flex items-center justify-center">
+      <div className="min-h-screen bg-[#9333ea] flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
           <p className="mt-4 text-gray-600">Loading book details...</p>
@@ -230,12 +231,12 @@ const BookDetails = () => {
 
   if (!book) {
     return (
-      <div className="min-h-screen bg-[#4a919e] flex items-center justify-center">
+      <div className="min-h-screen bg-[#9333ea] flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-[#212e53] mb-4">
             Book not found
           </h2>
-          <Link to="/" className="text-blue-500 hover:underline">
+          <Link to="/" className="text-[#212e53] hover:underline">
             Return to Homepage
           </Link>
         </div>
@@ -244,7 +245,7 @@ const BookDetails = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#4a919e]">
+    <div className="min-h-screen bg-[#9333ea]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold text-white">Book Details</h1>
