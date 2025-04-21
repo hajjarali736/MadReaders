@@ -21,19 +21,19 @@ const BookDetails = () => {
   const [showMessage, setShowMessage] = useState("");
 
   function generatePriceFromTitle(title) {
-    if (!title || typeof title !== "string") return 12;
+    if (!title || typeof title !== "string") return 10;
 
     const normalized = title.trim().toUpperCase();
-
-    // Create a numeric hash based on character codes
     let hash = 0;
+
+    // Generate a basic hash from character codes
     for (let i = 0; i < normalized.length; i++) {
       hash = normalized.charCodeAt(i) + ((hash << 5) - hash);
     }
 
-    // Normalize hash to a range: 10 to 50
+    // Clamp the price between $10 and $90
     const min = 10;
-    const max = 50;
+    const max = 90;
     const price = min + Math.abs(hash % (max - min + 1));
 
     return price;
@@ -86,7 +86,7 @@ const BookDetails = () => {
           cover:
             volumeInfo.imageLinks?.thumbnail ||
             "https://via.placeholder.com/300x450",
-          price: data.saleInfo?.listPrice?.amount || 29.99,
+          price: generatePriceFromTitle(volumeInfo.title),
           category: volumeInfo.categories?.[0] || "Fiction",
           availability: data.saleInfo?.saleability === "FOR_SALE",
           publishedDate: volumeInfo.publishedDate || "Unknown",

@@ -8,9 +8,10 @@ import cartRoutes from "./routes/cart.js";
 import userRoutes from "./routes/userRoutes.js";
 import couponRoutes from "./routes/coupon.js";
 import contactRoutes from "./routes/contact.js";
+import checkoutRoutes from "./routes/checkout.js";
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = 3001;
 
 // 🧠 MongoDB Atlas URI
 const MONGO_URI =
@@ -47,6 +48,6 @@ app.use("/api/cart", cartRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/coupons", couponRoutes);
 app.use("/api/contact", contactRoutes);
-
+app.use("/api/checkout", checkoutRoutes);
 // Start server
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
