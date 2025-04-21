@@ -101,9 +101,67 @@ function Homepage() {
             ratingsCount: volumeInfo.ratingsCount || 0
         };
     };
+    const [showWelcomePopup, setShowWelcomePopup] = useState(false);
+    const [couponCopied, setCouponCopied] = useState(false);
 
+    useEffect(() => {
+        const hasSeenPopup = sessionStorage.getItem('hasSeenPopup');
+        if (!hasSeenPopup) {
+            setShowWelcomePopup(true);
+            sessionStorage.setItem('hasSeenPopup', 'true');
+        }
+    }, []);
+
+    const copyCouponCode = () => {
+        navigator.clipboard.writeText('MADREADER20');
+        setCouponCopied(true);
+        setTimeout(() => setCouponCopied(false), 2000);
+    };
     return (
         <div className="min-h-screen bg-[#9333ea] flex flex-col w-full">
+            {/* Welcome Popup with Coupon */}
+            {showWelcomePopup && (
+                <div className="fixed inset-0 flex items-center justify-center z-50 p-4 bg-black bg-opacity-30">
+                    <div className="bg-white rounded-xl p-6 max-w-md w-full relative shadow-lg">
+                        <button 
+                            onClick={() => setShowWelcomePopup(false)}
+                            className="absolute top-3 right-3 text-gray-500 hover:text-purple-600"
+                        >
+                            ✕
+                        </button>
+                        <div className="text-center">
+                            <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <span className="text-2xl">🎉</span>
+                            </div>
+                            <h3 className="text-2xl font-bold text-purple-600 mb-2">Welcome to MadReaders!</h3>
+                            <p className="text-lg mb-4">Here's a special gift for you!</p>
+                            
+                            <div className="bg-gradient-to-r from-purple-100 to-pink-100 border-2 border-dashed border-purple-300 rounded-lg p-4 mb-4">
+                                <p className="text-sm text-gray-600 mb-1">Use this code at checkout</p>
+                                <div className="flex items-center justify-center">
+                                    <span className="font-mono text-xl font-bold text-purple-700 mr-2">MADREADER20</span>
+                                    <button 
+                                        onClick={copyCouponCode}
+                                        className="text-sm bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700 transition-colors"
+                                    >
+                                        {couponCopied ? 'Copied!' : 'Copy'}
+                                    </button>
+                                </div>
+                                <p className="text-xs text-gray-500 mt-2">20% off your first purchase</p>
+                            </div>
+
+                            <p className="text-sm text-gray-600 mb-4">Expires in 7 days</p>
+                            
+                            <button 
+                                onClick={() => setShowWelcomePopup(false)}
+                                className="mt-2 px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors w-full"
+                            >
+                                Start Shopping →
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
             <Header />
             <main className="w-full max-w-7xl px-8 py-2 mx-auto mt-2 relative bg-[#9333ea] flex-1 z-10">
                 <section className="mb-4 bg-white p-6 rounded-lg shadow-sm w-full">

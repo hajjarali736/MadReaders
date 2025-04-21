@@ -165,6 +165,7 @@ export default function SignUpPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#DDE6ED]">
+      
       <Header />
 
       {/* Error message positioned below header at top right */}
@@ -223,7 +224,7 @@ export default function SignUpPage() {
       </div>
 
       {/* Main content area */}
-      <main className="flex-grow flex items-center justify-center p-4 relative z-10 mt-20">
+      <main className="flex-grow flex items-center justify-center p-4 relative z-10 mt-">
         <div className="w-full max-w-md">
           <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
             <div className="bg-gradient-to-r from-[#27374D] to-[#526D82] p-6 text-center">
