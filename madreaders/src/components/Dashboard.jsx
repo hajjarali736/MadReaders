@@ -36,7 +36,6 @@ export default function AdminDashboard() {
     fetchDashboardData();
   }, []);
 
-  // Function to fetch all dashboard data
   async function fetchDashboardData() {
     try {
       setLoading(true);
@@ -59,17 +58,29 @@ export default function AdminDashboard() {
 
       const usersData = await usersResponse.json();
       setUsers(usersData.users);
-      setStats((prev) => ({ ...prev, totalUsers: usersData.count }));
 
-      // Fetch orders
-      const ordersData = await db.getOrders();
-      setOrders(ordersData);
+      // Fetch coupon count
+      const couponsResponse = await fetch(
+        "http://localhost:3001/api/coupons/count",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!couponsResponse.ok) {
+        throw new Error("Failed to fetch coupon count");
+      }
+
+      const couponsData = await couponsResponse.json();
 
       // Set stats
       setStats({
         totalUsers: usersData.count,
         totalBooks: books.length,
-        activeCoupons: coupons.length,
+        activeCoupons: couponsData.count, // Use the count from the API
       });
     } catch (err) {
       setError(err.message);
@@ -78,6 +89,9 @@ export default function AdminDashboard() {
       setLoading(false);
     }
   }
+  const handleCouponCountClick = () => {
+    setActiveTab("coupons");
+  };
 
   // Function to handle user deletion
   async function handleDeleteUser(userId) {
@@ -216,12 +230,17 @@ export default function AdminDashboard() {
               value={stats.totalBooks.toString()}
               color="bg-green-900/30"
             />
-            <StatCard
-              icon={<FaTags className="text-yellow-400" />}
-              title="Active Coupons"
-              value={stats.activeCoupons.toString()}
-              color="bg-yellow-900/30"
-            />
+            <div
+              onClick={handleCouponCountClick}
+              className="cursor-pointer hover:scale-105 transition-transform duration-200"
+            >
+              <StatCard
+                icon={<FaTags className="text-yellow-400" />}
+                title="Active Coupons"
+                value={stats.activeCoupons.toString()}
+                color="bg-yellow-900/30"
+              />
+            </div>
           </div>
 
           {/* Content Area */}

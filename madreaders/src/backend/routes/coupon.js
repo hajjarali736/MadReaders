@@ -100,4 +100,14 @@ router.get("/validate/:code", async (req, res) => {
   }
 });
 
+// GET count of all coupons
+router.get("/count", async (req, res) => {
+  try {
+    const count = await Coupon.countDocuments();
+    res.json({ count });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 export default router;
