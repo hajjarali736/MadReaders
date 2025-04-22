@@ -9,6 +9,28 @@ function Header() {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   const [wishlistCount, setWishlistCount] = useState(0);
+  const [cartCount, setCartCount] = useState(0);
+
+  useEffect(() => {
+    const fetchCartCount = async () => {
+      if (!user) return;
+
+      try {
+        const res = await fetch(
+          `http://localhost:3001/api/cart/count/${user.username}`
+        );
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          setCartCount(data.count || 0);
+        }
+      } catch (err) {
+        console.error("Failed to fetch cart count", err);
+      }
+    };
+
+    fetchCartCount();
+  }, []);
 
   useEffect(() => {
     const fetchWishlistCount = async () => {
@@ -50,7 +72,11 @@ function Header() {
         <div className="flex justify-between items-center h-20">
           <div className="flex items-center space-x-8">
             <Link to="/" className="text-4xl font-bold text-[#212e53]">
-              <img src="/madreaderslogo.png" alt="MadReaders Logo" className="h-14 w-auto opacity-90 hover:opacity-100 transition-opacity" />
+              <img
+                src="/madreaderslogo.png"
+                alt="MadReaders Logo"
+                className="h-14 w-auto opacity-90 hover:opacity-100 transition-opacity"
+              />
             </Link>
             <div className="flex space-x-8">
               <Link
@@ -167,10 +193,7 @@ function Header() {
                     id="cart-count"
                     className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center"
                   >
-                    {(() => {
-                      const cart = localStorage.getItem("cart");
-                      return cart ? JSON.parse(cart).length : 0;
-                    })()}
+                    {cartCount ? 1 : 0}
                   </span>
                 </Link>
                 <div className="relative">

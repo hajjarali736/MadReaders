@@ -87,4 +87,30 @@ router.get("/count/:username", async (req, res) => {
   res.status(result.success ? 200 : 400).json(result);
 });
 
+// ✅ Check if cart is empty
+router.get("/empty/:username", async (req, res) => {
+  const { username } = req.params;
+
+  if (!username) {
+    return res.status(400).json({
+      success: false,
+      message: "Username is required",
+    });
+  }
+
+  const result = await getCart(username);
+
+  if (!result.success) {
+    return res.status(400).json(result);
+  }
+
+  const isEmpty = result.data.length === 0;
+
+  res.status(200).json({
+    success: true,
+    empty: isEmpty,
+    message: isEmpty ? "Cart is empty" : "Cart has items",
+  });
+});
+
 export default router;
