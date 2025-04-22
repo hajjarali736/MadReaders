@@ -54,11 +54,18 @@ function App() {
                 path="/"
                 element={
                   <Layout>
+                    <Landing />
+                  </Layout>
+                }
+              />
+              <Route
+                path="/books"
+                element={
+                  <Layout>
                     <Homepage />
                   </Layout>
                 }
               />
-              <Route path="/landing" element={<Layout><Landing /></Layout>} />
               <Route path="/login" element={<Layout><Login /></Layout>} />
               <Route path="/signup" element={<Layout><Signup /></Layout>} />
               <Route

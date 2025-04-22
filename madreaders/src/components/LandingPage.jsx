@@ -359,10 +359,10 @@ export default function LandingPage() {
                 Our Mission <ChevronRight className="h-4 w-4 transition-all duration-300 group-hover:translate-x-1" />
               </a>
               <a
-                href="/book-recommendation"
+                href="/books"
                 className="px-6 py-3 rounded-lg bg-transparent border border-white text-white font-medium hover:bg-white/10 transition-all duration-300 flex items-center gap-2 hover:gap-3 group"
               >
-                Try Book Buddy <BookHeart className="h-4 w-4 transition-all duration-300 group-hover:scale-110" />
+                Explore Our Library <BookOpen className="h-4 w-4 transition-all duration-300 group-hover:scale-110" />
               </a>
             </div>
           </div>

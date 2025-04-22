@@ -52,7 +52,7 @@ function Header() {
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           <div className="flex items-center space-x-8">
-            <Link to="/landing" className="text-4xl font-bold text-[#212e53]">
+            <Link to="/" className="text-4xl font-bold text-[#212e53]">
               <img
                 src="/madreaderslogo.png"
                 alt="MadReaders Logo"
