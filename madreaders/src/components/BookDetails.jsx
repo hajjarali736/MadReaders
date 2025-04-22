@@ -40,16 +40,6 @@ const BookDetails = () => {
     return price;
   }
 
-  // Save cart and wishlist to localStorage whenever they change
-  useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cart));
-    // Update cart count in navbar
-    const cartCount = document.getElementById("cart-count");
-    if (cartCount) {
-      cartCount.textContent = cart.length;
-    }
-  }, [cart]);
-
   useEffect(() => {
     localStorage.setItem("wishlist", JSON.stringify(wishlist));
     // Update wishlist count in navbar
@@ -248,7 +238,9 @@ const BookDetails = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-bg-gradient-to-r from-[#27374D] to-[#526D82]">Book Details</h1>
+          <h1 className="text-2xl font-bold text-bg-gradient-to-r from-[#27374D] to-[#526D82]">
+            Book Details
+          </h1>
         </div>
         <div className="flex flex-col md:flex-row gap-8">
           {/* Book Details */}
@@ -266,9 +258,7 @@ const BookDetails = () => {
                   <h1 className="text-3xl font-bold mb-2 text-white">
                     {book.title}
                   </h1>
-                  <p className="text-xl text-white mb-4">
-                    by {book.author}
-                  </p>
+                  <p className="text-xl text-white mb-4">by {book.author}</p>
                   <div className="mb-4">
                     <span className="text-2xl font-bold text-white">
                       ${book.price}
@@ -398,8 +388,12 @@ const BookDetails = () => {
                         className="w-16 h-24 object-cover rounded"
                       />
                       <div className="flex-1">
-                        <h3 className="font-semibold text-sm line-clamp-2 text-white">{rec.title}</h3>
-                        <p className="text-xs text-white line-clamp-1">{rec.author}</p>
+                        <h3 className="font-semibold text-sm line-clamp-2 text-white">
+                          {rec.title}
+                        </h3>
+                        <p className="text-xs text-white line-clamp-1">
+                          {rec.author}
+                        </p>
                       </div>
                     </div>
                   </Link>

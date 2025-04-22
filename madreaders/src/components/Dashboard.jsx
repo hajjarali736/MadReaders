@@ -7,7 +7,6 @@ import {
   FaTags,
   FaChartLine,
   FaSearch,
-  FaTrash,
   FaEdit,
   FaPlus,
 } from "react-icons/fa";
@@ -30,6 +29,8 @@ export default function AdminDashboard() {
     totalBooks: 0,
     activeCoupons: 0,
   });
+
+  const [inquiries, setInquiries] = useState([]);
 
   // Fetch data on component mount
   useEffect(() => {
@@ -143,76 +144,17 @@ export default function AdminDashboard() {
       {/* Dashboard Grid */}
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-4 gap-6 p-8 px-4 sm:px-6 lg:px-8 pt-25 pb-12">
         {/* Navigation Panel */}
-        <div className="lg:col-span-1 bg-gray-800/50 rounded-xl p-6 border border-gray-700">
-          <h2 className="text-xl font-semibold mb-6 flex items-center">
-            <FaBook className="mr-2 text-blue-400" /> Admin Grimoire
-          </h2>
-          <nav className="space-y-3">
-            <button
-              onClick={() => setActiveTab("users")}
-              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition ${
-                activeTab === "users"
-                  ? "bg-blue-600/30 border border-blue-400/20"
-                  : "hover:bg-gray-700/50"
-              }`}
-            >
-              <FaUsers className="text-blue-300" />
-              <span>User Scrolls</span>
-            </button>
-            <button
-              onClick={() => setActiveTab("books")}
-              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition ${
-                activeTab === "books"
-                  ? "bg-blue-600/30 border border-blue-400/20"
-                  : "hover:bg-gray-700/50"
-              }`}
-            >
-              <FaBook className="text-green-300" />
-              <span>Book Tomes</span>
-            </button>
-            <button
-              onClick={() => setActiveTab("coupons")}
-              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition ${
-                activeTab === "coupons"
-                  ? "bg-blue-600/30 border border-blue-400/20"
-                  : "hover:bg-gray-700/50"
-              }`}
-            >
-              <FaTags className="text-yellow-300" />
-              <span>Coupon Spells</span>
-            </button>
-            <button
-              onClick={() => setActiveTab("orders")}
-              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition ${
-                activeTab === "orders"
-                  ? "bg-blue-600/30 border border-blue-400/20"
-                  : "hover:bg-gray-700/50"
-              }`}
-            >
-              <FaChartLine className="text-purple-300" />
-              <span>Order Chronicles</span>
-            </button>
-          </nav>
-        </div>
 
         {/* Main Content */}
         <div className="lg:col-span-3 space-y-6">
-          {/* Search Bar */}
-          <div className="bg-gray-800/50 rounded-xl p-4 border border-gray-700 flex">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search the archives..."
-              className="bg-gray-900/50 flex-grow px-4 py-2 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-            />
-            <button className="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-r-lg">
-              <FaSearch />
-            </button>
-          </div>
-
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <StatCard
+              icon={<FaBook className="text-green-400" />}
+              title="Books in Library"
+              value={"45 821"}
+              color="bg-green-900/30"
+            />
             <div
               onClick={handleUserCountClick}
               className="cursor-pointer hover:scale-105 transition-transform duration-200"
@@ -224,14 +166,9 @@ export default function AdminDashboard() {
                 color="bg-blue-900/30"
               />
             </div>
-            <StatCard
-              icon={<FaBook className="text-green-400" />}
-              title="Books in Library"
-              value={stats.totalBooks.toString()}
-              color="bg-green-900/30"
-            />
+
             <div
-              onClick={handleCouponCountClick}
+              onClick={() => navigate("/coupons")}
               className="cursor-pointer hover:scale-105 transition-transform duration-200"
             >
               <StatCard
@@ -239,6 +176,17 @@ export default function AdminDashboard() {
                 title="Active Coupons"
                 value={stats.activeCoupons.toString()}
                 color="bg-yellow-900/30"
+              />
+            </div>
+            <div
+              onClick={() => navigate("/contact-inquiries")}
+              className="cursor-pointer hover:scale-105 transition-transform duration-200"
+            >
+              <StatCard
+                icon={<FaSearch className="text-pink-400" />}
+                title="User Inquiries"
+                value={"View"}
+                color="bg-pink-900/30"
               />
             </div>
           </div>
@@ -347,7 +295,6 @@ function UserTable({ users, onDelete }) {
           <th className="py-3 text-left">Email</th>
           <th className="py-3 text-left">Role</th>
           <th className="py-3 text-left">Join Date</th>
-          <th className="py-3 text-left">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -364,15 +311,10 @@ function UserTable({ users, onDelete }) {
             </td>
             <td className="py-3">
               <div className="flex space-x-2">
-                <button className="text-blue-400 hover:text-blue-300">
-                  <FaEdit />
-                </button>
                 <button
                   onClick={() => onDelete(user._id)}
                   className="text-red-400 hover:text-red-300"
-                >
-                  <FaTrash />
-                </button>
+                ></button>
               </div>
             </td>
           </tr>
@@ -392,7 +334,6 @@ function OrderTable({ orders, onUpdateStatus }) {
           <th className="py-3 text-left">User</th>
           <th className="py-3 text-left">Total</th>
           <th className="py-3 text-left">Status</th>
-          <th className="py-3 text-left">Actions</th>
         </tr>
       </thead>
       <tbody>
