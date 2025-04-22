@@ -6,6 +6,8 @@ import {
   Navigate,
 } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext.jsx";
+import { CartProvider } from "./context/CartContext";
+import { WishlistProvider } from "./context/WishlistContext";
 import "./App.css";
 import Homepage from "./components/Homepage.jsx";
 import Login from "./components/Login.jsx";
@@ -26,6 +28,7 @@ import UserList from "./components/UserList.jsx";
 import BookRecommendationChat from "./components/BookRecommendationChat.jsx";
 import ChatRecommendation from "./components/ChatRecommendation.jsx";
 import Landing from "./components/LandingPage.jsx";
+
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
 
@@ -43,72 +46,76 @@ const ProtectedRoute = ({ children }) => {
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <Layout>
-                <Homepage />
-              </Layout>
-            }
-          />
-          <Route path="/login" element={<Layout><Login /></Layout>} />
-          <Route path="/signup" element={<Layout><Signup /></Layout>} />
-          <Route
-            path="/search"
-            element={
-              <Layout>
-                <SearchResults />
-              </Layout>
-            }
-          />
-          <Route
-            path="/book/:id"
-            element={
-              <Layout>
-                <BookDetails />
-              </Layout>
-            }
-          />
-          <Route path="/category/:category" element={<Layout><CategoryPage /></Layout>} />
-          <Route path="/cart" element={<Layout><Cart /></Layout>} />
-          <Route path="/checkout" element={<Layout><Check /></Layout>} />
-          <Route path="/contact" element={<Layout><Contact /></Layout>} />
-          <Route path="/faq" element={<Layout><Faq /></Layout>} />
-          <Route path="/dashboard" element={<Layout><Dash /></Layout>} />
-          <Route path="/users" element={<Layout><UserList /></Layout>} />
-          <Route path="/coupons" element={<Layout><CouponManager /></Layout>} />
-          <Route path="/contact-inquiries" element={<Layout><ContactInquiries /></Layout>} />
-          <Route path="/landing" element={<Layout><Landing /></Layout>} />
-          <Route
-            path="/book-recommendation"
-            element={
-              <Layout>
-                <BookRecommendationChat />
-              </Layout>
-            }
-          />
-          <Route
-            path="/chat-recommendation"
-            element={
-              <Layout>
-                <ChatRecommendation />
-              </Layout>
-            }
-          />
-          <Route
-            path="/wishlist"
-            element={
-              <ProtectedRoute>
-                <Layout>
-                  <WishList />
-                </Layout>
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
-      </Router>
+      <CartProvider>
+        <WishlistProvider>
+          <Router>
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <Layout>
+                    <Homepage />
+                  </Layout>
+                }
+              />
+              <Route path="/login" element={<Layout><Login /></Layout>} />
+              <Route path="/signup" element={<Layout><Signup /></Layout>} />
+              <Route
+                path="/search"
+                element={
+                  <Layout>
+                    <SearchResults />
+                  </Layout>
+                }
+              />
+              <Route
+                path="/book/:id"
+                element={
+                  <Layout>
+                    <BookDetails />
+                  </Layout>
+                }
+              />
+              <Route path="/category/:category" element={<Layout><CategoryPage /></Layout>} />
+              <Route path="/cart" element={<Layout><Cart /></Layout>} />
+              <Route path="/checkout" element={<Layout><Check /></Layout>} />
+              <Route path="/contact" element={<Layout><Contact /></Layout>} />
+              <Route path="/faq" element={<Layout><Faq /></Layout>} />
+              <Route path="/dashboard" element={<Layout><Dash /></Layout>} />
+              <Route path="/users" element={<Layout><UserList /></Layout>} />
+              <Route path="/coupons" element={<Layout><CouponManager /></Layout>} />
+              <Route path="/contact-inquiries" element={<Layout><ContactInquiries /></Layout>} />
+              <Route path="/landing" element={<Layout><Landing /></Layout>} />
+              <Route
+                path="/book-recommendation"
+                element={
+                  <Layout>
+                    <BookRecommendationChat />
+                  </Layout>
+                }
+              />
+              <Route
+                path="/chat-recommendation"
+                element={
+                  <Layout>
+                    <ChatRecommendation />
+                  </Layout>
+                }
+              />
+              <Route
+                path="/wishlist"
+                element={
+                  <ProtectedRoute>
+                    <Layout>
+                      <WishList />
+                    </Layout>
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
+          </Router>
+        </WishlistProvider>
+      </CartProvider>
     </AuthProvider>
   );
 }

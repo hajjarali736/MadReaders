@@ -24,6 +24,12 @@ const ChatRecommendation = () => {
 
   const formatBookData = (book) => {
     const volumeInfo = book.volumeInfo || {};
+    
+    // Skip books that have Arabic language or no language specified
+    if (volumeInfo.language !== 'en') {
+      return null;
+    }
+    
     return {
       id: book.id,
       title: volumeInfo.title || "No Title",
@@ -72,11 +78,16 @@ const ChatRecommendation = () => {
 
       const booksRes = await searchBooks(keyword, {
         orderBy: "relevance",
-        maxResults: 4,
+        maxResults: 8, // Increased to ensure we get enough English books after filtering
+        langRestrict: "en",
+        q: `${keyword} language:english -inlang:ar`,
+        printType: "books"
       });
 
-      const formattedBooks =
-        booksRes.items?.slice(0, 4).map(formatBookData) || [];
+      const formattedBooks = booksRes.items
+        ?.map(formatBookData)
+        .filter(book => book !== null) // Remove any non-English books
+        .slice(0, 4) || [];
 
       formattedBooks.forEach((book) => {
         setMessages((prev) => [
@@ -141,40 +152,44 @@ const ChatRecommendation = () => {
                   {message.isBook ? (
                     <div 
                       onClick={() => handleBookClick(message.text)}
-                      className="bg-white rounded-lg p-2 shadow-sm border border-blue-200 hover:shadow-md transition-all duration-200 flex flex-col cursor-pointer hover:scale-105"
+                      className="bg-white rounded-lg p-4 shadow-sm border border-blue-200 hover:shadow-md hover:-translate-y-1 transition-all duration-200 flex flex-col h-[450px] cursor-pointer"
                     >
-                      <img
-                        src={message.text.coverImage}
-                        alt={message.text.title}
-                        className="w-full h-[120px] object-cover rounded mb-2"
-                      />
-                      <h3 className="text-sm font-medium text-[#212e53] line-clamp-2">
-                        {message.text.title}
-                      </h3>
-                      <p className="text-xs text-[#212e53] mb-1 italic line-clamp-1">
-                        by {message.text.author}
-                      </p>
-                      <p className="text-xs text-gray-600 line-clamp-2">
-                        {message.text.description}
-                      </p>
-                      <div className="mt-1 flex items-center gap-1">
-                        {Array(5)
-                          .fill()
-                          .map((_, i) => (
-                            <span
-                              key={i}
-                              className={`text-base ${
-                                i < message.text.averageRating
-                                  ? "text-yellow-400"
-                                  : "text-gray-300"
-                              }`}
-                            >
-                              ★
-                            </span>
-                          ))}
-                        <span className="text-xs text-gray-500 ml-1">
-                          ({message.text.ratingsCount})
-                        </span>
+                      <div className="w-full h-[250px] flex items-center justify-center overflow-hidden rounded mb-4">
+                        <img
+                          src={message.text.coverImage}
+                          alt={message.text.title}
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
+                      <div className="flex flex-col flex-grow">
+                        <h3 className="text-lg font-medium text-[#212e53] mb-2 line-clamp-2 min-h-[3.5rem]">
+                          {message.text.title}
+                        </h3>
+                        <p className="text-[#212e53] mb-2 line-clamp-1">
+                          by {message.text.author}
+                        </p>
+                        <p className="text-gray-600 text-sm line-clamp-2 mb-2">
+                          {message.text.description}
+                        </p>
+                        <div className="mt-auto flex items-center gap-1">
+                          {Array(5)
+                            .fill()
+                            .map((_, i) => (
+                              <span
+                                key={i}
+                                className={`text-xl ${
+                                  i < message.text.averageRating
+                                    ? "text-yellow-400"
+                                    : "text-gray-300"
+                                }`}
+                              >
+                                ★
+                              </span>
+                            ))}
+                          <span className="text-sm text-gray-600 ml-2">
+                            ({message.text.ratingsCount})
+                          </span>
+                        </div>
                       </div>
                     </div>
                   ) : (

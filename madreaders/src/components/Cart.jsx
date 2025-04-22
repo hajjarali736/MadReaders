@@ -331,11 +331,7 @@ function Cart() {
     );
   };
 
-  return (
-    <Layout>
-      <CartContent />
-    </Layout>
-  );
+  return <CartContent />;
 }
 
 export default Cart;

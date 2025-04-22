@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useCart } from "../context/CartContext";
+import { useWishlist } from "../context/WishlistContext";
 
 function Header() {
   const { isAuthenticated, user, signOut } = useAuth();
+  const { cartCount } = useCart();
+  const { wishlistCount } = useWishlist();
   const location = useLocation();
 
   const [isAdmin, setIsAdmin] = useState(false);
 
   const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-
-  const [wishlistCount, setWishlistCount] = useState(0);
-  const [cartCount, setCartCount] = useState(0);
 
   useEffect(() => {
     const checkAdminStatus = async () => {
@@ -31,47 +32,6 @@ function Header() {
 
     checkAdminStatus();
   }, [user]);
-
-  useEffect(() => {
-    const fetchCartCount = async () => {
-      if (!user) return;
-
-      try {
-        const res = await fetch(
-          `http://localhost:3001/api/cart/count/${user.username}`
-        );
-        const data = await res.json();
-
-        if (res.ok && data.success) {
-          setCartCount(data.count || 0);
-        }
-      } catch (err) {
-        console.error("Failed to fetch cart count", err);
-      }
-    };
-
-    fetchCartCount();
-  }, []);
-
-  useEffect(() => {
-    const fetchWishlistCount = async () => {
-      if (!isAuthenticated || !user) return;
-
-      try {
-        const res = await fetch(
-          `http://localhost:3001/api/wishlist/count/${user.username}`
-        );
-        const data = await res.json();
-        if (res.ok && data.success) {
-          setWishlistCount(data.count);
-        }
-      } catch (err) {
-        console.error("Failed to fetch wishlist count", err);
-      }
-    };
-
-    fetchWishlistCount();
-  }, [isAuthenticated, user]);
 
   const categories = [
     { name: "Horror", path: "/category/horror" },
@@ -172,11 +132,7 @@ function Header() {
                 >
                   <svg
                     className="h-6 w-6 transition-transform group-hover:scale-110"
-                    fill={
-                      location.pathname === "/wishlist"
-                        ? "currentColor"
-                        : "none"
-                    }
+                    fill={location.pathname === "/wishlist" ? "currentColor" : "none"}
                     viewBox="0 0 24 24"
                     stroke="currentColor"
                   >
@@ -197,9 +153,7 @@ function Header() {
                 >
                   <svg
                     className="h-6 w-6 transition-transform group-hover:scale-110"
-                    fill={
-                      location.pathname === "/cart" ? "currentColor" : "none"
-                    }
+                    fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
                   >
@@ -210,11 +164,8 @@ function Header() {
                       d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
                     />
                   </svg>
-                  <span
-                    id="cart-count"
-                    className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center"
-                  >
-                    {cartCount ? 1 : 0}
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                    {cartCount}
                   </span>
                 </Link>
                 {isAdmin && (
