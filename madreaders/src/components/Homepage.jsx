@@ -2,9 +2,10 @@
 import React, { useState, useEffect } from "react";
 import Header from "./Header";
 import { searchBooks } from "./services/googleBooksService";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 function Homepage() {
+  const location = useLocation();
   const [searchQuery, setSearchQuery] = useState("");
   const [featuredBooks, setFeaturedBooks] = useState([]);
   const [bestsellers, setBestsellers] = useState([]);
@@ -16,6 +17,14 @@ function Homepage() {
   const [displayedNewReleases, setDisplayedNewReleases] = useState(20);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const searchParam = new URLSearchParams(location.search).get('search');
+    if (searchParam) {
+      setSearchQuery(searchParam);
+      handleSearch(null, searchParam);
+    }
+  }, [location.search]);
 
   useEffect(() => {
     const fetchInitialData = async () => {
@@ -61,13 +70,14 @@ function Homepage() {
     fetchInitialData();
   }, []);
 
-  const handleSearch = async (e) => {
-    e.preventDefault();
-    if (!searchQuery.trim()) return;
+  const handleSearch = async (e, query = null) => {
+    if (e) e.preventDefault();
+    const searchTerm = query || searchQuery;
+    if (!searchTerm.trim()) return;
 
     setIsSearching(true);
     try {
-      const results = await searchBooks(searchQuery);
+      const results = await searchBooks(searchTerm);
       setSearchResults(results.items || []);
     } catch (error) {
       console.error("Error searching books:", error);

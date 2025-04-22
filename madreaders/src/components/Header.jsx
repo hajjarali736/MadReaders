@@ -1,19 +1,26 @@
-import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import React, { useState, useEffect, useRef } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
 import { useWishlist } from "../context/WishlistContext";
+import { FaSearch } from "react-icons/fa";
 
 function Header() {
   const { isAuthenticated, user, signOut } = useAuth();
   const { cartCount } = useCart();
   const { wishlistCount } = useWishlist();
   const location = useLocation();
+  const navigate = useNavigate();
 
   const [isAdmin, setIsAdmin] = useState(false);
-
   const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  
+  const categoriesRef = useRef(null);
+  const buttonRef = useRef(null);
+  const searchInputRef = useRef(null);
 
   useEffect(() => {
     const checkAdminStatus = async () => {
@@ -33,6 +40,27 @@ function Header() {
     checkAdminStatus();
   }, [user]);
 
+  // Handle click outside for search
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchInputRef.current && !searchInputRef.current.contains(event.target)) {
+        setIsSearchOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  // Focus search input when opened
+  useEffect(() => {
+    if (isSearchOpen && searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [isSearchOpen]);
+
   const categories = [
     { name: "Horror", path: "/category/horror" },
     { name: "Romance", path: "/category/romance" },
@@ -47,17 +75,26 @@ function Header() {
     setIsProfileOpen(false);
   };
 
+  const handleSearchClick = () => {
+    setIsSearchOpen(!isSearchOpen);
+  };
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (!searchQuery.trim()) return;
+    
+    navigate(`/books?search=${encodeURIComponent(searchQuery)}`);
+    setIsSearchOpen(false);
+    setSearchQuery("");
+  };
+
   return (
     <header className="fixed top-0 left-0 right-0 bg-white shadow-md z-50">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           <div className="flex items-center space-x-8">
             <Link to="/" className="text-4xl font-bold text-[#212e53]">
-              <img
-                src="/madreaderslogo.png"
-                alt="MadReaders Logo"
-                className="h-14 w-auto opacity-90 hover:opacity-100 transition-opacity"
-              />
+              <img src="/madreaderslogo.png" alt="MadReaders Logo" className="h-14 w-auto opacity-90 hover:opacity-100 transition-opacity" />
             </Link>
             <div className="flex space-x-8">
               <Link
@@ -65,6 +102,12 @@ function Header() {
                 className="text-[#212e53] hover:text-[#212e53] font-medium"
               >
                 Home
+              </Link>
+              <Link
+                to="/books"
+                className="text-[#212e53] hover:text-[#212e53] font-medium"
+              >
+                Library
               </Link>
               <div className="relative">
                 <button
@@ -126,6 +169,33 @@ function Header() {
           <div className="flex items-center space-x-4">
             {isAuthenticated ? (
               <>
+                <div className="relative">
+                  <button
+                    onClick={handleSearchClick}
+                    className="relative inline-flex items-center p-2 text-[#212e53] hover:text-[#212e53] font-medium group"
+                  >
+                    <FaSearch className="h-5 w-5 transition-transform group-hover:scale-110" />
+                  </button>
+                  {isSearchOpen && (
+                    <div ref={searchInputRef} className="absolute right-0 mt-2 w-72 bg-white rounded-md shadow-lg py-2 px-3 border border-gray-200">
+                      <form onSubmit={handleSearchSubmit} className="flex gap-2">
+                        <input
+                          type="text"
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          placeholder="Search for books..."
+                          className="flex-1 px-3 py-2 border border-[#212e53] rounded-md text-sm focus:ring-2 focus:ring-[#212e53] focus:border-[#212e53]"
+                        />
+                        <button
+                          type="submit"
+                          className="px-3 py-2 bg-[#212e53] text-white rounded-md hover:bg-[#1a243f] transition-colors"
+                        >
+                          <FaSearch className="w-4 h-4" />
+                        </button>
+                      </form>
+                    </div>
+                  )}
+                </div>
                 <Link
                   to="/wishlist"
                   className="relative inline-flex items-center p-2 text-[#212e53] hover:text-[#212e53] font-medium group"
