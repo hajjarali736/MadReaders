@@ -4,8 +4,9 @@ const { Schema, model } = mongoose;
 
 // 🔹 User Schema
 const UserSchema = new Schema({
+  Username: { type: String, required: true, unique: true }, // ✅ new field
   Name: { type: String, required: true },
-  Email: { type: String, required: true, unique: true },
+  Email: { type: String, required: true },
   PhoneNumber: { type: String, required: true },
   Address: { type: String, required: true },
   Role: { type: String, default: "user", enum: ["user", "admin"] },

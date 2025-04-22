@@ -120,7 +120,6 @@ export default function SignUpPage() {
         gender,
       } = formData;
 
-      // First register with Cognito
       const user = await register(
         username,
         password,
@@ -131,13 +130,36 @@ export default function SignUpPage() {
         email
       );
 
-      if (user) {
-        setIsConfirming(true); // Go to verification step
-      } else {
-        setError("Registration failed. Please try again.");
+      if (!user) {
+        setError("❌ Registration failed");
+        setIsLoading(false);
+        return;
       }
+
+      // ✅ Add to MongoDB right after Cognito register
+      const res = await fetch("http://localhost:3001/api/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          Username: username,
+          Name: `${firstName} ${lastName}`,
+          Email: email,
+          PhoneNumber: "00000000",
+          Address: "Not Provided",
+          Role: "user",
+        }),
+      });
+
+      const db = await res.json();
+      if (db.sucess == false) {
+        setError("⚠️ Registered but failed saving to DB: " + db.message);
+        setIsLoading(false);
+        return;
+      }
+
+      setIsConfirming(true); // ✅ Show confirmation form now
     } catch (err) {
-      setError(err.message || "An error occurred during registration");
+      setError("❌ Something went wrong: " + err.message);
     } finally {
       setIsLoading(false);
     }
@@ -222,6 +244,11 @@ export default function SignUpPage() {
             {error && (
               <p className="text-sm text-red-600 text-center mb-2">{error}</p>
             )}
+            {success && (
+              <p className="text-sm text-green-600 text-center mb-2">
+                ✅ Your email is confirmed and you're now logged in!
+              </p>
+            )}
 
             <button
               disabled={isLoading}
@@ -229,17 +256,21 @@ export default function SignUpPage() {
                 setIsLoading(true);
                 setError("");
                 try {
-                  await confirmUser(formData.username, confirmationCode);
-                  const user = await login(
+                  const confirmed = await confirmUser(
                     formData.username,
-                    formData.password
+                    confirmationCode
                   );
-                  if (user) {
-                    setSuccess(true);
-                    setTimeout(() => navigate("/"), 1500); // Slight delay before redirect
+                  if (!confirmed) {
+                    setError("❌ Wrong code or expired.");
+                    return;
                   }
+
+                  // ✅ Optional: login again after confirming
+                  await login(formData.username, formData.password);
+
+                  navigate("/"); // ✅ All good
                 } catch (err) {
-                  setError("❌ Confirmation failed: " + (err.message || err));
+                  setError("❌ Confirmation failed: " + err.message);
                 } finally {
                   setIsLoading(false);
                 }

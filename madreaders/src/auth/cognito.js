@@ -85,19 +85,23 @@ export const getCurrentUser = () => {
 };
 
 export const confirmUser = (username, confirmationCode) => {
-  const userData = {
-    Username: username,
-    Pool: UserPool,
-  };
+  return new Promise((resolve) => {
+    const userData = {
+      Username: username,
+      Pool: UserPool,
+    };
 
-  const cognitoUser = new CognitoUser(userData);
+    const cognitoUser = new CognitoUser(userData);
 
-  cognitoUser.confirmRegistration(confirmationCode, true, (err, result) => {
-    if (err) {
-      console.error("❌ Confirmation failed:", err.message || err);
-    } else {
-      console.log("✅ Confirmation successful:", result);
-    }
+    cognitoUser.confirmRegistration(confirmationCode, true, (err, result) => {
+      if (err) {
+        console.error("❌ Confirmation failed:", err.message || err);
+        resolve(false);
+      } else {
+        console.log("✅ Confirmation successful:", result);
+        resolve(true);
+      }
+    });
   });
 };
 
