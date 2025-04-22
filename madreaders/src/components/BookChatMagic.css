@@ -1,0 +1,77 @@
+/* BookChatMagic.css */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.magic-bg {
+  background: linear-gradient(135deg, #d8e8f5, #f3e8ff);
+  position: relative;
+  overflow: hidden;
+}
+
+.magic-bg::before {
+  content: "";
+  position: absolute;
+  top: -40%;
+  left: -40%;
+  width: 200%;
+  height: 200%;
+  background-image: radial-gradient(
+    circle at 25% 25%,
+    #c084fc44 0%,
+    transparent 60%
+  );
+  animation: rotate 20s linear infinite;
+  z-index: 0;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
+.message-bubble {
+  animation: fadeInUp 0.5s ease-in-out;
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.message-bubble:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.glow-border {
+  border: 1px solid transparent;
+  border-radius: 1rem;
+  background-image: linear-gradient(#fff, #fff),
+    radial-gradient(circle at top left, #6b21a8, #3b0764);
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+  animation: borderGlow 3s ease-in-out infinite;
+}
+
+@keyframes borderGlow {
+  0% {
+    box-shadow: 0 0 10px rgba(107, 33, 168, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(107, 33, 168, 0.6);
+  }
+  100% {
+    box-shadow: 0 0 10px rgba(107, 33, 168, 0.2);
+  }
+}
+
+.starry-bg {
+  background: radial-gradient(circle at 50% 20%, #dbeafe 0%, #f0f0ff 100%);
+}
