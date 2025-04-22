@@ -6,6 +6,25 @@ function WishList() {
   const [wishlistItems, setWishlistItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  function generatePriceFromTitle(title) {
+    if (!title || typeof title !== "string") return 10;
+
+    const normalized = title.trim().toUpperCase();
+    let hash = 0;
+
+    // Generate a basic hash from character codes
+    for (let i = 0; i < normalized.length; i++) {
+      hash = normalized.charCodeAt(i) + ((hash << 5) - hash);
+    }
+
+    // Clamp the price between $10 and $90
+    const min = 10;
+    const max = 90;
+    const price = min + Math.abs(hash % (max - min + 1));
+
+    return price;
+  }
+
   const fetchWishlist = async () => {
     const user = getCurrentUser();
     if (!user) return;
@@ -69,27 +88,57 @@ function WishList() {
     fetchWishlist();
   }, []);
 
-  const handleAddToCart = (item) => {
-    const savedCart = localStorage.getItem("cart") || "[]";
-    const currentCart = JSON.parse(savedCart);
+  const handleAddToCart = async (item) => {
+    const user = getCurrentUser();
+    if (!user) return;
 
-    if (!currentCart.some((cartItem) => cartItem.BookID === item.BookID)) {
-      const cartItem = {
-        id: item.BookID,
-        title: item.title,
-        author: item.author,
-        cover: item.cover,
-        price: item.price,
-      };
-      const updatedCart = [...currentCart, cartItem];
-      localStorage.setItem("cart", JSON.stringify(updatedCart));
+    const username = user.getUsername();
 
-      // Optional: update navbar count
-      const cartCount = document.getElementById("cart-count");
-      if (cartCount) cartCount.textContent = updatedCart.length;
+    try {
+      const res = await fetch("http://localhost:3001/api/cart/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username,
+          bookID: item.BookID,
+          price: item.price,
+          quantity: 1,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        console.log("✅ Book added to cart");
+
+        // Optional: Update cart count in UI
+        const savedCart = localStorage.getItem("cart") || "[]";
+        const currentCart = JSON.parse(savedCart);
+
+        const cartItem = {
+          id: item.BookID,
+          title: item.title,
+          author: item.author,
+          cover: item.cover,
+          price: item.price,
+        };
+
+        const updatedCart = [...currentCart, cartItem];
+        localStorage.setItem("cart", JSON.stringify(updatedCart));
+
+        const cartCount = document.getElementById("cart-count");
+        if (cartCount) cartCount.textContent = updatedCart.length;
+
+        // Remove from wishlist after adding
+        handleRemoveFromWishlist(item.BookID);
+      } else {
+        console.error("❌ Failed to add to cart:", data.message);
+      }
+    } catch (err) {
+      console.error("❌ Error adding to cart:", err);
     }
-
-    handleRemoveFromWishlist(item.BookID);
   };
 
   const handleRemoveFromWishlist = async (bookID) => {
@@ -191,7 +240,7 @@ function WishList() {
                   {item.author}
                 </p>
                 <div className="mt-2 text-base font-medium text-[#212e53]">
-                  ${item.price}
+                  ${generatePriceFromTitle(item.title)}
                 </div>
                 <div className="mt-3 space-y-2">
                   <button
