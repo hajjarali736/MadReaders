@@ -19,35 +19,42 @@ function WishList() {
       if (res.ok && data.success) {
         const wishlist = data.data;
 
-        const detailedBooks = await Promise.all(
-          wishlist.map(async (item) => {
-            try {
-              const response = await fetch(
-                `https://www.googleapis.com/books/v1/volumes/${item.BookID}`
-              );
-              const result = await response.json();
+        const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-              return {
-                ...item,
-                title: result.volumeInfo?.title || "Untitled",
-                author:
-                  result.volumeInfo?.authors?.join(", ") || "Unknown Author",
-                cover:
-                  result.volumeInfo?.imageLinks?.thumbnail ||
-                  "https://via.placeholder.com/150x200",
-                price: Math.floor(Math.random() * 40) + 10, // fake price since Google doesn't return one
-              };
-            } catch {
-              return {
-                ...item,
-                title: "Unavailable Book",
-                author: "Unknown",
-                cover: "https://via.placeholder.com/150x200",
-                price: 0,
-              };
-            }
-          })
-        );
+        const detailedBooks = [];
+
+        for (let i = 0; i < wishlist.length; i++) {
+          const item = wishlist[i];
+
+          try {
+            const response = await fetch(
+              `https://www.googleapis.com/books/v1/volumes/${item.BookID}`
+            );
+            const result = await response.json();
+
+            detailedBooks.push({
+              ...item,
+              title: result.volumeInfo?.title || "Untitled",
+              author:
+                result.volumeInfo?.authors?.join(", ") || "Unknown Author",
+              cover:
+                result.volumeInfo?.imageLinks?.thumbnail ||
+                "https://via.placeholder.com/150x200",
+              price: Math.floor(Math.random() * 40) + 10,
+            });
+          } catch {
+            detailedBooks.push({
+              ...item,
+              title: "Unavailable Book",
+              author: "Unknown",
+              cover: "https://via.placeholder.com/150x200",
+              price: 0,
+            });
+          }
+
+          // 🔐 Small delay before next request to avoid HTTP 429
+          await delay(200); // 200ms = 5 requests per second
+        }
 
         setWishlistItems(detailedBooks);
       }
