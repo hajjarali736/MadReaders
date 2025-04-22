@@ -11,7 +11,7 @@ export default function ContactInquiries() {
       const res = await fetch("http://localhost:3001/api/contact");
       const data = await res.json();
       setContacts(data);
-    } catch (err) {
+    } catch  {
       setError("Failed to fetch contact inquiries");
     } finally {
       setLoading(false);

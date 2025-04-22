@@ -168,9 +168,9 @@ function Cart() {
 
     if (cartItems.length === 0) {
       return (
-        <div className="min-h-screen bg-[#4a919e] pt-20">
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 pt-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div className="text-center py-16 bg-white rounded-lg shadow-sm">
+            <div className="text-center py-16 bg-gradient-to-r from-[#27374D] to-[#526D82] rounded-lg shadow-sm">
               <div className="mb-6">
                 <svg
                   className="mx-auto h-12 w-12 text-[#212e53]"
@@ -186,10 +186,10 @@ function Cart() {
                   />
                 </svg>
               </div>
-              <h3 className="mt-2 text-xl font-medium text-[#212e53]">
+              <h3 className="mt-2 text-xl font-medium text-white">
                 Your cart is empty
               </h3>
-              <p className="mt-1 text-sm text-[#212e53]">
+              <p className="mt-1 text-sm text-white">
                 Browse our collection and add items to your cart!
               </p>
               <div className="mt-6">
@@ -207,8 +207,8 @@ function Cart() {
     }
 
     return (
-      <div className="min-h-screen bg-[#4a919e] pt-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 pt-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 bg-gradient-to-r from-[#27374D] to-[#526D82]">
           <h1 className="text-2xl font-semibold text-white mb-6">
             Shopping Cart
           </h1>
@@ -320,7 +320,7 @@ function Cart() {
                   couponCode,
                   total,
                 }}
-                className="w-full flex justify-center items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-[#4a919e] hover:bg-[#3a7a85]"
+                className="w-full flex justify-center items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-gradient-to-r from-[#27374D] to-[#526D82] hover:bg-[#3a7a85]"
               >
                 Proceed to Checkout
               </Link>

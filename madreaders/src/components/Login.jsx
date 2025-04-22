@@ -147,14 +147,6 @@ export default function LoginPage() {
                       className="form-input w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#27374D] focus:ring-2 focus:ring-[#526D82]/20 outline-none transition-all duration-300"
                       placeholder="••••••••"
                     />
-                    <div className="text-right mt-2">
-                      <Link
-                        to="/forgotpassword"
-                        className="text-xs text-[#27374D] hover:text-[#526D82] hover:underline transition-colors duration-300"
-                      >
-                        Forgot password?
-                      </Link>
-                    </div>
                   </div>
                 </div>
 

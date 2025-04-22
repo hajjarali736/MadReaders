@@ -10,7 +10,6 @@ import "./App.css";
 import Homepage from "./components/Homepage.jsx";
 import Login from "./components/Login.jsx";
 import Signup from "./components/Signup.jsx";
-import ForgotPassword from "./components/ForgotPassword.jsx";
 import SearchResults from "./components/SearchResults.jsx";
 import Cart from "./components/Cart.jsx";
 import Check from "./components/Checkout.jsx";
@@ -55,7 +54,6 @@ function App() {
           />
           <Route path="/login" element={<Layout><Login /></Layout>} />
           <Route path="/signup" element={<Layout><Signup /></Layout>} />
-          <Route path="/forgotpassword" element={<Layout><ForgotPassword /></Layout>} />
           <Route
             path="/search"
             element={
