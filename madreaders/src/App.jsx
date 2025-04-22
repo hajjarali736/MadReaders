@@ -25,6 +25,7 @@ import ContactInquiries from "./components/ContactInquiries.jsx";
 import UserList from "./components/UserList.jsx";
 import BookRecommendationChat from "./components/BookRecommendationChat.jsx";
 import ChatRecommendation from "./components/ChatRecommendation.jsx";
+import Landing from "./components/LandingPage.jsx";
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
 
@@ -79,6 +80,7 @@ function App() {
           <Route path="/users" element={<Layout><UserList /></Layout>} />
           <Route path="/coupons" element={<Layout><CouponManager /></Layout>} />
           <Route path="/contact-inquiries" element={<Layout><ContactInquiries /></Layout>} />
+          <Route path="/landing" element={<Layout><Landing /></Layout>} />
           <Route
             path="/book-recommendation"
             element={
