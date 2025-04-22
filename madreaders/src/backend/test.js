@@ -12,7 +12,7 @@ const users = Array.from({ length: 1 }).map((_, i) => ({
 async function seedUsers() {
   for (const user of users) {
     try {
-      const res = await fetch("http://localhost:3001/api/users", {
+      const res = await fetch("http://localhost:3001/api/users/list", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(user),

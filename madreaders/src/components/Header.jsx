@@ -5,11 +5,32 @@ import { useAuth } from "../context/AuthContext";
 function Header() {
   const { isAuthenticated, user, signOut } = useAuth();
   const location = useLocation();
+
+  const [isAdmin, setIsAdmin] = useState(false);
+
   const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   const [wishlistCount, setWishlistCount] = useState(0);
   const [cartCount, setCartCount] = useState(0);
+
+  useEffect(() => {
+    const checkAdminStatus = async () => {
+      if (user?.username) {
+        try {
+          const res = await fetch(
+            `http://localhost:3001/api/users/is-admin/${user.username}`
+          );
+          const data = await res.json();
+          setIsAdmin(data.isAdmin);
+        } catch (err) {
+          console.error("Failed to check admin status", err);
+        }
+      }
+    };
+
+    checkAdminStatus();
+  }, [user]);
 
   useEffect(() => {
     const fetchCartCount = async () => {
@@ -196,6 +217,14 @@ function Header() {
                     {cartCount ? 1 : 0}
                   </span>
                 </Link>
+                {isAdmin && (
+                  <Link
+                    to="/dashboard"
+                    className="bg-[#212e53] text-white px-3 py-1 rounded-md text-sm font-medium hover:bg-[#1a243f] mr-2"
+                  >
+                    Admin
+                  </Link>
+                )}
                 <div className="relative">
                   <button
                     onClick={() => setIsProfileOpen(!isProfileOpen)}

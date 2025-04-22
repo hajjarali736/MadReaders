@@ -26,4 +26,26 @@ router.get("/list", async (req, res) => {
   }
 });
 
+// Check if user is admin
+router.get("/is-admin/:username", async (req, res) => {
+  try {
+    const { username } = req.params;
+    const users = await listUsers();
+
+    const user = users.find((u) => u.Username === username);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const isAdmin = user.Role === "admin";
+    res.status(200).json({
+      Username: username,
+      isAdmin: isAdmin,
+    });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
 export default router;

@@ -43,7 +43,7 @@ app.post("/api/users", async (req, res) => {
   }
 });
 
-// Route registrations
+// Route registrationsc
 app.use("/api/wishlist", wishlistRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/users", userRoutes);
