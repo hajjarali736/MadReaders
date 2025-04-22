@@ -169,15 +169,15 @@ function WishList() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#4a919e] pt-20 flex justify-center items-center">
-        <p className="text-white text-xl">Loading wishlist...</p>
+      <div className="min-h-screen bg-[#DDE6ED] pt-20 flex justify-center items-center">
+        <p className="text-black text-xl">Loading wishlist...</p>
       </div>
     );
   }
 
   if (wishlistItems.length === 0) {
     return (
-      <div className="min-h-screen bg-[#4a919e] pt-20">
+      <div className="min-h-screen bg-gradient-to-r from-[#27374D] to-[#526D82] pt-20">
         <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="text-center py-16 bg-white rounded-lg shadow-sm">
             <div className="mb-6">
@@ -216,14 +216,14 @@ function WishList() {
   }
 
   return (
-    <div className="min-h-screen bg-[#4a919e] pt-20">
+    <div className="min-h-screen bg-[#DDE6ED] pt-20">
       <div className="max-w-7xl mx-auto px-4 py-8">
-        <h1 className="text-2xl font-semibold text-white mb-6">My Wishlist</h1>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <h1 className="text-2xl font-semibold text-black mb-6">My Wishlist</h1>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 ">
           {wishlistItems.map((item) => (
             <div
               key={item._id}
-              className="bg-white rounded-lg shadow-sm overflow-hidden"
+              className="bg-gradient-to-r from-[#27374D] to-[#526D82] rounded-lg shadow-sm overflow-hidden"
             >
               <div className="p-3">
                 <div className="mb-3">
@@ -233,19 +233,19 @@ function WishList() {
                     className="object-contain w-[150px] h-[200px] rounded-md mx-auto"
                   />
                 </div>
-                <h3 className="text-base font-medium text-[#212e53] truncate">
+                <h3 className="text-base font-medium text-white truncate">
                   {item.title}
                 </h3>
-                <p className="mt-1 text-sm text-[#212e53] truncate">
+                <p className="mt-1 text-sm text-white truncate">
                   {item.author}
                 </p>
-                <div className="mt-2 text-base font-medium text-[#212e53]">
+                <div className="mt-2 text-base font-medium text-white">
                   ${generatePriceFromTitle(item.title)}
                 </div>
                 <div className="mt-3 space-y-2">
                   <button
                     onClick={() => handleAddToCart(item)}
-                    className="w-full px-4 py-2 bg-[#4a919e] text-white rounded-md shadow-sm hover:bg-[#3a7a85]"
+                    className="w-full px-4 py-2 bg-[#DDE6ED] text-black rounded-md shadow-sm hover:bg-[#3a7a85]"
                   >
                     Add to Cart
                   </button>

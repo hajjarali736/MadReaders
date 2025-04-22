@@ -220,7 +220,7 @@ const BookDetails = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#9333ea] flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-r from-[#27374D] to-[#526D82] flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
           <p className="mt-4 text-gray-600">Loading book details...</p>
@@ -231,7 +231,7 @@ const BookDetails = () => {
 
   if (!book) {
     return (
-      <div className="min-h-screen bg-[#9333ea] flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-r from-[#27374D] to-[#526D82] flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-[#212e53] mb-4">
             Book not found
@@ -245,32 +245,32 @@ const BookDetails = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#9333ea]">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-white">Book Details</h1>
+          <h1 className="text-2xl font-bold text-bg-gradient-to-r from-[#27374D] to-[#526D82]">Book Details</h1>
         </div>
         <div className="flex flex-col md:flex-row gap-8">
           {/* Book Details */}
           <div className="w-full md:w-2/3">
-            <div className="bg-white rounded-lg shadow-lg p-6">
+            <div className="bg-gradient-to-r from-[#27374D] to-[#526D82] rounded-lg shadow-lg p-6">
               <div className="flex flex-col md:flex-row gap-6">
                 <div className="w-full md:w-1/4">
                   <img
                     src={book.cover}
                     alt={book.title}
-                    className="w-[200px] h-[300px] object-contain rounded-lg shadow-md"
+                    className="w-[200px] h-[300px] object-contain rounded-lg shadow-md bg-white"
                   />
                 </div>
                 <div className="w-full md:w-3/4">
-                  <h1 className="text-3xl font-bold mb-2 text-[#212e53]">
+                  <h1 className="text-3xl font-bold mb-2 text-white">
                     {book.title}
                   </h1>
-                  <p className="text-xl text-[#212e53] mb-4">
+                  <p className="text-xl text-white mb-4">
                     by {book.author}
                   </p>
                   <div className="mb-4">
-                    <span className="text-2xl font-bold text-[#212e53]">
+                    <span className="text-2xl font-bold text-white">
                       ${book.price}
                     </span>
                     <span
@@ -299,12 +299,12 @@ const BookDetails = () => {
                             ★
                           </span>
                         ))}
-                      <span className="text-sm text-gray-600 ml-2">
+                      <span className="text-sm text-white-600 ml-2">
                         ({book.ratingsCount})
                       </span>
                     </div>
                   </div>
-                  <div className="mb-4 text-sm text-gray-600">
+                  <div className="mb-4 text-sm text-white">
                     <p>
                       <span className="font-semibold">Published:</span>{" "}
                       {book.publishedDate}
@@ -323,7 +323,7 @@ const BookDetails = () => {
                     </p>
                   </div>
                   <p
-                    className="text-[#212e53] mb-6"
+                    className="text-white mb-6"
                     dangerouslySetInnerHTML={{ __html: book.description }}
                   ></p>
                   <div className="flex gap-4">
@@ -334,7 +334,7 @@ const BookDetails = () => {
                       onChange={(e) =>
                         setQuantity(parseInt(e.target.value) || 1)
                       }
-                      className="w-20 px-2 py-1 border rounded text-[#212e53]"
+                      className="w-20 px-2 py-1 border rounded text-white"
                       disabled={!book?.availability}
                     />
 
@@ -384,22 +384,22 @@ const BookDetails = () => {
 
           {/* Recommendations */}
           <div className="w-full md:w-1/3">
-            <h2 className="text-2xl font-bold mb-4 text-white">
+            <h2 className="text-2xl font-bold mb-4 text-bg-gradient-to-r from-[#27374D] to-[#526D82]">
               You May Also Like
             </h2>
             <div className="flex flex-wrap gap-3">
               {recommendations.length > 0 ? (
                 recommendations.map((rec) => (
                   <Link to={`/book/${rec.id}`} key={rec.id} className="w-full">
-                    <div className="bg-white rounded-lg shadow p-3 flex gap-3 hover:shadow-md transition-shadow cursor-pointer">
+                    <div className="bg-gradient-to-r from-[#27374D] to-[#526D82]  rounded-lg shadow p-3 flex gap-3 hover:shadow-md transition-shadow cursor-pointer">
                       <img
                         src={rec.cover}
                         alt={rec.title}
                         className="w-16 h-24 object-cover rounded"
                       />
                       <div className="flex-1">
-                        <h3 className="font-semibold text-sm line-clamp-2">{rec.title}</h3>
-                        <p className="text-xs text-gray-600 line-clamp-1">{rec.author}</p>
+                        <h3 className="font-semibold text-sm line-clamp-2 text-white">{rec.title}</h3>
+                        <p className="text-xs text-white line-clamp-1">{rec.author}</p>
                       </div>
                     </div>
                   </Link>

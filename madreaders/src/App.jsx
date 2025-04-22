@@ -18,7 +18,6 @@ import BookDetails from "./components/BookDetails.jsx";
 import WishList from "./components/WishList.jsx";
 import CategoryPage from "./components/CategoryPage.jsx";
 import Layout from "./components/Layout.jsx";
-import Order from "./components/OrderHistory.jsx";
 import Contact from "./components/Contactus.jsx";
 import Faq from "./components/Faq.jsx";
 import Dash from "./components/Dashboard.jsx";
@@ -76,7 +75,6 @@ function App() {
           <Route path="/category/:category" element={<Layout><CategoryPage /></Layout>} />
           <Route path="/cart" element={<Layout><Cart /></Layout>} />
           <Route path="/checkout" element={<Layout><Check /></Layout>} />
-          <Route path="/order" element={<Layout><Order /></Layout>} />
           <Route path="/contact" element={<Layout><Contact /></Layout>} />
           <Route path="/faq" element={<Layout><Faq /></Layout>} />
           <Route path="/dashboard" element={<Layout><Dash /></Layout>} />

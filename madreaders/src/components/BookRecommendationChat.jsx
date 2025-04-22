@@ -4,7 +4,7 @@ import BookRecommendationHero from './BookRecommendationHero';
 
 const BookRecommendationChat = () => {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen ">
       <BookRecommendationHero />
     </div>
   );

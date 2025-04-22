@@ -118,7 +118,7 @@ function Homepage() {
         setTimeout(() => setCouponCopied(false), 2000);
     };
     return (
-        <div className="min-h-screen bg-[#9333ea] flex flex-col w-full">
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 flex flex-col w-full">
             {/* Welcome Popup with Coupon */}
             {showWelcomePopup && (
                 <div className="fixed inset-0 flex items-center justify-center z-50 p-4 bg-black bg-opacity-30">
@@ -163,7 +163,7 @@ function Homepage() {
                 </div>
             )}
             <Header />
-            <main className="w-full max-w-7xl px-8 py-2 mx-auto mt-2 relative bg-[#9333ea] flex-1 z-10">
+            <main className="w-full max-w-7xl px-8 py-2 mx-auto mt-2 relative bg-gradient-to-br from-blue-50 to-indigo-50 flex-1 z-10">
                 <section className="mb-4 bg-white p-6 rounded-lg shadow-sm w-full">
                     <form onSubmit={handleSearch} className="flex gap-4 w-full">
                         <input
@@ -184,7 +184,7 @@ function Homepage() {
                 </section>
 
                 {searchResults.length > 0 && (
-                    <section className="mb-12">
+                    <section className="mb-12 ">
                         <h2 className="text-2xl font-semibold text-[#212e53] mb-6">Search Results</h2>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                             {searchResults.map((book) => {
@@ -211,9 +211,9 @@ function Homepage() {
                     </section>
                 )}
 
-                <section className="mb-8 bg-white p-6 rounded-lg shadow-sm">
-                    <h2 className="text-2xl font-semibold text-[#212e53] mb-6">Featured Books</h2>
-                    <div className="grid grid-cols-4 gap-6">
+                <section className="mb-8 bg-gradient-to-r from-[#27374D] to-[#526D82] p-6 rounded-lg shadow-sm">
+                    <h2 className="text-2xl font-semibold text-white mb-6">Featured Books</h2>
+                    <div className="grid grid-cols-4 gap-6 ">
                         {featuredBooks.slice(0, 20).map((book) => {
                             const formattedBook = formatBookData(book);
                             return (
@@ -247,8 +247,8 @@ function Homepage() {
                     )}
                 </section>
 
-                <section className="mb-8 bg-white p-6 rounded-lg shadow-sm">
-                    <h2 className="text-2xl font-semibold text-[#212e53] mb-6">Best Sellers</h2>
+                <section className="mb-8 bg-gradient-to-r from-[#27374D] to-[#526D82] p-6 rounded-lg shadow-sm">
+                    <h2 className="text-2xl font-semibold text-white mb-6">Best Sellers</h2>
                     <div className="grid grid-cols-4 gap-6">
                         {bestsellers.slice(0, displayedBestsellers).map((book) => {
                             const formattedBook = formatBookData(book);
@@ -283,8 +283,8 @@ function Homepage() {
                     )}
                 </section>
 
-                <section className="mb-8 bg-white p-6 rounded-lg shadow-sm">
-                    <h2 className="text-2xl font-semibold text-[#212e53] mb-6">New Releases</h2>
+                <section className="mb-8 bg-gradient-to-r from-[#27374D] to-[#526D82] p-6 rounded-lg shadow-sm">
+                    <h2 className="text-2xl font-semibold text-white mb-6">New Releases</h2>
                     <div className="grid grid-cols-4 gap-6">
                         {newReleases.slice(0, displayedNewReleases).map((book) => {
                             const formattedBook = formatBookData(book);

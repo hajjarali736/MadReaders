@@ -84,11 +84,11 @@ function CategoryPage() {
     }
 
     return (
-        <div className="w-full min-h-screen bg-[#9333ea]">
+        <div className="w-full min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
             <main className="w-full max-w-7xl px-8 py-8 mx-auto">
-                <div className="bg-white/90 rounded-lg shadow-lg p-8">
+                <div className="bg-gradient-to-r from-[#27374D] to-[#526D82] rounded-lg shadow-lg p-8">
                     <div className="border-b border-gray-200 pb-4 mb-6">
-                        <h1 className="text-3xl font-bold text-[#212e53] capitalize">
+                        <h1 className="text-3xl font-bold text-white capitalize">
                             {category.replace(/([A-Z])/g, ' $1').trim()} Books
                         </h1>
                     </div>
