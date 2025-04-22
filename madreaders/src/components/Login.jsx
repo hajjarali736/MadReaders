@@ -38,6 +38,7 @@ export default function LoginPage() {
 
     try {
       const success = await signIn(username, password);
+      setTimeout(() => {}, 2000);
       if (success) {
         setSuccess("Login successful!");
         setTimeout(() => {

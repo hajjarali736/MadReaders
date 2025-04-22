@@ -31,8 +31,8 @@ export const AuthProvider = ({ children }) => {
   const signIn = async (username, password) => {
     try {
       await login(username, password);
-      const currentUser = await getCurrentUser();
       await new Promise((resolve) => setTimeout(resolve, 2000));
+      const currentUser = await getCurrentUser();
       if (!currentUser) {
         throw new Error("Login failed");
       }
