@@ -1,12 +1,19 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { FaCheckCircle, FaEnvelope, FaShoppingBag, FaHome } from "react-icons/fa";
+import {
+  FaCheckCircle,
+  FaEnvelope,
+  FaShoppingBag,
+  FaHome,
+  FaTruck,
+} from "react-icons/fa";
 import { getCurrentUser } from "../auth/cognito";
 
 export default function CheckoutConfirmationPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { email = "" } = location.state?.formData || {};
+  const [progress, setProgress] = useState(0);
 
   const user = getCurrentUser();
   const userEmail = email || (user ? user.attributes?.email : "");
@@ -14,6 +21,40 @@ export default function CheckoutConfirmationPage() {
   useEffect(() => {
     // Scroll to top on mount
     window.scrollTo(0, 0);
+
+    // Animation timeline
+    const animationDuration = 6000; // 6 seconds in milliseconds
+    const startTime = Date.now();
+
+    const animateProgress = () => {
+      const elapsed = Date.now() - startTime;
+      const progressPercentage = Math.min(elapsed / animationDuration, 1);
+
+      // Different easing functions for different phases
+      let easedProgress;
+      if (progressPercentage < 0.3) {
+        // Fast start (easeOutQuad)
+        easedProgress = progressPercentage * (2 - progressPercentage);
+      } else if (progressPercentage < 0.7) {
+        // Slow middle (easeInQuad)
+        easedProgress = progressPercentage * progressPercentage;
+      } else {
+        // Normal finish (linear)
+        easedProgress = progressPercentage;
+      }
+
+      setProgress(easedProgress * 100);
+
+      if (progressPercentage < 1) {
+        requestAnimationFrame(animateProgress);
+      }
+    };
+
+    requestAnimationFrame(animateProgress);
+
+    return () => {
+      // Cleanup if component unmounts
+    };
   }, []);
 
   return (
@@ -28,7 +69,7 @@ export default function CheckoutConfirmationPage() {
           </div>
           <h1 className="text-2xl font-bold text-white">Order Confirmed!</h1>
           <p className="text-indigo-100 mt-1">
-            Thank you for your purchase
+            Your order is confirmed. It will arrive in 3-5 days.
           </p>
         </div>
 
@@ -38,7 +79,7 @@ export default function CheckoutConfirmationPage() {
             <div className="flex justify-center mb-4">
               <div className="relative">
                 <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center">
-                  <FaEnvelope className="text-green-600 text-3xl" />
+                  <FaHome className="text-green-600 text-3xl" />
                 </div>
                 <div className="absolute -bottom-2 -right-2 bg-indigo-100 rounded-full p-2">
                   <FaShoppingBag className="text-indigo-600 text-sm" />
@@ -47,7 +88,7 @@ export default function CheckoutConfirmationPage() {
             </div>
 
             <h2 className="text-lg font-semibold text-gray-800">
-              Check your email
+              The order will take 3-5 days
             </h2>
             <p className="text-gray-600 mt-2">
               We've sent order confirmation and shipping details to:
@@ -88,6 +129,22 @@ export default function CheckoutConfirmationPage() {
             </ul>
           </div>
 
+          {/* Progress Bar - Simplified */}
+          <div className="mb-6">
+            <h3 className="text-lg font-semibold text-gray-800 mb-3">
+              Delivery Status
+            </h3>
+            <div className="flex items-center">
+              <FaTruck className="mr-2 text-indigo-600 text-2xl" />
+              <div className="w-full bg-gray-300 rounded-full h-2.5">
+                <div
+                  className="bg-indigo-600 h-2.5 rounded-full transition-all duration-300 ease-linear"
+                  style={{ width: `${progress}%` }}
+                ></div>
+              </div>
+            </div>
+          </div>
+
           <div className="flex flex-col space-y-3">
             <button
               onClick={() => navigate("/")}
@@ -103,10 +160,7 @@ export default function CheckoutConfirmationPage() {
         <div className="bg-gray-50 px-6 py-4 border-t border-gray-200 text-center">
           <p className="text-xs text-gray-500">
             Need help?{" "}
-            <a
-              href="/contact"
-              className="text-indigo-600 hover:underline"
-            >
+            <a href="/contact" className="text-indigo-600 hover:underline">
               Contact our support team
             </a>
           </p>
