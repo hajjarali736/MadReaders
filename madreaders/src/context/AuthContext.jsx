@@ -33,6 +33,9 @@ export const AuthProvider = ({ children }) => {
       await login(username, password);
       const currentUser = await getCurrentUser();
       await new Promise((resolve) => setTimeout(resolve, 2000));
+      if (!currentUser) {
+        throw new Error("Login failed");
+      }
       setIsAuthenticated(true);
       setUser(currentUser);
       return true;
