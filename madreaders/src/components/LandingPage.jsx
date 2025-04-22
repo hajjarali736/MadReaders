@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react"
 import { BookOpen, BookMarked, Users, Sparkles, ChevronRight, BookHeart, Star, Bookmark, Coffee, Zap, ArrowRight, Lightbulb, Heart } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
 // Custom animated book component
 const AnimatedBook = () => {
@@ -308,6 +309,8 @@ const ParticleEffect = () => {
 }
 
 export default function LandingPage() {
+  const navigate = useNavigate();
+  
   // eslint-disable-next-line no-unused-vars
   const [scrollY, setScrollY] = useState(0)
   
@@ -559,7 +562,7 @@ export default function LandingPage() {
               },
               {
                 quote:
-                  "MadReaders didn’t just calm my bookish chaos—it weaponized it. My ‘to-read’ pile used to be a source of stress (we’ve all been there). Now, thanks to scary-accurate recommendations and filters that actually work, my madness has direction. I still obsess over books… but now it’s a superpower.",
+                  "MadReaders didn't just calm my bookish chaos—it weaponized it. My 'to-read' pile used to be a source of stress (we've all been there). Now, thanks to scary-accurate recommendations and filters that actually work, my madness has direction. I still obsess over books… but now it's a superpower.",
                 name: "Bilal Abou Osman",
                 title: "MadReader",
               },

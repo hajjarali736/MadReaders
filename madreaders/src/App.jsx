@@ -58,6 +58,7 @@ function App() {
                   </Layout>
                 }
               />
+              <Route path="/landing" element={<Layout><Landing /></Layout>} />
               <Route path="/login" element={<Layout><Login /></Layout>} />
               <Route path="/signup" element={<Layout><Signup /></Layout>} />
               <Route
@@ -85,7 +86,6 @@ function App() {
               <Route path="/users" element={<Layout><UserList /></Layout>} />
               <Route path="/coupons" element={<Layout><CouponManager /></Layout>} />
               <Route path="/contact-inquiries" element={<Layout><ContactInquiries /></Layout>} />
-              <Route path="/landing" element={<Layout><Landing /></Layout>} />
               <Route
                 path="/book-recommendation"
                 element={
