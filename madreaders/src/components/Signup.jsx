@@ -1,10 +1,17 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { register, login } from "../auth/cognito";
+import { register, login, confirmUser, getCurrentUser } from "../auth/cognito";
 import "../styles/Login.css";
 import Header from "./Header";
 
 export default function SignUpPage() {
+  useEffect(() => {
+    const user = getCurrentUser();
+    if (user) {
+      navigate("/");
+    }
+  }, []);
+
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: "",
@@ -18,6 +25,9 @@ export default function SignUpPage() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
+  const [isConfirming, setIsConfirming] = useState(false);
+  const [confirmationCode, setConfirmationCode] = useState("");
+  const [success, setSuccess] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -122,37 +132,7 @@ export default function SignUpPage() {
       );
 
       if (user) {
-        // If Cognito registration is successful, create user in MongoDB
-        const userData = {
-          Name: `${formData.firstName} ${formData.lastName}`,
-          Email: formData.email,
-          PhoneNumber: "1234567890", // You might want to collect this in the form
-          Address: "Not provided", // You might want to collect this in the form
-          Role: "user",
-        };
-
-        // Call the API endpoint instead of directly using createUser
-        const response = await fetch("http://localhost:3001/api/users/create", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(userData),
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || "Failed to create user");
-        }
-
-        const result = await response.json();
-        console.log("✅ User created:", result);
-
-        // Login the user
-        const curr = await login(username, password);
-        if (curr) {
-          navigate("/");
-        }
+        setIsConfirming(true); // Go to verification step
       } else {
         setError("Registration failed. Please try again.");
       }
@@ -165,7 +145,6 @@ export default function SignUpPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#DDE6ED]">
-      
       <Header />
 
       {/* Error message positioned below header at top right */}
@@ -225,6 +204,83 @@ export default function SignUpPage() {
 
       {/* Main content area */}
       <main className="flex-grow flex items-center justify-center p-4 relative z-10 mt-">
+        {isConfirming && (
+          <div className="p-8 bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl max-w-md mx-auto">
+            <h2 className="text-lg font-semibold text-center mb-4">
+              Confirm Your Email
+            </h2>
+            <p className="text-sm text-gray-600 mb-4 text-center">
+              We've sent a 6-digit code to <strong>{formData.email}</strong>.
+            </p>
+            <input
+              type="text"
+              placeholder="Enter verification code"
+              className="form-input w-full px-4 py-3 rounded-lg border border-gray-300 mb-4"
+              value={confirmationCode}
+              onChange={(e) => setConfirmationCode(e.target.value)}
+            />
+            {error && (
+              <p className="text-sm text-red-600 text-center mb-2">{error}</p>
+            )}
+
+            <button
+              disabled={isLoading}
+              onClick={async () => {
+                setIsLoading(true);
+                setError("");
+                try {
+                  await confirmUser(formData.username, confirmationCode);
+                  const user = await login(
+                    formData.username,
+                    formData.password
+                  );
+                  if (user) {
+                    setSuccess(true);
+                    setTimeout(() => navigate("/"), 1500); // Slight delay before redirect
+                  }
+                } catch (err) {
+                  setError("❌ Confirmation failed: " + (err.message || err));
+                } finally {
+                  setIsLoading(false);
+                }
+              }}
+              className={`w-full px-6 py-3 rounded-lg transition text-white ${
+                isLoading ? "bg-gray-400" : "bg-[#27374D] hover:bg-[#526D82]"
+              }`}
+            >
+              {isLoading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <svg
+                    className="animate-spin h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v8H4z"
+                    ></path>
+                  </svg>
+                  Confirming...
+                </span>
+              ) : success ? (
+                "✅ Confirmed!"
+              ) : (
+                "Confirm Email"
+              )}
+            </button>
+          </div>
+        )}
+
         <div className="w-full max-w-md">
           <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
             <div className="bg-gradient-to-r from-[#27374D] to-[#526D82] p-6 text-center">
@@ -240,7 +296,7 @@ export default function SignUpPage() {
                 className="space-y-6"
               >
                 {/* Step 1: Account Info */}
-                {currentStep === 1 && (
+                {!isConfirming && currentStep === 1 && (
                   <div className="space-y-4">
                     <div>
                       <label
@@ -276,15 +332,15 @@ export default function SignUpPage() {
                         required
                       />
                       <p className="mt-2 text-sm text-gray-500">
-                        At least 6 characters with 1 uppercase, 1 lowercase, and 1
-                        number
+                        At least 6 characters with 1 uppercase, 1 lowercase, and
+                        1 number
                       </p>
                     </div>
                   </div>
                 )}
 
                 {/* Step 2: Personal Info */}
-                {currentStep === 2 && (
+                {!isConfirming && currentStep === 2 && (
                   <div className="space-y-4">
                     <div>
                       <label
@@ -328,7 +384,7 @@ export default function SignUpPage() {
                 )}
 
                 {/* Step 3: Contact Info */}
-                {currentStep === 3 && (
+                {!isConfirming && currentStep === 3 && (
                   <div className="space-y-4">
                     <div>
                       <label

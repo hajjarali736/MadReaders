@@ -21,13 +21,16 @@ export const register = (
     new CognitoUserAttribute({ Name: "family_name", Value: family_name }),
   ];
 
-  UserPool.signUp(username, password, attributeList, null, (err, data) => {
-    if (err) {
-      console.log("❌ Registration error:", err.message || err);
-      throw new Error(err.message || "Registration failed");
-    }
-    console.log("✅ Registration success:", data);
-    return data;
+  return new Promise((resolve, reject) => {
+    UserPool.signUp(username, password, attributeList, null, (err, data) => {
+      if (err) {
+        console.log("❌ Registration error:", err.message || err);
+        reject(new Error(err.message || "Registration failed"));
+      } else {
+        console.log("✅ Registration success:", data);
+        resolve(data);
+      }
+    });
   });
 };
 
@@ -79,6 +82,23 @@ export const getCurrentUser = () => {
     console.log("No user is currently signed in.");
     return null;
   }
+};
+
+export const confirmUser = (username, confirmationCode) => {
+  const userData = {
+    Username: username,
+    Pool: UserPool,
+  };
+
+  const cognitoUser = new CognitoUser(userData);
+
+  cognitoUser.confirmRegistration(confirmationCode, true, (err, result) => {
+    if (err) {
+      console.error("❌ Confirmation failed:", err.message || err);
+    } else {
+      console.log("✅ Confirmation successful:", result);
+    }
+  });
 };
 
 // register(

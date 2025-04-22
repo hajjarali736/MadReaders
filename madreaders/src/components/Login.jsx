@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { getCurrentUser } from "../auth/cognito";
 import { useAuth } from "../context/AuthContext";
 import "../styles/Login.css";
 
@@ -12,6 +13,13 @@ export default function LoginPage() {
   const [success, setSuccess] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showErrorPopup, setShowErrorPopup] = useState(false);
+
+  useEffect(() => {
+    const user = getCurrentUser();
+    if (user) {
+      navigate("/");
+    }
+  }, []);
 
   useEffect(() => {
     if (showErrorPopup) {
