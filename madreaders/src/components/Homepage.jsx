@@ -148,7 +148,7 @@ function Homepage() {
                 </p>
                 <div className="flex items-center justify-center">
                   <span className="font-mono text-xl font-bold text-purple-700 mr-2">
-                    MADREADER20
+                    MADREADERS20
                   </span>
                   <button
                     onClick={copyCouponCode}

@@ -180,15 +180,6 @@ const TimelineItem = ({ year, title, description, index }) => {
       }`}
     >
       <div className="bg-white rounded-xl p-8 shadow-md relative hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-        <div
-          className={`absolute top-1/2 transform -translate-y-1/2 w-6 h-6 rounded-full bg-[#1e3a5f] border-4 border-white z-20 ${
-            index % 2 === 0
-              ? "md:-right-[3.25rem] right-1/2 translate-x-1/2 md:translate-x-0"
-              : "md:-left-[3.25rem] left-1/2 -translate-x-1/2 md:translate-x-0"
-          }`}
-        >
-          <span className="ping-animation absolute inline-flex h-full w-full rounded-full bg-[#a3c9ff] opacity-75"></span>
-        </div>
         <span className="inline-block px-3 py-1 bg-[#1e3a5f] text-white text-sm font-medium rounded-full mb-4">
           {year}
         </span>
@@ -477,9 +468,9 @@ export default function LandingPage() {
               },
               {
                 year: "Today",
-                title: "Book Buddy Launch",
+                title: "Launching",
                 description:
-                  "We introduced Book Buddy, our AI-powered recommendation system that helps readers find their perfect match.",
+                  "We launched MadReaders, a platform where readers can explore, share, and connect with their favorite books.",
               },
             ].map((item, index) => (
               <TimelineItem 
