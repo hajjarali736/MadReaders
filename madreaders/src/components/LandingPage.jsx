@@ -463,7 +463,7 @@ export default function LandingPage() {
               },
               {
                 year: "Phase 3",
-                title: "Implementation and Book Body Launch",
+                title: "Implementation and Book Buddy Launch",
                 description: "We implemented our website and introduced Book Buddy, our AI-powered recommendation system that helps readers find their perfect match..",
               },
               {
@@ -549,7 +549,7 @@ export default function LandingPage() {
                 quote:
                   "MadReaders completely transformed how I discover books. The Book Buddy feature feels like having a librarian who really knows me.",
                 name: "Mohammad Jomha",
-                title: "Book Addict",
+                title: "SamLander",
               },
               {
                 quote:
@@ -575,7 +575,82 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
+      {/* Team Section */}
+<section className="py-20 bg-gradient-to-r from-[#1e3a5f] to-[#2c4c74] text-white relative overflow-hidden">
+  <ParticleEffect />
+  <div className="absolute top-0 left-0 w-full h-full overflow-hidden">
+    <div className="absolute -top-24 -left-24 w-64 h-64 bg-[#a3c9ff]/20 rounded-full blur-3xl"></div>
+    <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-[#a3c9ff]/10 rounded-full blur-3xl"></div>
+  </div>
+  
+  <div className="container px-4 mx-auto relative z-10">
+    <div className="text-center mb-16">
+      <div className="inline-block px-4 py-1 rounded-full bg-white/10 backdrop-blur-sm mb-4">
+        <span className="text-sm font-medium text-white">Our Team</span>
+      </div>
+      <h2 className="text-3xl md:text-4xl font-bold mb-6 relative inline-block">
+        Meet The Minds Behind MadReaders
+        <div className="absolute -bottom-3 left-0 right-0 h-1 bg-[#a3c9ff] rounded-full"></div>
+      </h2>
+      <p className="text-lg text-white/80 max-w-2xl mx-auto">
+        A passionate group of book lovers, tech enthusiasts, and creative thinkers dedicated to revolutionizing your reading experience.
+      </p>
+    </div>
 
+    <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-8">
+      {[
+        {
+          name: "Ali El Hajjar",
+          role: "Team Leader",
+          image: "https://placehold.co/400x400/1e3a5f/FFFFFF?text=MJ",
+          description: "Visionary leader with a passion for connecting readers with great books."
+        },
+        {
+          name: "Diyaa Aldeen Swaid",
+          role: "CTO",
+          image: "https://placehold.co/400x400/1e3a5f/FFFFFF?text=BA",
+          description: "Tech wizard who brings our platform to life with innovative solutions."
+        },
+        {
+          name: "Mohammad Al Majzoub",
+          role: "Head of Content",
+          image: "https://placehold.co/400x400/1e3a5f/FFFFFF?text=MK",
+          description: "Curates our exceptional collection and ensures quality recommendations."
+        },
+        {
+          name: "Mohammad Zeitoun",
+          role: "UX Designer",
+          image: "https://placehold.co/400x400/1e3a5f/FFFFFF?text=JD",
+          description: "Creates the beautiful and intuitive interfaces you love using."
+        },
+        {
+          name: "Mohammad Samhoun",
+          role: "Tester",
+          image: "https://placehold.co/400x400/1e3a5f/FFFFFF?text=JS",
+          description: "Makes sure every option in the website is working perfectly."
+        }
+      ].map((member, index) => (
+        <div 
+          key={index}
+          className="bg-white/5 rounded-xl p-6 backdrop-blur-sm border border-white/10 hover:border-[#a3c9ff]/50 transition-all duration-500 hover:-translate-y-2 group"
+        >
+          <div className="relative mb-6 overflow-hidden rounded-lg aspect-square">
+            <img 
+              src={member.image} 
+              alt={member.name}
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+              <p className="text-white text-sm">{member.description}</p>
+            </div>
+          </div>
+          <h3 className="text-xl font-bold mb-1">{member.name}</h3>
+          <p className="text-[#a3c9ff] mb-4">{member.role}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
       {/* Join Us CTA */}
       <section className="py-20 bg-gradient-to-r from-[#1e3a5f] to-[#2c4c74] text-white relative overflow-hidden">
         <ParticleEffect />
@@ -601,7 +676,7 @@ export default function LandingPage() {
                 Sign Up Now
               </a>
               <a
-                href="/"
+                href="/books"
                 className="px-8 py-4 rounded-lg bg-transparent border border-white text-white font-medium hover:bg-white/10 transition-all duration-300 hover:scale-105"
               >
                 Explore Books
