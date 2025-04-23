@@ -205,7 +205,7 @@ function WishList() {
             </p>
             <div className="mt-6">
               <Link
-                to="/"
+                to="/books"
                 className="px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600"
               >
                 Browse Books

@@ -209,7 +209,7 @@ function Cart() {
               </p>
               <div className="mt-6">
                 <Link
-                  to="/"
+                  to="/books"
                   className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-[#212e53] hover:bg-[#1a243f]"
                 >
                   Browse Books
