@@ -1,13 +1,20 @@
-
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FaQuestionCircle, FaChevronDown, FaChevronUp, FaSearch, FaBookOpen, FaShippingFast, FaExchangeAlt, FaCreditCard, FaEnvelope } from 'react-icons/fa';
 // eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from 'framer-motion';
 import Header from './Header';
-
+import samlandLogo from '/samland (1).png';
 export default function FAQPage() {
   const [activeIndex, setActiveIndex] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [showSamLandPopup, setShowSamLandPopup] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowSamLandPopup(true);
+    }, 1000); // Shows after 10 seconds
+    return () => clearTimeout(timer);
+  }, []);
 
   const toggleFAQ = (index) => {
     setActiveIndex(activeIndex === index ? null : index);
@@ -25,65 +32,65 @@ export default function FAQPage() {
         icon: <FaExchangeAlt className="text-bg-gradient-to-br from-indigo-50 to-blue-100" />
     },
     {
-        question: "Do you offer international shipping?",
-        answer: "Yes, we ship to most countries worldwide. Shipping costs and delivery times vary by destination. You'll see the exact shipping costs during checkout.",
-        icon: <FaShippingFast className="text-bg-gradient-to-br from-indigo-50 to-blue-100" />
-    },
-    {
-        question: "How can I track my order?",
-        answer: "Once your order ships, you'll receive a tracking number via email. You can use this number on our website or the carrier's website to track your package's journey to you.",
-        icon: <FaSearch className="text-bg-gradient-to-br from-indigo-50 to-blue-100" />
-    },
-    {
-        question: "What payment methods do you accept?",
-        answer: "We accept all major credit cards (Visa, Mastercard, American Express), PayPal, and Apple Pay. All transactions are securely processed.",
-        icon: <FaCreditCard className="text-bg-gradient-to-br from-indigo-50 to-blue-100" />
-    },
-    {
-        question: "Can I cancel or modify my order?",
-        answer: "You can cancel or modify your order within 1 hour of placement by contacting our support team. After that, orders enter our processing system and cannot be changed.",
-        icon: <FaExchangeAlt className="text-bg-gradient-to-br from-indigo-50 to-blue-100" />
-    },
-    {
-        question: "Do you sell e-books or digital products?",
-        answer: "Currently we specialize in physical books only. We're considering adding e-books in the future - stay updated!",
-        icon: <FaBookOpen className="text-bg-gradient-to-br from-indigo-50 to-blue-100" />
-    },
-    {
-        question: "How are books packaged for shipping?",
-        answer: "All books are carefully packaged in protective materials to prevent damage during transit. Hardcover books include additional corner protectors for extra safety.",
-        icon: <FaShippingFast className="text-bg-gradient-to-br from-indigo-50 to-blue-100" />
-    },
-    {
-        question: "Do you have a loyalty program?",
-        answer: "Yes! We offer a loyalty program where you can earn points for every purchase. These points can be redeemed for discounts on future orders. Sign up for more details!",
-        icon: <FaBookOpen className="text-bg-gradient-to-br from-indigo-50 to-blue-100" />
-    },
-    {
-        question: "What should I do if I received a damaged book?",
-        answer: "If you receive a damaged book, please contact our support team within 7 days of delivery. We'll assist you in processing a return or exchange.",
-        icon: <FaExchangeAlt className="text-bg-gradient-to-br from-indigo-50 to-blue-100" />
-    },
-    {
-      question: "What is your return policy?",
-      answer: "We accept returns within 30 days of purchase. The item must be in its original condition and packaging. You can contact us for more details.",
+      question: "Do you offer international shipping?",
+      answer: "Yes, we ship to most countries worldwide. Shipping costs and delivery times vary by destination. You'll see the exact shipping costs during checkout.",
+      icon: <FaShippingFast className="text-bg-gradient-to-br from-indigo-50 to-blue-100" />
+  },
+  {
+      question: "How can I track my order?",
+      answer: "Once your order ships, you'll receive a tracking number via email. You can use this number on our website or the carrier's website to track your package's journey to you.",
+      icon: <FaSearch className="text-bg-gradient-to-br from-indigo-50 to-blue-100" />
+  },
+  {
+      question: "What payment methods do you accept?",
+      answer: "We accept all major credit cards (Visa, Mastercard, American Express), PayPal, and Apple Pay. All transactions are securely processed.",
+      icon: <FaCreditCard className="text-bg-gradient-to-br from-indigo-50 to-blue-100" />
+  },
+  {
+      question: "Can I cancel or modify my order?",
+      answer: "You can cancel or modify your order within 1 hour of placement by contacting our support team. After that, orders enter our processing system and cannot be changed.",
+      icon: <FaExchangeAlt className="text-bg-gradient-to-br from-indigo-50 to-blue-100" />
+  },
+  {
+      question: "Do you sell e-books or digital products?",
+      answer: "Currently we specialize in physical books only. We're considering adding e-books in the future - stay updated!",
       icon: <FaBookOpen className="text-bg-gradient-to-br from-indigo-50 to-blue-100" />
-    },
-    {
-        question: "How often do you restock books?",
-        answer: "We regularly restock popular titles, but availability can vary. If a book is out of stock, it will not be displayed in our website.",
-        icon: <FaBookOpen className="text-bg-gradient-to-br from-indigo-50 to-blue-100" />
-    },
-    {
-        question: "Do you offer gift cards?",
-        answer: "No, but we offer Coupons in various amounts. They can be purchased through our website and are a perfect gift for any book lover!",
-        icon: <FaCreditCard className="text-bg-gradient-to-br from-indigo-50 to-blue-100" />
-    },
-    {
-        question: "How can I contact customer support?",
-        answer: "You can contact our customer support team via the contact form on our website or by emailing us at support@madreaders.com. We're here to help!",
-        icon: <FaEnvelope className="text-bg-gradient-to-br from-indigo-50 to-blue-100" />
-    },
+  },
+  {
+      question: "How are books packaged for shipping?",
+      answer: "All books are carefully packaged in protective materials to prevent damage during transit. Hardcover books include additional corner protectors for extra safety.",
+      icon: <FaShippingFast className="text-bg-gradient-to-br from-indigo-50 to-blue-100" />
+  },
+  {
+      question: "Do you have a loyalty program?",
+      answer: "Yes! We offer a loyalty program where you can earn points for every purchase. These points can be redeemed for discounts on future orders. Sign up for more details!",
+      icon: <FaBookOpen className="text-bg-gradient-to-br from-indigo-50 to-blue-100" />
+  },
+  {
+      question: "What should I do if I received a damaged book?",
+      answer: "If you receive a damaged book, please contact our support team within 7 days of delivery. We'll assist you in processing a return or exchange.",
+      icon: <FaExchangeAlt className="text-bg-gradient-to-br from-indigo-50 to-blue-100" />
+  },
+  {
+    question: "What is your return policy?",
+    answer: "We accept returns within 30 days of purchase. The item must be in its original condition and packaging. You can contact us for more details.",
+    icon: <FaBookOpen className="text-bg-gradient-to-br from-indigo-50 to-blue-100" />
+  },
+  {
+      question: "How often do you restock books?",
+      answer: "We regularly restock popular titles, but availability can vary. If a book is out of stock, it will not be displayed in our website.",
+      icon: <FaBookOpen className="text-bg-gradient-to-br from-indigo-50 to-blue-100" />
+  },
+  {
+      question: "Do you offer gift cards?",
+      answer: "No, but we offer Coupons in various amounts. They can be purchased through our website and are a perfect gift for any book lover!",
+      icon: <FaCreditCard className="text-bg-gradient-to-br from-indigo-50 to-blue-100" />
+  },
+  {
+      question: "How can I contact customer support?",
+      answer: "You can contact our customer support team via the contact form on our website or by emailing us at support@madreaders.com. We're here to help!",
+      icon: <FaEnvelope className="text-bg-gradient-to-br from-indigo-50 to-blue-100" />
+  },
   ];
 
   const filteredFaqs = faqs.filter(faq => 
@@ -95,6 +102,63 @@ export default function FAQPage() {
     <div className="flex flex-col min-h-screen bg-gradient-to-br from-indigo-50 to-blue-100">
       <Header />
       
+      {/* SamLand Popup */}
+      <AnimatePresence>
+        {showSamLandPopup && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 flex items-center justify-center z-50 p-4 bg-black/30 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              className="bg-gradient-to-br from-yellow-100 to-orange-100 rounded-xl p-6 max-w-md w-full relative shadow-lg border-2 border-orange-300"
+            >
+              <button
+                onClick={() => setShowSamLandPopup(false)}
+                className="absolute top-3 right-3 text-gray-600 hover:text-orange-600"
+              >
+                ✕
+              </button>
+              <div className="text-center">
+                <div className="w-16 h-16 bg-orange-200 rounded-full flex items-center justify-center mx-auto mb-4">
+                <img 
+                  src={samlandLogo} 
+                  alt="SamLand Logo"
+                  className="w-full h-full object-cover"
+                />
+                </div>
+                <h3 className="text-2xl font-bold text-orange-700 mb-2">
+                  Take a break from reading!
+                </h3>
+                <p className="text-lg mb-4">Enjoy yourself at SamLand, where rollercoasters of imagination meet waterslides of adventure!</p>
+
+                <div className="bg-gradient-to-r from-orange-200 to-yellow-200 border-2 border-dashed border-orange-300 rounded-lg p-4 mb-4">
+                  <p className="text-sm text-gray-800 mb-1">
+                    Special offer just for book lovers:
+                  </p>
+                  <p className="text-xs text-gray-700 mt-2">
+                    50% off Day Pass Tickets
+                  </p>
+                </div>
+
+                <a
+                  href="https://samland.fun/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-2 px-6 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors w-full inline-block text-center"
+                > 
+                Visit SamLand →
+                </a>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <main className="flex-grow py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-12">
           {/* Animated Header Section */}
@@ -255,4 +319,3 @@ export default function FAQPage() {
     </div>
   );
 }
-
