@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Header from "./Header";
-
+import { Link } from "react-router-dom";
 export default function ContactInquiries() {
   const [contacts, setContacts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -11,7 +11,7 @@ export default function ContactInquiries() {
       const res = await fetch("http://localhost:3001/api/contact");
       const data = await res.json();
       setContacts(data);
-    } catch  {
+    } catch {
       setError("Failed to fetch contact inquiries");
     } finally {
       setLoading(false);
@@ -43,6 +43,13 @@ export default function ContactInquiries() {
           <h1 className="text-2xl font-bold text-gray-800 mb-6">
             Contact Inquiries
           </h1>
+          <div className="mb-4">
+            <Link to="/dashboard">
+              <button className="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded">
+                Go to Dashboard
+              </button>
+            </Link>
+          </div>
 
           {loading ? (
             <p>Loading...</p>
