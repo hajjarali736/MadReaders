@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import Layout from "./Layout";
 import { getCurrentUser } from "../auth/cognito"; // Adjust path if needed
-import { useCart } from "../context/CartContext";
 
 function WishList() {
   const [wishlistItems, setWishlistItems] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { updateCartCount } = useCart();
 
   function generatePriceFromTitle(title) {
     if (!title || typeof title !== "string") return 10;
@@ -62,8 +59,7 @@ function WishList() {
               cover:
                 result.volumeInfo?.imageLinks?.thumbnail ||
                 "https://via.placeholder.com/150x200",
-              price: generatePriceFromTitle(result.volumeInfo?.title),
-              availability: result.saleInfo?.saleability === "FOR_SALE"
+              price: Math.floor(Math.random() * 40) + 10,
             });
           } catch {
             detailedBooks.push({
@@ -72,7 +68,6 @@ function WishList() {
               author: "Unknown",
               cover: "https://via.placeholder.com/150x200",
               price: 0,
-              availability: false
             });
           }
 
@@ -94,11 +89,6 @@ function WishList() {
   }, []);
 
   const handleAddToCart = async (item) => {
-    if (!item.availability) {
-      alert("This book is currently out of stock and cannot be added to cart.");
-      return;
-    }
-
     const user = getCurrentUser();
     if (!user) return;
 
@@ -122,8 +112,25 @@ function WishList() {
 
       if (res.ok && data.success) {
         console.log("✅ Book added to cart");
-        // Update cart count immediately
-        updateCartCount();
+
+        // Optional: Update cart count in UI
+        const savedCart = localStorage.getItem("cart") || "[]";
+        const currentCart = JSON.parse(savedCart);
+
+        const cartItem = {
+          id: item.BookID,
+          title: item.title,
+          author: item.author,
+          cover: item.cover,
+          price: item.price,
+        };
+
+        const updatedCart = [...currentCart, cartItem];
+        localStorage.setItem("cart", JSON.stringify(updatedCart));
+
+        const cartCount = document.getElementById("cart-count");
+        if (cartCount) cartCount.textContent = updatedCart.length;
+
         // Remove from wishlist after adding
         handleRemoveFromWishlist(item.BookID);
       } else {
@@ -196,7 +203,7 @@ function WishList() {
             </p>
             <div className="mt-6">
               <Link
-                to="/books"
+                to="/"
                 className="px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600"
               >
                 Browse Books
@@ -235,26 +242,12 @@ function WishList() {
                 <div className="mt-2 text-base font-medium text-white">
                   ${generatePriceFromTitle(item.title)}
                 </div>
-                <div className="mt-2">
-                  <span className={`px-2 py-1 rounded-full text-xs ${
-                    item.availability 
-                      ? "bg-green-100 text-green-800" 
-                      : "bg-red-100 text-red-800"
-                  }`}>
-                    {item.availability ? "In Stock" : "Out of Stock"}
-                  </span>
-                </div>
                 <div className="mt-3 space-y-2">
                   <button
                     onClick={() => handleAddToCart(item)}
-                    className={`w-full px-4 py-2 rounded-md shadow-sm ${
-                      item.availability
-                        ? "bg-[#DDE6ED] text-black hover:bg-[#3a7a85]"
-                        : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                    }`}
-                    disabled={!item.availability}
+                    className="w-full px-4 py-2 bg-[#DDE6ED] text-black rounded-md shadow-sm hover:bg-[#3a7a85]"
                   >
-                    {item.availability ? "Add to Cart" : "Out of Stock"}
+                    Add to Cart
                   </button>
                   <button
                     onClick={() => handleRemoveFromWishlist(item.BookID)}

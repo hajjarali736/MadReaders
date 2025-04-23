@@ -1,20 +1,15 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { GOOGLE_BOOKS_API_KEY } from "./services/googleBooksService";
 import { getCurrentUser } from "../auth/cognito";
-import { useCart } from "../context/CartContext";
-import { useWishlist } from "../context/WishlistContext";
 
 const BookDetails = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
   const [book, setBook] = useState(null);
   const [recommendations, setRecommendations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
-  const { updateCartCount } = useCart();
-  const { updateWishlistCount } = useWishlist();
 
   const [cart, setCart] = useState(() => {
     const savedCart = localStorage.getItem("cart");
@@ -44,6 +39,16 @@ const BookDetails = () => {
 
     return price;
   }
+
+  // Save cart and wishlist to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart));
+    // Update cart count in navbar
+    const cartCount = document.getElementById("cart-count");
+    if (cartCount) {
+      cartCount.textContent = cart.length;
+    }
+  }, [cart]);
 
   useEffect(() => {
     localStorage.setItem("wishlist", JSON.stringify(wishlist));
@@ -140,6 +145,13 @@ const BookDetails = () => {
 
     const username = user.getUsername();
 
+    console.log("Sending cart add request:", {
+      username: user.getUsername(),
+      bookID: book.id,
+      price: generatePriceFromTitle(book.volumeInfo?.title),
+      quantity,
+    });
+
     try {
       const response = await fetch("http://localhost:3001/api/cart/add", {
         method: "POST",
@@ -156,8 +168,7 @@ const BookDetails = () => {
 
       if (response.ok && data.success) {
         setShowMessage("Added to cart!");
-        // Update cart count immediately
-        updateCartCount();
+        // Optional: update localStorage or cart count UI if you want
       } else {
         setShowMessage(data.message || "Error adding to cart.");
       }
@@ -196,10 +207,8 @@ const BookDetails = () => {
 
       if (response.ok && data.success) {
         setShowMessage("Added to wishlist!");
-        // Update wishlist count immediately
-        updateWishlistCount();
       } else {
-        setShowMessage(data.message || "Error adding to wishlist.");
+        setShowMessage(data.message || "Already in wishlist.");
       }
     } catch (err) {
       console.error("Error adding to wishlist:", err);
@@ -239,24 +248,6 @@ const BookDetails = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex justify-between items-center mb-6">
-          <button
-            onClick={() => navigate(-1)}
-            className="flex items-center gap-2 text-[#212e53] hover:text-[#4a919e] transition-colors"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fillRule="evenodd"
-                d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
-                clipRule="evenodd"
-              />
-            </svg>
-            Back
-          </button>
           <h1 className="text-2xl font-bold text-bg-gradient-to-r from-[#27374D] to-[#526D82]">
             Book Details
           </h1>
