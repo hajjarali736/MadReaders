@@ -18,6 +18,7 @@ export default function ContactPage() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [selectedInquiry, setSelectedInquiry] = useState(null);
   const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {

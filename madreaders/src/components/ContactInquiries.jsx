@@ -5,6 +5,11 @@ export default function ContactInquiries() {
   const [contacts, setContacts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [selectedInquiry, setSelectedInquiry] = useState(null);
+
+  const handleInquiryClick = (contact) => {
+    setSelectedInquiry(contact);
+  };
 
   const fetchContacts = async () => {
     try {
@@ -69,7 +74,11 @@ export default function ContactInquiries() {
               </thead>
               <tbody>
                 {contacts.map((contact) => (
-                  <tr key={contact._id} className="border-t">
+                  <tr
+                    key={contact._id}
+                    className="border-t cursor-pointer"
+                    onClick={() => handleInquiryClick(contact)}
+                  >
                     <td className="px-4 py-2">{contact.Name}</td>
                     <td className="px-4 py-2">{contact.Email}</td>
                     <td className="px-4 py-2">{contact.Subject}</td>
@@ -110,6 +119,29 @@ export default function ContactInquiries() {
           )}
         </div>
       </div>
+      {selectedInquiry && (
+        <div className="mt-6 p-4 bg-white rounded-lg shadow-md">
+          <h2 className="text-xl font-bold">Inquiry Details</h2>
+          <p>
+            <strong>Name:</strong> {selectedInquiry.Name}
+          </p>
+          <p>
+            <strong>Email:</strong> {selectedInquiry.Email}
+          </p>
+          <p>
+            <strong>Subject:</strong> {selectedInquiry.Subject}
+          </p>
+          <p>
+            <strong>Message:</strong> {selectedInquiry.Message}
+          </p>
+          <button
+            onClick={() => setSelectedInquiry(null)}
+            className="mt-4 bg-red-500 text-white px-4 py-2 rounded"
+          >
+            Close
+          </button>
+        </div>
+      )}
     </div>
   );
 }
