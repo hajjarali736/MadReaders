@@ -178,6 +178,7 @@ const BookDetails = () => {
     }
 
     setTimeout(() => setShowMessage(""), 3000);
+    setTimeout(() => window.location.reload(), 1200);
   };
 
   const handleAddToWishlist = async () => {
@@ -216,6 +217,7 @@ const BookDetails = () => {
     }
 
     setTimeout(() => setShowMessage(""), 3000);
+    setTimeout(() => window.location.reload(), 1200);
   };
 
   if (loading) {

@@ -133,6 +133,7 @@ function WishList() {
 
         // Remove from wishlist after adding
         handleRemoveFromWishlist(item.BookID);
+        setTimeout(() => window.location.reload(), 1200);
       } else {
         console.error("❌ Failed to add to cart:", data.message);
       }
@@ -161,6 +162,7 @@ function WishList() {
 
         const wishlistCount = document.getElementById("wishlist-count");
         if (wishlistCount) wishlistCount.textContent = wishlistItems.length - 1;
+        setTimeout(() => window.location.reload(), 1200);
       }
     } catch (err) {
       console.error("Error removing from wishlist:", err);

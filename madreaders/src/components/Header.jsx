@@ -6,10 +6,9 @@ import { FaSearch } from "react-icons/fa";
 
 function Header() {
   const { isAuthenticated, user, signOut } = useAuth();
-  // const { cartCount } = useCart();
-  const cartCount = 1;
-  // const { wishlistCount } = useWishlist();
-  const wishlistCount = 1;
+
+  const [cartCount, setCartCount] = useState(0);
+  const [wishlistCount, setWishlistCount] = useState(0);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -22,6 +21,36 @@ function Header() {
   const categoriesRef = useRef(null);
   const buttonRef = useRef(null);
   const searchInputRef = useRef(null);
+
+  useEffect(() => {
+    const fetchCounts = async () => {
+      if (isAuthenticated && user?.username) {
+        try {
+          // Fetch cart count
+          const cartResponse = await fetch(
+            `http://localhost:3001/api/cart/count/${user.username}`
+          );
+          const cartData = await cartResponse.json();
+          if (cartData.success) {
+            setCartCount(cartData.count); // Assuming the response has a count property
+          }
+
+          // Fetch wishlist count
+          const wishlistResponse = await fetch(
+            `http://localhost:3001/api/wishlist/count/${user.username}`
+          );
+          const wishlistData = await wishlistResponse.json();
+          if (wishlistData.success) {
+            setWishlistCount(wishlistData.count); // Assuming the response has a count property
+          }
+        } catch (error) {
+          console.error("Failed to fetch counts", error);
+        }
+      }
+    };
+
+    fetchCounts();
+  }, [isAuthenticated, user]);
 
   useEffect(() => {
     const checkAdminStatus = async () => {

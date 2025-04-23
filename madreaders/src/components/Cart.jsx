@@ -138,6 +138,7 @@ function Cart() {
     if (res.ok) {
       setCartItems((prev) => prev.filter((item) => item.BookID !== bookID));
     }
+    setTimeout(() => window.location.reload(), 1200);
   };
 
   const applyCoupon = async () => {
