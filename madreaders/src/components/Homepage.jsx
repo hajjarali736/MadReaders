@@ -127,7 +127,7 @@ function Homepage() {
   }, []);
 
   const copyCouponCode = () => {
-    navigator.clipboard.writeText("MADREADER20");
+    navigator.clipboard.writeText("MADREADERS20");
     setCouponCopied(true);
     setTimeout(() => setCouponCopied(false), 2000);
   };
