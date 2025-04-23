@@ -58,33 +58,81 @@ const AnimatedBook = () => {
   )
 }
 
-// Floating books background component
+// Enhanced FloatingBooksBackground component
 const FloatingBooksBackground = () => {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {[...Array(15)].map((_, i) => (
-        <div 
-          key={i}
-          className="absolute book-icon"
-          style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-            animationDelay: `${Math.random() * 5}s`,
-            animationDuration: `${15 + Math.random() * 15}s`
-          }}
-        >
-          {i % 3 === 0 ? (
-            <BookOpen className="text-white/10 w-8 h-8" />
-          ) : i % 3 === 1 ? (
-            <BookMarked className="text-white/10 w-10 h-10" />
-          ) : (
-            <Bookmark className="text-white/10 w-6 h-6" />
-          )}
-        </div>
-      ))}
+      {[...Array(25)].map((_, i) => {
+        const size = Math.random() * 40 + 20;
+        const duration = 15 + Math.random() * 20;
+        const delay = Math.random() * 10;
+        const opacity = Math.random() * 0.3 + 0.1;
+        
+        return (
+          <div 
+            key={i}
+            className="absolute book-icon animate-float"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              width: `${size}px`,
+              height: `${size}px`,
+              animationDelay: `${delay}s`,
+              animationDuration: `${duration}s`,
+              opacity: opacity
+            }}
+          >
+            {i % 4 === 0 ? (
+              <BookOpen className="w-full h-full text-white" />
+            ) : i % 4 === 1 ? (
+              <BookMarked className="w-full h-full text-white" />
+            ) : i % 4 === 2 ? (
+              <BookHeart className="w-full h-full text-white" />
+            ) : (
+              <Bookmark className="w-full h-full text-white" />
+            )}
+          </div>
+        );
+      })}
     </div>
-  )
-}
+  );
+};
+
+// Enhanced Book-themed ParticleEffect component
+const ParticleEffect = () => {
+  return (
+    <div className="particle-container absolute inset-0 pointer-events-none">
+      {[...Array(30)].map((_, i) => {
+        const size = Math.random() * 20 + 10;
+        const duration = Math.random() * 20 + 10;
+        const delay = Math.random() * 5;
+        const opacity = Math.random() * 0.4 + 0.2;
+        
+        return (
+          <div 
+            key={i}
+            className="absolute animate-float"
+            style={{
+              width: `${size}px`,
+              height: `${size}px`,
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDuration: `${duration}s`,
+              animationDelay: `${delay}s`,
+              opacity: opacity
+            }}
+          >
+            {Math.random() > 0.5 ? (
+              <Bookmark className="w-full h-full text-[#a3c9ff]" />
+            ) : (
+              <BookOpen className="w-full h-full text-[#a3c9ff]" />
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+};
 
 // Animated counter component
 const AnimatedCounter = ({ value, label, icon }) => {
@@ -276,33 +324,8 @@ const TestimonialCard = ({ quote, name, title, index }) => {
   )
 }
 
-// Particle effect component
-const ParticleEffect = () => {
-  return (
-    <div className="particle-container absolute inset-0 pointer-events-none">
-      {[...Array(50)].map((_, i) => (
-        <div 
-          key={i}
-          className="particle absolute rounded-full"
-          style={{
-            width: `${Math.random() * 10 + 2}px`,
-            height: `${Math.random() * 10 + 2}px`,
-            background: `rgba(163, 201, 255, ${Math.random() * 0.5 + 0.2})`,
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-            animationDuration: `${Math.random() * 20 + 10}s`,
-            animationDelay: `${Math.random() * 5}s`
-          }}
-        ></div>
-      ))}
-    </div>
-  )
-}
-
 export default function LandingPage() {
   const navigate = useNavigate();
-  
-  // eslint-disable-next-line no-unused-vars
   const [scrollY, setScrollY] = useState(0)
   
   useEffect(() => {
@@ -316,7 +339,7 @@ export default function LandingPage() {
   
   return (
     <div className="flex flex-col min-h-screen bg-[#f0f4f9] overflow-hidden">
-      {/* Hero Section with Animated Book */}
+      {/* Hero Section with Enhanced Animated Book Background */}
       <section className="relative w-full min-h-[90vh] flex items-center justify-center overflow-hidden bg-gradient-to-b from-[#1e3a5f] to-[#2c4c74]">
         <FloatingBooksBackground />
         <ParticleEffect />
@@ -529,7 +552,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-
       {/* Testimonials */}
       <section className="py-20 bg-white">
         <div className="container px-4 mx-auto">
@@ -575,89 +597,85 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
-      {/* Team Section */}
-<section className="py-20 bg-gradient-to-r from-[#1e3a5f] to-[#2c4c74] text-white relative overflow-hidden">
-  <ParticleEffect />
-  <div className="absolute top-0 left-0 w-full h-full overflow-hidden">
-    <div className="absolute -top-24 -left-24 w-64 h-64 bg-[#a3c9ff]/20 rounded-full blur-3xl"></div>
-    <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-[#a3c9ff]/10 rounded-full blur-3xl"></div>
-  </div>
-  
-  <div className="container px-4 mx-auto relative z-10">
-    <div className="text-center mb-16">
-      <div className="inline-block px-4 py-1 rounded-full bg-white/10 backdrop-blur-sm mb-4">
-        <span className="text-sm font-medium text-white">Our Team</span>
-      </div>
-      <h2 className="text-3xl md:text-4xl font-bold mb-6 relative inline-block">
-        Meet The Minds Behind MadReaders
-        <div className="absolute -bottom-3 left-0 right-0 h-1 bg-[#a3c9ff] rounded-full"></div>
-      </h2>
-      <p className="text-lg text-white/80 max-w-2xl mx-auto">
-        A passionate group of book lovers, tech enthusiasts, and creative thinkers dedicated to revolutionizing your reading experience.
-      </p>
-    </div>
 
-    <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-8">
-      {[
-        {
-          name: "Ali El Hajjar",
-          role: "Team Leader",
-          image: "https://placehold.co/400x400/1e3a5f/FFFFFF?text=MJ",
-          description: "Visionary leader with a passion for connecting readers with great books."
-        },
-        {
-          name: "Diyaa Aldeen Swaid",
-          role: "CTO",
-          image: "https://placehold.co/400x400/1e3a5f/FFFFFF?text=BA",
-          description: "Tech wizard who brings our platform to life with innovative solutions."
-        },
-        {
-          name: "Mohammad Al Majzoub",
-          role: "Head of Content",
-          image: "https://placehold.co/400x400/1e3a5f/FFFFFF?text=MK",
-          description: "Curates our exceptional collection and ensures quality recommendations."
-        },
-        {
-          name: "Mohammad Zeitoun",
-          role: "UX Designer",
-          image: "https://placehold.co/400x400/1e3a5f/FFFFFF?text=JD",
-          description: "Creates the beautiful and intuitive interfaces you love using."
-        },
-        {
-          name: "Mohammad Samhoun",
-          role: "Tester",
-          image: "https://placehold.co/400x400/1e3a5f/FFFFFF?text=JS",
-          description: "Makes sure every option in the website is working perfectly."
-        }
-      ].map((member, index) => (
-        <div 
-          key={index}
-          className="bg-white/5 rounded-xl p-6 backdrop-blur-sm border border-white/10 hover:border-[#a3c9ff]/50 transition-all duration-500 hover:-translate-y-2 group"
-        >
-          <div className="relative mb-6 overflow-hidden rounded-lg aspect-square">
-            <img 
-              src={member.image} 
-              alt={member.name}
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-              <p className="text-white text-sm">{member.description}</p>
+      {/* Team Section */}
+      <section className="py-20 bg-gradient-to-r from-[#1e3a5f] to-[#2c4c74] text-white relative overflow-hidden">
+        <FloatingBooksBackground />
+        <ParticleEffect />
+        
+        <div className="container px-4 mx-auto relative z-10">
+          <div className="text-center mb-16">
+            <div className="inline-block px-4 py-1 rounded-full bg-white/10 backdrop-blur-sm mb-4">
+              <span className="text-sm font-medium text-white">Our Team</span>
             </div>
+            <h2 className="text-3xl md:text-4xl font-bold mb-6 relative inline-block">
+              Meet The MadCoders Behind MadReaders
+              <div className="absolute -bottom-3 left-0 right-0 h-1 bg-[#a3c9ff] rounded-full"></div>
+            </h2>
+            <p className="text-lg text-white/80 max-w-2xl mx-auto">
+              A passionate group of book lovers, tech enthusiasts, and creative thinkers dedicated to revolutionizing your reading experience.
+            </p>
           </div>
-          <h3 className="text-xl font-bold mb-1">{member.name}</h3>
-          <p className="text-[#a3c9ff] mb-4">{member.role}</p>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-8">
+            {[
+              {
+                name: "Ali El Hajjar",
+                role: "Team Leader",
+                image: "hajjar.jpeg",
+                description: "Visionary leader with a passion for connecting readers with great books."
+              },
+              {
+                name: "Diyaa Aldeen Swaid",
+                role: "CTO",
+                image: "diyaa.jpeg",
+                description: "Tech wizard who brings our platform to life with innovative solutions."
+              },
+              {
+                name: "Mohammad Al Majzoub",
+                role: "Head of Content",
+                image: "majzoub.jpeg",
+                description: "Curates our exceptional collection and ensures quality recommendations."
+              },
+              {
+                name: "Mohammad Zeitoun",
+                role: "UX Designer",
+                image: "zeitoun.jpeg",
+                description: "Creates the beautiful and intuitive interfaces you love using."
+              },
+              {
+                name: "Mohammad Samhoun",
+                role: "Tester",
+                image: "samhoun.jpeg",
+                description: "Makes sure every option in the website is working perfectly."
+              }
+            ].map((member, index) => (
+              <div 
+                key={index}
+                className="bg-white/5 rounded-xl p-6 backdrop-blur-sm border border-white/10 hover:border-[#a3c9ff]/50 transition-all duration-500 hover:-translate-y-2 group"
+              >
+                <div className="relative mb-6 overflow-hidden rounded-lg aspect-square">
+                  <img 
+                    src={member.image} 
+                    alt={member.name}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                    <p className="text-white text-sm">{member.description}</p>
+                  </div>
+                </div>
+                <h3 className="text-xl font-bold mb-1">{member.name}</h3>
+                <p className="text-[#a3c9ff] mb-4">{member.role}</p>
+              </div>
+            ))}
+          </div>
         </div>
-      ))}
-    </div>
-  </div>
-</section>
+      </section>
+
       {/* Join Us CTA */}
       <section className="py-20 bg-gradient-to-r from-[#1e3a5f] to-[#2c4c74] text-white relative overflow-hidden">
+        <FloatingBooksBackground />
         <ParticleEffect />
-        <div className="absolute top-0 left-0 w-full h-full overflow-hidden">
-          <div className="absolute -top-24 -left-24 w-64 h-64 bg-[#a3c9ff]/20 rounded-full blur-3xl"></div>
-          <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-[#a3c9ff]/10 rounded-full blur-3xl"></div>
-        </div>
         
         <div className="container px-4 mx-auto text-center relative z-10">
           <div className="max-w-3xl mx-auto">
@@ -705,4 +723,3 @@ export default function LandingPage() {
     </div>
   )
 }
-
