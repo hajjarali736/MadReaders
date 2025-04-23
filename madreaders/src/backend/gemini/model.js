@@ -2,7 +2,7 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 // 🧠 Init Gemini model
-const genAI = new GoogleGenerativeAI("AIzaSyBR58b5y2UJLqHwy_5xeXxvHOkE7SVSpXk");
+const genAI = new GoogleGenerativeAI("AIzaSyBseHnCtHEiBz_-y9tjg3abwqnyvwA7na0");
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 /**

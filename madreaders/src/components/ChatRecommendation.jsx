@@ -24,12 +24,12 @@ const ChatRecommendation = () => {
 
   const formatBookData = (book) => {
     const volumeInfo = book.volumeInfo || {};
-    
+
     // Skip books that have Arabic language or no language specified
-    if (volumeInfo.language !== 'en') {
+    if (volumeInfo.language !== "en") {
       return null;
     }
-    
+
     return {
       id: book.id,
       title: volumeInfo.title || "No Title",
@@ -60,10 +60,6 @@ const ChatRecommendation = () => {
         body: JSON.stringify({ prompt: inputValue }),
       });
 
-      if (!aiRes.ok) {
-        throw new Error("AI service is not available");
-      }
-
       const data = await aiRes.json();
 
       if (data.summary) {
@@ -77,153 +73,35 @@ const ChatRecommendation = () => {
         ]);
       }
 
-      // Use all keywords for better search
-      const keywords = data?.keywords || ["fiction"];
-      console.log("🔑 keywords from AI:", keywords);
+      const keyword = data?.keywords?.[0] || "fiction";
+      console.log("🔑 keywords from AI:", data.keywords);
 
-      // Create a more specific search query using all keywords
-      const searchQuery = keywords
-        .map(keyword => `"${keyword}"`)
-        .join(" OR ");
-
-      const booksRes = await searchBooks(searchQuery, {
+      const booksRes = await searchBooks(keyword, {
         orderBy: "relevance",
-        maxResults: 12, // Increased to get more options
+        maxResults: 8, // Increased to ensure we get enough English books after filtering
         langRestrict: "en",
-        printType: "books"
+        q: `${keyword} language:english -inlang:ar`,
+        printType: "books",
       });
 
-      // Filter and format books
-      const formattedBooks = booksRes.items
-        ?.map(formatBookData)
-        .filter(book => {
-          if (!book) return false;
-          
-          // Additional filtering criteria
-          const hasGoodRating = book.averageRating >= 3.5;
-          const hasEnoughRatings = book.ratingsCount >= 10;
-          const hasDescription = book.description && book.description.length > 50;
-          
-          return hasGoodRating && hasEnoughRatings && hasDescription;
-        })
-        .slice(0, 4) || [];
-
-      if (formattedBooks.length === 0) {
-        setMessages((prev) => [
-          ...prev,
-          { 
-            text: "I couldn't find any books that match your preferences perfectly. Would you like to try a different search?", 
-            isUser: false 
-          },
-        ]);
-      } else {
-        formattedBooks.forEach((book) => {
-          setMessages((prev) => [
-            ...prev,
-            { text: book, isUser: false, isBook: true },
-          ]);
-        });
-      }
-    } catch (error) {
-      console.error(error);
-      // Fallback to direct book search if AI service fails
-      try {
-        // Clean and format the search query
-        const cleanQuery = inputValue.trim().toLowerCase();
-        
-        // Create a more specific search query
-        const searchQuery = `intitle:${cleanQuery} OR inauthor:${cleanQuery} OR subject:${cleanQuery}`;
-        
-        const booksRes = await searchBooks(searchQuery, {
-          orderBy: "relevance",
-          maxResults: 20, // Increased to get more options
-          langRestrict: "en",
-          printType: "books",
-          filter: "ebooks" // Only include ebooks for better results
-        });
-
-        // Filter and format books with more specific criteria
-        const formattedBooks = booksRes.items
+      const formattedBooks =
+        booksRes.items
           ?.map(formatBookData)
-          .filter(book => {
-            if (!book) return false;
-            
-            // More specific filtering criteria
-            const hasGoodRating = book.averageRating >= 4.0; // Increased rating threshold
-            const hasEnoughRatings = book.ratingsCount >= 50; // Increased ratings count
-            const hasDescription = book.description && book.description.length > 100; // Longer description
-            const matchesQuery = book.title.toLowerCase().includes(cleanQuery) || 
-                               book.author.toLowerCase().includes(cleanQuery) ||
-                               book.description.toLowerCase().includes(cleanQuery);
-            
-            return hasGoodRating && hasEnoughRatings && hasDescription && matchesQuery;
-          })
+          .filter((book) => book !== null) // Remove any non-English books
           .slice(0, 4) || [];
 
-        if (formattedBooks.length > 0) {
-          setMessages((prev) => [
-            ...prev,
-            { 
-              text: `Here are some highly-rated books related to "${inputValue}":`, 
-              isUser: false 
-            },
-          ]);
-          
-          formattedBooks.forEach((book) => {
-            setMessages((prev) => [
-              ...prev,
-              { text: book, isUser: false, isBook: true },
-            ]);
-          });
-        } else {
-          // Try a broader search if no exact matches found
-          const broaderBooksRes = await searchBooks(cleanQuery, {
-            orderBy: "relevance",
-            maxResults: 12,
-            langRestrict: "en",
-            printType: "books"
-          });
-
-          const broaderBooks = broaderBooksRes.items
-            ?.map(formatBookData)
-            .filter(book => book !== null)
-            .slice(0, 4) || [];
-
-          if (broaderBooks.length > 0) {
-            setMessages((prev) => [
-              ...prev,
-              { 
-                text: `I found some related books that might interest you:`, 
-                isUser: false 
-              },
-            ]);
-            
-            broaderBooks.forEach((book) => {
-              setMessages((prev) => [
-                ...prev,
-                { text: book, isUser: false, isBook: true },
-              ]);
-            });
-          } else {
-            setMessages((prev) => [
-              ...prev,
-              { 
-                text: "I couldn't find any books matching your search. Please try different keywords or be more specific about what you're looking for.", 
-                isUser: false 
-              },
-            ]);
-          }
-        }
-      } catch (searchError) {
-        console.error(searchError);
+      formattedBooks.forEach((book) => {
         setMessages((prev) => [
           ...prev,
-          { 
-            text: "I'm having trouble connecting to the book service. Please try again in a few moments.", 
-            isUser: false 
-          },
+          { text: book, isUser: false, isBook: true },
         ]);
-      }
+      });
+    } catch (error) {
+      console.error(error);
+      setMessages((prev) => [
+        ...prev,
+        { text: "Oops! Something went wrong.", isUser: false },
+      ]);
     } finally {
       setInputDisabled(false);
     }
@@ -238,9 +116,18 @@ const ChatRecommendation = () => {
       {/* Animated background */}
       <div className="fixed inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 animate-gradient-x">
         <div className="absolute inset-0 opacity-20">
-          <div className="absolute w-96 h-96 bg-white rounded-full blur-3xl animate-float" style={{ top: '10%', left: '20%' }}></div>
-          <div className="absolute w-96 h-96 bg-white rounded-full blur-3xl animate-float-delay" style={{ top: '60%', right: '20%' }}></div>
-          <div className="absolute w-96 h-96 bg-white rounded-full blur-3xl animate-float-delay-2" style={{ top: '40%', left: '50%' }}></div>
+          <div
+            className="absolute w-96 h-96 bg-white rounded-full blur-3xl animate-float"
+            style={{ top: "10%", left: "20%" }}
+          ></div>
+          <div
+            className="absolute w-96 h-96 bg-white rounded-full blur-3xl animate-float-delay"
+            style={{ top: "60%", right: "20%" }}
+          ></div>
+          <div
+            className="absolute w-96 h-96 bg-white rounded-full blur-3xl animate-float-delay-2"
+            style={{ top: "40%", left: "50%" }}
+          ></div>
         </div>
       </div>
 
@@ -273,7 +160,7 @@ const ChatRecommendation = () => {
                   }`}
                 >
                   {message.isBook ? (
-                    <div 
+                    <div
                       onClick={() => handleBookClick(message.text)}
                       className="bg-white rounded-lg p-4 shadow-sm border border-blue-200 hover:shadow-md hover:-translate-y-1 transition-all duration-200 flex flex-col h-[450px] cursor-pointer"
                     >
@@ -345,4 +232,4 @@ const ChatRecommendation = () => {
   );
 };
 
-export default ChatRecommendation; 
+export default ChatRecommendation;
