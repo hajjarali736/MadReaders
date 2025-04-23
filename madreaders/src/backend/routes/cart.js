@@ -5,6 +5,7 @@ import {
   updateCartItemQuantity,
   removeFromCart,
   countCartItems,
+  clearCart,
 } from "../cartOperations.js";
 
 const router = express.Router();
@@ -111,6 +112,20 @@ router.get("/empty/:username", async (req, res) => {
     empty: isEmpty,
     message: isEmpty ? "Cart is empty" : "Cart has items",
   });
+});
+
+router.delete("/clear", async (req, res) => {
+  const { username } = req.body;
+
+  if (!username) {
+    return res.status(400).json({
+      success: false,
+      message: "Username is required",
+    });
+  }
+
+  const result = await clearCart(username);
+  res.status(result.success ? 200 : 400).json(result);
 });
 
 export default router;

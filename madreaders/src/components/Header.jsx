@@ -1,14 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { useCart } from "../context/CartContext";
-import { useWishlist } from "../context/WishlistContext";
+// import { useWishlist } from "../context/WishlistContext";
 import { FaSearch } from "react-icons/fa";
 
 function Header() {
   const { isAuthenticated, user, signOut } = useAuth();
-  const { cartCount } = useCart();
-  const { wishlistCount } = useWishlist();
+  // const { cartCount } = useCart();
+  const cartCount = 1;
+  // const { wishlistCount } = useWishlist();
+  const wishlistCount = 1;
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -17,7 +18,7 @@ function Header() {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  
+
   const categoriesRef = useRef(null);
   const buttonRef = useRef(null);
   const searchInputRef = useRef(null);
@@ -43,14 +44,17 @@ function Header() {
   // Handle click outside for search
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (searchInputRef.current && !searchInputRef.current.contains(event.target)) {
+      if (
+        searchInputRef.current &&
+        !searchInputRef.current.contains(event.target)
+      ) {
         setIsSearchOpen(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -82,7 +86,7 @@ function Header() {
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     if (!searchQuery.trim()) return;
-    
+
     navigate(`/books?search=${encodeURIComponent(searchQuery)}`);
     setIsSearchOpen(false);
     setSearchQuery("");
@@ -94,7 +98,11 @@ function Header() {
         <div className="flex justify-between items-center h-20">
           <div className="flex items-center space-x-8">
             <Link to="/" className="text-4xl font-bold text-[#212e53]">
-              <img src="/madreaderslogo.png" alt="MadReaders Logo" className="h-14 w-auto opacity-90 hover:opacity-100 transition-opacity" />
+              <img
+                src="/madreaderslogo.png"
+                alt="MadReaders Logo"
+                className="h-14 w-auto opacity-90 hover:opacity-100 transition-opacity"
+              />
             </Link>
             <div className="flex space-x-8">
               <Link
@@ -177,8 +185,14 @@ function Header() {
                     <FaSearch className="h-5 w-5 transition-transform group-hover:scale-110" />
                   </button>
                   {isSearchOpen && (
-                    <div ref={searchInputRef} className="absolute right-0 mt-2 w-72 bg-white rounded-md shadow-lg py-2 px-3 border border-gray-200">
-                      <form onSubmit={handleSearchSubmit} className="flex gap-2">
+                    <div
+                      ref={searchInputRef}
+                      className="absolute right-0 mt-2 w-72 bg-white rounded-md shadow-lg py-2 px-3 border border-gray-200"
+                    >
+                      <form
+                        onSubmit={handleSearchSubmit}
+                        className="flex gap-2"
+                      >
                         <input
                           type="text"
                           value={searchQuery}
@@ -202,7 +216,11 @@ function Header() {
                 >
                   <svg
                     className="h-6 w-6 transition-transform group-hover:scale-110"
-                    fill={location.pathname === "/wishlist" ? "currentColor" : "none"}
+                    fill={
+                      location.pathname === "/wishlist"
+                        ? "currentColor"
+                        : "none"
+                    }
                     viewBox="0 0 24 24"
                     stroke="currentColor"
                   >

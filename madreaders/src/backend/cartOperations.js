@@ -64,3 +64,13 @@ export async function countCartItems(username) {
     return { success: false, message: error.message };
   }
 }
+
+export const clearCart = async (username) => {
+  try {
+    await Cart.deleteMany({ Username: username }); // This will delete all cart items for the given username
+    return { success: true, message: "Cart cleared successfully" };
+  } catch (error) {
+    console.error("Error clearing cart:", error);
+    return { success: false, message: "Failed to clear cart" };
+  }
+};

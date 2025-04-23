@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Layout from "./Layout";
 import { getCurrentUser } from "../auth/cognito";
 import { FaClipboard } from "react-icons/fa";
 
 function Cart() {
+  const navigate = useNavigate();
+
   const [cartItems, setCartItems] = useState([]);
 
   const [couponCode, setCouponCode] = useState("");
@@ -29,6 +31,17 @@ function Cart() {
 
     return price;
   }
+
+  const clearCart = async () => {
+    const user = getCurrentUser();
+    if (!user) return;
+
+    await fetch("http://localhost:3001/api/cart/clear", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: user.getUsername() }),
+    });
+  };
   const fetchCartItems = async () => {
     const user = getCurrentUser();
     if (!user) return;
@@ -323,19 +336,23 @@ function Cart() {
             </div>
 
             <div className="mt-6">
-              <Link
-                to="/checkout"
-                state={{
-                  subtotal,
-                  discount,
-                  discountAmount,
-                  couponCode,
-                  total,
+              <button
+                onClick={async () => {
+                  await clearCart();
+                  navigate("/checkout", {
+                    state: {
+                      subtotal,
+                      discount,
+                      discountAmount,
+                      couponCode,
+                      total,
+                    },
+                  });
                 }}
                 className="w-full flex justify-center items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-gradient-to-r from-[#27374D] to-[#526D82] hover:bg-[#3a7a85]"
               >
                 Proceed to Checkout
-              </Link>
+              </button>
             </div>
           </div>
         </div>
