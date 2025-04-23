@@ -486,14 +486,14 @@ export default function LandingPage() {
               },
               {
                 year: "Phase 3",
-                title: "Implementation and Book Buddy Launch",
-                description: "We implemented our website and introduced Book Buddy, our AI-powered recommendation system that helps readers find their perfect match..",
+                title: "Implementation testing",
+                description: "We implemented our website and tested our functions and the website as a whole.",
               },
               {
                 year: "Today",
-                title: "Launching",
+                title: "Launching book buddy",
                 description:
-                  "We launched MadReaders, a platform where readers can explore, share, and connect with their favorite books.",
+                  "We launched Book buddy, our own AI consultant.",
               },
             ].map((item, index) => (
               <TimelineItem 
