@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Layout from "./Layout";
 import { getCurrentUser } from "../auth/cognito";
+import { FaClipboard } from "react-icons/fa";
 
 function Cart() {
   const [cartItems, setCartItems] = useState([]);
@@ -290,6 +291,17 @@ function Cart() {
                 className="px-4 py-2 bg-[#212e53] text-white rounded-md hover:bg-[#1a243f]"
               >
                 Apply Coupon
+              </button>
+              <button
+                onClick={() =>
+                  navigator.clipboard
+                    .readText()
+                    .then((text) => setCouponCode(text))
+                }
+                className="ml-2 px-4 py-2 bg-[#212e53] text-white rounded-md hover:bg-[#1a243f]"
+              >
+                <FaClipboard className="inline mr-1" />
+                Paste
               </button>
             </div>
 
